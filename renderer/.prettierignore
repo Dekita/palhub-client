@@ -1,0 +1,6 @@
+.yarn
+.next
+.storybook
+node_modules
+dist
+app

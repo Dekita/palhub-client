@@ -1,0 +1,5 @@
+User-agent: *
+Disallow: /api/
+Disallow: /logs/
+Disallow: /files/
+Disallow: /netdata/

@@ -1,0 +1,1197 @@
+/* CSS Styles by dekitarpg@gmail.com */
+
+/*###################################
+* 
+* CSS Styles by dekitarpg@gmail.com
+* 
+* 
+*/
+
+@font-face {
+    font-family: Whitney;
+    src: url(/fonts/Whitney-Book.ttf);
+}
+@font-face {
+    font-family: WhitneyThick;
+    src: url(/fonts/Whitney-Medium.ttf);
+}
+@font-face {
+    font-family: WhitneyBold;
+    src: url(/fonts/Whitney-Bold.ttf);
+}
+
+/*###################################
+* 
+* ■ Main CSS Variables
+* 
+*/
+:root {
+    /* font settings */
+    --dek-font-family-1: Whitney, var(--bs-body-font-family);
+    --dek-font-family-2: WhitneyThick, var(--bs-body-font-family);
+    --dek-font-family-3: WhitneyBold, var(--bs-body-font-family);
+    /* darker shades */
+    --dek-darker-1: rgba(0, 0, 0, 0.05);
+    --dek-darker-2: rgba(0, 0, 0, 0.1);
+    --dek-darker-3: rgba(0, 0, 0, 0.2);
+    --dek-darker-4: rgba(0, 0, 0, 0.3);
+    /* lighter shades */
+    --dek-lighter-1: rgba(255, 255, 255, 0.05);
+    --dek-lighter-2: rgba(255, 255, 255, 0.2);
+    --dek-lighter-3: rgba(255, 255, 255, 0.3);
+    --dek-lighter-4: rgba(255, 255, 255, 0.3);
+    /* input/dropdown area bg colorings */
+    --dek-area-default: #17181b;
+    --dek-area-active: #151719;
+
+    --dek-area-default: var(--dek-darker-3);
+    --dek-area-active: var(--dek-darker-2);
+}
+
+/*###################################
+* 
+* Main element changes: (also includes bootstrap/helper classes)
+* 
+*/
+body,
+.font {
+    font-family: var(--dek-font-family-1);
+}
+button,
+.tooltip,
+.font-thick {
+    font-family: var(--dek-font-family-2);
+}
+b,
+strong,
+.font-bold {
+    font-family: var(--dek-font-family-3);
+}
+a {
+    text-decoration: none;
+}
+body,
+.theme-border,
+.btn,
+.form-control {
+    transition: color 1s, background-color 1s, border-color 1s;
+}
+small {
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    overflow: hidden;
+}
+code {
+    background-color: rgba(0, 0, 0, 0.05);
+    padding-right: 0.25em;
+    padding-left: 0.25em;
+    color: var(--dek-danger-normal);
+}
+pre {
+    padding: 0.5em;
+    border-radius: 9px;
+    background-color: var(--dek-lighter-1);
+}
+/* Chrome, Safari, Edge, Opera */
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+/* Firefox */
+input[type='number'] {
+    -moz-appearance: textfield;
+}
+::selection {
+    background: #7e7ec2;
+}
+::-moz-selection {
+    background: #7e7ec2;
+}
+
+::-webkit-scrollbar {
+    width: 12px;
+    height: 12px;
+}
+/* ::-webkit-scrollbar-track {
+  background-color: var(--dek-darker-3); 
+  padding-left: 10px !important;
+  border-top-right-radius: inherit;
+  border-bottom-right-radius: inherit;
+  border-radius: 10px;
+}
+::-webkit-scrollbar-thumb {
+  background-color: var(--dek-darker-1); 
+  border: 2px solid var(--dek-darker-2); 
+  border-radius: 99px;
+} */
+
+::-webkit-scrollbar-track {
+    border-left: none;
+    border-radius: inherit;
+    border-top-left-radius: 0;
+    border-bottom-left-radius: 0;
+    background-color: var(--dek-modal-border-color);
+}
+::-webkit-scrollbar-thumb {
+    background-color: var(--dek-modal-body-color);
+    border: 3px solid var(--dek-modal-border-color);
+    border-radius: 6px;
+}
+
+input[type="range"] {
+    margin: 0; /* Resets default margin */
+    padding: 0; /* Resets default padding */
+    display: block; /* Example: changes display property */
+    height: 36px;
+}
+
+input[type="range"].thin {
+    height: 12px;
+}
+
+.custom-range {
+    cursor: pointer;
+    /* height: 1.4rem; */
+    /* margin: 0; */
+    /* padding: 0; */
+
+    /* background: linear-gradient(to right, var(--dek-primary-normal) 1%, var(--dek-secondary-normal) 50%, transparent 50%, transparent 100%); */
+    border-radius: 3px;
+    /* height: 1.8rem; */
+    /* line-height: 2rem; */
+
+    &::-webkit-slider-thumb {
+        background: var(--dek-text-color);
+        border-color: var(--dek-darker-3);
+        transition: all .5s;
+        margin-top: -17px;
+        height: 42px;
+        width: 8px;
+    }
+    .thin&::-webkit-slider-thumb {
+        height: 16px;
+        margin-top: -4px;
+    }
+    &::-webkit-slider-runnable-track {
+        background: transparent;
+    }
+
+    &::-moz-range-thumb {
+        background: var(--dek-secondary-normal);
+        border-color: var(--dek-darker-3);
+        transition: all .5s;
+        margin-top: -17px;
+        height: 42px;
+        width: 8px;
+    }
+    .thin&::-moz-range-thumb {
+        height: 16px;
+        margin-top: -4px;
+    }
+    &::-moz-range-track {
+        background: transparent;
+    }
+
+    &::-ms-thumb {
+        background: var(--dek-secondary-normal);
+        border-color: var(--dek-darker-3);
+        transition: all .5s;
+        margin-top: -17px;
+        height: 42px;
+        width: 8px;
+    }
+    .thin&::-ms-thumb {
+        height: 16px;
+        margin-top: -4px;
+    }
+    &::-ms-track {
+        background: transparent;
+    }
+
+    &:hover::-webkit-slider-thumb,
+    &:focus::-webkit-slider-thumb,
+    &:active::-webkit-slider-thumb {
+        background: var(--dek-secondary-darker);
+    }
+    &:hover::-moz-range-thumb,
+    &:focus::-moz-range-thumb,
+    &:active::-moz-range-thumb {
+        background: var(--dek-secondary-darker);
+    }
+    &:hover::-ms-thumb,
+    &:focus::-ms-thumb,
+    &:active::-ms-thumb {
+        background: var(--dek-secondary-darker);
+    }
+}
+
+/* 
+input[type="range"].thin {
+    height: 12px;
+}
+
+.custom-range.thin {
+    &::-webkit-slider-thumb {
+        background: var(--dek-text-color);
+        border-color: var(--dek-darker-3);
+        width: 8px;
+        height: 16px;
+        margin-top: -4px;
+        transition: all .5s;
+    }
+    &::-webkit-slider-runnable-track {
+        background: transparent;
+    }
+
+    &::-moz-range-thumb {
+        background: var(--dek-secondary-normal);
+        border-color: var(--dek-darker-3);
+    }
+    &::-moz-range-track {
+        background: transparent;
+    }
+
+    &::-ms-thumb {
+        background: var(--dek-secondary-normal);
+        border-color: var(--dek-darker-3);
+    }
+    &::-ms-track {
+        background: transparent;
+    }
+} */
+
+/* .thin-scroller::-webkit-scrollbar {width: 10px} */
+/* .thin-scroller::-webkit-scrollbar-track {
+  -webkit-box-shadow: inset 0 0 3px rgba(0,0,0,0.2); 
+  -webkit-box-shadow: inset 0 0 3px rgba(0,0,0,0.4); 
+} */
+/* .thin-scroller::-webkit-scrollbar-thumb {
+  border-radius: 0;
+} */
+.form-control {
+    background-color: var(--dek-darker-2);
+    border-color: var(--dek-darker-4);
+    color: var(--dek-text-color);
+}
+.form-control:focus {
+    background-color: var(--dek-area-active);
+    color: var(--dek-text-color);
+}
+.form-control::placeholder {
+    color: inherit;
+    opacity: 0.5;
+}
+.btn:focus,
+.btn-close:focus,
+.form-control:focus {
+    outline: none;
+    box-shadow: none;
+}
+.btn[disabled],
+.form-control[disabled],
+.form-control[disabled]:hover {
+    background-color: var(--dek-darker-3);
+    border-color: var(--dek-darker-4);
+    color: var(--dek-text-color);
+    opacity: 0.5;
+    transition: all 1s;
+}
+.badge {
+    color: var(--dek-text-color);
+}
+
+.toast,
+.toast-header,
+.toast-body {
+    color: var(--dek-toast-text-color);
+    background-color: var(--dek-toast-body-color);
+    border-color: var(--dek-toast-border-color);
+}
+.toast,
+.toast-header,
+.toast-body {
+    border-radius: 0;
+    border-width: 2px;
+}
+.toast-header {
+    border-radius: 0;
+    border-top-left-radius: inherit;
+    border-top-right-radius: inherit;
+}
+.toast {
+    width: 272px;
+}
+
+/*###################################
+* 
+* ■ Dekcheck checkbox core css
+* 
+*/
+.dekcheckbox ul {
+    float: left !important;
+    list-style-type: none;
+    text-align: left;
+    cursor: pointer;
+    padding: 0px;
+}
+/* 
+.dekcheckbox ul li i,
+.dekcheckbox ul li span {
+  cursor: pointer;
+} 
+*/
+.dekcheckbox ul li i {
+    width: 18px;
+}
+
+/*###################################
+* 
+* ■ Bootstrap style button select loosely based on:
+* http://bootsnipp.com/snippets/GXagX
+* 
+*/
+.btn-select {
+    transition: background-color 0.25s, opacity 0.1s;
+    position: relative;
+    min-width: 80px;
+    width: 100%;
+    min-height: 42px;
+    padding: 0;
+    line-height: 1.75;
+    background-color: var(--dek-area-default);
+    border-color: var(--dek-darker-4);
+    cursor: pointer;
+    color: var(--dek-text-color);
+}
+.btn-select.active {
+    background-color: var(--dek-body-color);
+    border-color: var(--dek-darker-3);
+    background-color: transparent;
+}
+.btn-select:hover .btn-select-arrow {
+    border-color: var(--dek-secondary-darkest);
+}
+.btn-select .btn-select-value {
+    padding: 0.1rem 0.5rem;
+    /* padding: var(--bs-btn-padding-y) var(--bs-btn-padding-x); */
+
+    display: block;
+    position: absolute;
+    font-size: inherit;
+    font-weight: inherit;
+    font-family: inherit;
+    float: left;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    background-color: transparent;
+    /* line-height: 1.75; */
+    line-height: 2rem;
+
+    border: none !important;
+    border-color: inherit;
+    border-radius: inherit;
+    border-top-right-radius: 0;
+    border-bottom-right-radius: 0;
+    border-right: 2px solid white;
+
+    /* margin-right: 2px; */
+    box-shadow: none !important;
+    cursor: inherit;
+    /* background-color: var(--dek-area-default); */
+    border-color: transparent;
+    width: calc(100% - 42px);
+    opacity: 1;
+}
+.btn-select .btn-select-value:hover {
+    background-color: rgba(0, 0, 0, 0.05);
+    background-color: var(--dek-area-default);
+    background-color: transparent;
+    opacity: 1;
+}
+.btn-select .btn-select-arrow {
+    transition: all 1s;
+    background-color: transparent !important;
+    border: 0;
+    border-top-right-radius: inherit;
+    border-bottom-right-radius: inherit;
+    border-left: 3px solid var(--dek-darker-2);
+    color: var(--dek-text-color);
+    float: right;
+    line-height: inherit;
+    margin-top: -0.1rem;
+
+    padding: 3px 8px 4px 8px;
+    height: 40px;
+    width: 36px;
+    top: 0;
+}
+
+.btn-select ul {
+    display: none;
+    background-color: inherit;
+    border-color: inherit !important;
+    color: inherit;
+    clear: both;
+    list-style: none;
+    padding: 0;
+    margin-top: 0.1em;
+    border-radius: inherit;
+    border: 3px solid var(--dek-darker-2);
+    background-color: var(--dek-body-color);
+    position: absolute;
+    left: -3px;
+    /* right: -6px; */
+    top: 40px;
+    z-index: 99999;
+    max-height: 20vh;
+    overflow-y: auto;
+    /* width: calc(inherit + 1px); */
+    width: calc(100% + 6px);
+}
+.btn-select ul li {
+    border-radius: 0;
+    padding: 0.25rem 0.75rem;
+    text-align: left;
+    background-color: var(--dek-area-active);
+    color: var(--dek-text-color);
+}
+
+/* .btn-select ul li:first-child {
+  border-top-right-radius: inherit;
+  border-top-left-radius: inherit;
+}
+.btn-select ul li:last-child {
+  border-bottom-right-radius: inherit;
+  border-bottom-left-radius: inherit;
+} */
+.btn-select ul li:hover {
+    background-color: var(--dek-area-active);
+}
+.btn-select ul li.selected {
+    color: #e4e4e4;
+}
+
+.btn-select.active .btn-select-value,
+.btn-select.active .btn-select-arrow {
+    background-color: var(--dek-darker-2);
+    background-color: var(--dek-area-default);
+    background-color: transparent;
+    border-color: var(--dek-secondary-darkest);
+}
+.btn-select.active ul li {
+    background-color: var(--dek-darker-3);
+    background-color: var(--dek-area-default);
+}
+.btn-select.active ul li svg {
+    margin-right: 0.2rem;
+    width: 32px;
+    /* height: 24px;  */
+}
+
+/*###################################
+* 
+* ■ Various colorings
+* 
+*/
+.trans-bg {
+    background-color: transparent !important;
+}
+.darker-bg1 {
+    background-color: var(--dek-darker-2);
+}
+.darker-bg2 {
+    background-color: var(--dek-darker-3);
+}
+.darker-bg3 {
+    background-color: var(--dek-darker-4);
+}
+.lighter-bg1 {
+    background-color: var(--dek-lighter-1);
+}
+.lighter-bg2 {
+    background-color: var(--dek-lighter-2);
+}
+.lighter-bg3 {
+    background-color: var(--dek-lighter-3);
+}
+
+.theme-bg {
+    background-color: var(--dek-body-color);
+    color: var(--dek-text-color);
+}
+.theme-text {
+    color: var(--dek-text-color);
+}
+
+/** [xxx-dark] elements */
+.text-dark {
+    color: inherit !important;
+    opacity: 0.6;
+}
+.bg-dark {
+    background-color: var(--dek-darker-2) !important;
+}
+.border-dark {
+    border-color: var(--dek-darker-2) !important;
+}
+.border-dark2 {
+    border-color: var(--dek-darker-3) !important;
+}
+.hover-dark {
+    color: inherit;
+    opacity: 0.6;
+    cursor: pointer;
+}
+.hover-dark:hover {
+    color: inherit;
+    opacity: 1;
+}
+.dekcheckbox.check-dark ul li i {
+    color: inherit;
+    opacity: 0.6;
+}
+.dekcheckbox.check-dark ul li:hover i {
+    color: inherit;
+    opacity: 1;
+}
+.btn-select.dekselect-dark .btn-select-arrow {
+    opacity: 0.6;
+}
+.btn-select.dekselect-dark:hover .btn-select-arrow,
+.btn-select.dekselect-dark .btn-select-arrow:hover,
+.btn-select.dekselect-dark.active .btn-select-arrow {
+    opacity: 1;
+}
+.alert-dark {
+    background-color: var(--dek-darker-2);
+    border-color: var(--dek-darker-3);
+    color: inherit;
+}
+.btn-dark,
+.form-dark {
+    background-color: var(--dek-darker-2);
+    border-color: var(--dek-darker-3);
+    color: inherit;
+}
+.btn-dark:hover,
+.btn-dark:focus,
+.btn-dark:active,
+.btn-dark.active,
+.form-dark:hover,
+.form-dark:focus,
+.form-dark:active,
+.form-dark.active {
+    background-color: var(--dek-darker-3);
+    border-color: var(--dek-darker-4);
+    color: inherit;
+}
+.btn.hover-dark:active,
+.btn.hover-dark.active {
+    border-color: transparent;
+}
+.selection-dark ::selection {
+    background-color: var(--dek-darker-3);
+}
+.selection-dark ::-moz-selection {
+    background-color: var(--dek-darker-3);
+}
+/** [xxx-primary] elements */
+.text-primary {
+    color: var(--dek-primary-normal) !important;
+}
+.bg-primary {
+    background-color: var(--dek-primary-normal) !important;
+}
+.border-primary {
+    border-color: var(--dek-primary-normal) !important;
+}
+.border-primary2 {
+    border-color: var(--dek-primary-darkest) !important;
+}
+.hover-primary {
+    color: inherit;
+    cursor: pointer;
+}
+.hover-primary:hover {
+    color: var(--dek-primary-normal) !important;
+}
+.alert-primary {
+    background-color: var(--dek-primary-light);
+    border-color: var(--dek-primary-normal);
+    color: var(--dek-primary-darkest);
+}
+.form-primary {
+    border-color: var(--dek-darker-3);
+}
+.form-primary:hover {
+    border-color: var(--dek-primary-darkest);
+}
+.form-primary:focus,
+.form-primary:active,
+.form-primary.active {
+    border-color: var(--dek-primary-normal);
+}
+.btn-primary {
+    background-color: var(--dek-primary-normal);
+    border-color: var(--dek-primary-darker);
+    color: inherit;
+}
+.btn-primary:hover,
+.btn-primary:focus,
+.btn-primary:active,
+.btn-primary.active {
+    background-color: var(--dek-primary-darker) !important;
+    border-color: var(--dek-primary-darkest) !important;
+    color: inherit !important;
+}
+.btn-primary[disabled] {
+    background-color: var(--dek-primary-darker);
+    border-color: var(--dek-primary-darkest);
+}
+.dekcheckbox.check-primary ul li:hover i {
+    color: var(--dek-primary-light);
+}
+.btn-select.dekselect-primary:hover {
+    border-color: var(--dek-primary-darkest);
+}
+.btn-select.dekselect-primary:hover .btn-select-arrow {
+    color: var(--dek-primary-darker);
+}
+.btn-select.dekselect-primary ul,
+.btn-select.dekselect-primary.active {
+    border-color: var(--dek-primary-darker);
+}
+.btn-select.dekselect-primary.active .btn-select-arrow {
+    border-color: var(--dek-primary-darker);
+    color: var(--dek-primary-light);
+}
+.btn-select.dekselect-primary ul li:hover {
+    background-color: var(--dek-primary-darkest);
+}
+.selection-primary ::selection {
+    background: var(--dek-primary-darker);
+    color: #e4e4e4;
+}
+.selection-primary ::-moz-selection {
+    background: var(--dek-primary-darkest);
+    color: #e4e4e4;
+}
+/** [xxx-secondary] elements */
+.text-secondary {
+    color: var(--dek-secondary-normal) !important;
+}
+.bg-secondary {
+    background-color: var(--dek-secondary-normal) !important;
+}
+.border-secondary {
+    border-color: var(--dek-secondary-normal) !important;
+}
+.border-secondary2 {
+    border-color: var(--dek-secondary-darkest) !important;
+}
+.hover-secondary {
+    color: inherit;
+    cursor: pointer;
+}
+.hover-secondary:hover {
+    color: var(--dek-secondary-normal) !important;
+}
+.alert-secondary {
+    background-color: var(--dek-secondary-light);
+    border-color: var(--dek-secondary-normal);
+    color: var(--dek-secondary-darkest);
+}
+.form-secondary {
+    border-color: var(--dek-darker-3);
+}
+.form-secondary:hover {
+    border-color: var(--dek-secondary-darkest);
+}
+.form-secondary:focus,
+.form-secondary:active,
+.form-secondary.active {
+    border-color: var(--dek-secondary-normal);
+}
+.btn-secondary {
+    background-color: var(--dek-secondary-normal);
+    border-color: var(--dek-secondary-darker);
+    color: inherit;
+}
+.btn-secondary:hover,
+.btn-secondary:focus,
+.btn-secondary:active,
+.btn-secondary.active {
+    background-color: var(--dek-secondary-darker) !important;
+    border-color: var(--dek-secondary-darkest) !important;
+    color: inherit !important;
+}
+.btn-secondary[disabled] {
+    background-color: var(--dek-secondary-darker);
+    border-color: var(--dek-secondary-darkest);
+}
+.dekcheckbox.check-secondary ul li:hover i {
+    color: var(--dek-secondary-light);
+}
+.btn-select.dekselect-secondary:hover {
+    border-color: var(--dek-secondary-darkest);
+}
+.btn-select.dekselect-secondary:hover .btn-select-arrow {
+    color: var(--dek-secondary-darker);
+}
+.btn-select.dekselect-secondary ul,
+.btn-select.dekselect-secondary.active {
+    border-color: var(--dek-secondary-darker);
+}
+.btn-select.dekselect-secondary.active .btn-select-arrow {
+    border-color: var(--dek-secondary-darker);
+    color: var(--dek-secondary-light);
+}
+.btn-select.dekselect-secondary ul li:hover {
+    background-color: var(--dek-secondary-darkest);
+}
+.selection-secondary ::selection {
+    background: var(--dek-secondary-darker);
+    color: #e4e4e4;
+}
+.selection-secondary ::-moz-selection {
+    background: var(--dek-secondary-darkest);
+    color: #e4e4e4;
+}
+/** [xxx-info] elements */
+.text-info {
+    color: var(--dek-info-normal) !important;
+}
+.bg-info {
+    background-color: var(--dek-info-normal) !important;
+}
+.border-info {
+    border-color: var(--dek-info-normal) !important;
+}
+.border-info2 {
+    border-color: var(--dek-info-darkest) !important;
+}
+.hover-info {
+    color: inherit;
+    cursor: pointer;
+}
+.hover-info:hover {
+    color: var(--dek-info-normal) !important;
+}
+.alert-info {
+    background-color: var(--dek-info-light);
+    border-color: var(--dek-info-normal);
+    color: var(--dek-info-darkest);
+}
+.form-info {
+    border-color: var(--dek-darker-3);
+}
+.form-info:hover {
+    border-color: var(--dek-info-darkest);
+}
+.form-info:focus,
+.form-info:active,
+.form-info.active {
+    border-color: var(--dek-info-normal);
+}
+.btn-info {
+    background-color: var(--dek-info-normal);
+    border-color: var(--dek-info-darker);
+    color: inherit;
+}
+.btn-info:hover,
+.btn-info:focus,
+.btn-info:active,
+.btn-info.active {
+    background-color: var(--dek-info-darker) !important;
+    border-color: var(--dek-info-darkest) !important;
+    color: inherit !important;
+}
+.btn-info[disabled] {
+    background-color: var(--dek-info-darker);
+    border-color: var(--dek-info-darkest);
+}
+.dekcheckbox.check-info ul li:hover i {
+    color: var(--dek-info-light);
+}
+.btn-select.dekselect-info:hover {
+    border-color: var(--dek-info-darkest);
+}
+.btn-select.dekselect-info:hover .btn-select-arrow {
+    color: var(--dek-info-darker);
+}
+.btn-select.dekselect-info ul,
+.btn-select.dekselect-info.active {
+    border-color: var(--dek-info-darker);
+}
+.btn-select.dekselect-info.active .btn-select-arrow {
+    border-color: var(--dek-info-darker);
+    color: var(--dek-info-light);
+}
+.btn-select.dekselect-info ul li:hover {
+    background-color: var(--dek-info-darkest);
+}
+.selection-info ::selection {
+    background: var(--dek-info-darker);
+    color: #e4e4e4;
+}
+.selection-info ::-moz-selection {
+    background: var(--dek-info-darkest);
+    color: #e4e4e4;
+}
+/** [xxx-success] elements */
+.text-success {
+    color: var(--dek-success-normal) !important;
+}
+.bg-success {
+    background-color: var(--dek-success-normal) !important;
+}
+.border-success {
+    border-color: var(--dek-success-normal) !important;
+}
+.border-success2 {
+    border-color: var(--dek-success-darkest) !important;
+}
+.hover-success {
+    color: inherit;
+    cursor: pointer;
+}
+.hover-success:hover {
+    color: var(--dek-success-normal) !important;
+}
+.alert-success {
+    background-color: var(--dek-success-light);
+    border-color: var(--dek-success-normal);
+    color: var(--dek-success-darkest);
+}
+.form-success {
+    border-color: var(--dek-darker-3);
+}
+.form-success:hover {
+    border-color: var(--dek-success-darkest);
+}
+.form-success:focus,
+.form-success:active,
+.form-success.active {
+    border-color: var(--dek-success-normal);
+}
+.btn-success {
+    background-color: var(--dek-success-normal);
+    border-color: var(--dek-success-darker);
+    color: inherit;
+}
+.btn-success:hover,
+.btn-success:focus,
+.btn-success:active,
+.btn-success.active {
+    background-color: var(--dek-success-darker) !important;
+    border-color: var(--dek-success-darkest) !important;
+    color: inherit !important;
+}
+.btn-success[disabled] {
+    background-color: var(--dek-success-darker);
+    border-color: var(--dek-success-darkest);
+}
+.dekcheckbox.check-success ul li:hover i {
+    color: var(--dek-success-light);
+}
+.btn-select.dekselect-success:hover {
+    border-color: var(--dek-success-darkest);
+}
+.btn-select.dekselect-success:hover .btn-select-arrow {
+    color: var(--dek-success-darker);
+}
+.btn-select.dekselect-success ul,
+.btn-select.dekselect-success.active {
+    border-color: var(--dek-success-darker);
+}
+.btn-select.dekselect-success.active .btn-select-arrow {
+    border-color: var(--dek-success-darker);
+    color: var(--dek-success-light);
+}
+.btn-select.dekselect-success ul li:hover {
+    background-color: var(--dek-success-darkest);
+}
+.selection-success ::selection {
+    background: var(--dek-success-darker);
+    color: #e4e4e4;
+}
+.selection-success ::-moz-selection {
+    background: var(--dek-success-darkest);
+    color: #e4e4e4;
+}
+/** [xxx-warning] elements */
+.text-warning {
+    color: var(--dek-warning-normal) !important;
+}
+.bg-warning {
+    background-color: var(--dek-warning-normal) !important;
+}
+.border-warning {
+    border-color: var(--dek-warning-normal) !important;
+}
+.border-warning2 {
+    border-color: var(--dek-warning-darkest) !important;
+}
+.hover-warning {
+    color: inherit;
+    cursor: pointer;
+}
+.hover-warning:hover {
+    color: var(--dek-warning-normal) !important;
+}
+.alert-warning {
+    background-color: var(--dek-warning-light);
+    border-color: var(--dek-warning-normal);
+    color: var(--dek-warning-darkest);
+}
+.form-warning {
+    border-color: var(--dek-darker-3);
+}
+.form-warning:hover {
+    border-color: var(--dek-warning-darkest);
+}
+.form-warning:focus,
+.form-warning:active,
+.form-warning.active {
+    border-color: var(--dek-warning-normal);
+}
+.btn-warning {
+    background-color: var(--dek-warning-normal);
+    border-color: var(--dek-warning-darker);
+    color: inherit;
+}
+.btn-warning:hover,
+.btn-warning:focus,
+.btn-warning:active,
+.btn-warning.active {
+    background-color: var(--dek-warning-darker) !important;
+    border-color: var(--dek-warning-darkest) !important;
+    color: inherit !important;
+}
+.btn-warning[disabled] {
+    background-color: var(--dek-warning-darker);
+    border-color: var(--dek-warning-darkest);
+}
+.dekcheckbox.check-warning ul li:hover i {
+    color: var(--dek-warning-light);
+}
+.btn-select.dekselect-warning:hover {
+    border-color: var(--dek-warning-darkest);
+}
+.btn-select.dekselect-warning:hover .btn-select-arrow {
+    color: var(--dek-warning-darker);
+}
+.btn-select.dekselect-warning ul,
+.btn-select.dekselect-warning.active {
+    border-color: var(--dek-warning-darker);
+}
+.btn-select.dekselect-warning.active .btn-select-arrow {
+    border-color: var(--dek-warning-darker);
+    color: var(--dek-warning-light);
+}
+.btn-select.dekselect-warning ul li:hover {
+    background-color: var(--dek-warning-darkest);
+}
+.selection-warning ::selection {
+    background: var(--dek-warning-darker);
+    color: #e4e4e4;
+}
+.selection-warning ::-moz-selection {
+    background: var(--dek-warning-darkest);
+    color: #e4e4e4;
+}
+/** [xxx-danger] elements */
+.text-danger {
+    color: var(--dek-danger-normal) !important;
+}
+.bg-danger {
+    background-color: var(--dek-danger-normal) !important;
+}
+.border-danger {
+    border-color: var(--dek-danger-normal) !important;
+}
+.border-danger2 {
+    border-color: var(--dek-danger-darkest) !important;
+}
+.hover-danger {
+    color: inherit;
+    cursor: pointer;
+}
+.hover-danger:hover {
+    color: var(--dek-danger-normal) !important;
+}
+.alert-danger {
+    background-color: var(--dek-danger-light);
+    border-color: var(--dek-danger-normal);
+    color: var(--dek-danger-darkest);
+}
+.form-danger {
+    border-color: var(--dek-darker-3);
+}
+.form-danger:hover {
+    border-color: var(--dek-danger-darkest);
+}
+.form-danger:focus,
+.form-danger:active,
+.form-danger.active {
+    border-color: var(--dek-danger-normal);
+}
+.btn-danger {
+    background-color: var(--dek-danger-normal);
+    border-color: var(--dek-danger-darker);
+    color: inherit;
+}
+.btn-danger:hover,
+.btn-danger:focus,
+.btn-danger:active,
+.btn-danger.active {
+    background-color: var(--dek-danger-darker) !important;
+    border-color: var(--dek-danger-darkest) !important;
+    color: inherit !important;
+}
+.btn-danger[disabled] {
+    background-color: var(--dek-danger-darker);
+    border-color: var(--dek-danger-darkest);
+}
+.dekcheckbox.check-danger ul li:hover i {
+    color: var(--dek-danger-light);
+}
+.btn-select.dekselect-danger:hover {
+    border-color: var(--dek-danger-darkest);
+}
+.btn-select.dekselect-danger:hover .btn-select-arrow {
+    color: var(--dek-danger-darker);
+}
+.btn-select.dekselect-danger ul,
+.btn-select.dekselect-danger.active {
+    border-color: var(--dek-danger-darker);
+}
+.btn-select.dekselect-danger.active .btn-select-arrow {
+    border-color: var(--dek-danger-darker);
+    color: var(--dek-danger-light);
+}
+.btn-select.dekselect-danger ul li:hover {
+    background-color: var(--dek-danger-darkest);
+}
+.selection-danger ::selection {
+    background: var(--dek-danger-darker);
+    color: #e4e4e4;
+}
+.selection-danger ::-moz-selection {
+    background: var(--dek-danger-darkest);
+    color: #e4e4e4;
+}
+/** background that fades color from left to right */
+.bg-gradient-primary-to-secondary {
+    background: linear-gradient(to right, var(--dek-primary-normal), var(--dek-secondary-normal));
+}
+.bg-gradient-primary-to-info {
+    background: linear-gradient(to right, var(--dek-primary-normal), var(--dek-info-normal));
+}
+.bg-gradient-primary-to-success {
+    background: linear-gradient(to right, var(--dek-primary-normal), var(--dek-success-normal));
+}
+.bg-gradient-primary-to-warning {
+    background: linear-gradient(to right, var(--dek-primary-normal), var(--dek-warning-normal));
+}
+.bg-gradient-primary-to-danger {
+    background: linear-gradient(to right, var(--dek-primary-normal), var(--dek-danger-normal));
+}
+
+.bg-gradient-secondary-to-primary {
+    background: linear-gradient(to right, var(--dek-secondary-normal), var(--dek-primary-normal));
+}
+.bg-gradient-secondary-to-info {
+    background: linear-gradient(to right, var(--dek-secondary-normal), var(--dek-info-normal));
+}
+.bg-gradient-secondary-to-success {
+    background: linear-gradient(to right, var(--dek-secondary-normal), var(--dek-success-normal));
+}
+.bg-gradient-secondary-to-warning {
+    background: linear-gradient(to right, var(--dek-secondary-normal), var(--dek-warning-normal));
+}
+.bg-gradient-secondary-to-danger {
+    background: linear-gradient(to right, var(--dek-secondary-normal), var(--dek-danger-normal));
+}
+
+.bg-gradient-info-to-primary {
+    background: linear-gradient(to right, var(--dek-info-normal), var(--dek-primary-normal));
+}
+.bg-gradient-info-to-secondary {
+    background: linear-gradient(to right, var(--dek-info-normal), var(--dek-secondary-normal));
+}
+.bg-gradient-info-to-success {
+    background: linear-gradient(to right, var(--dek-info-normal), var(--dek-success-normal));
+}
+.bg-gradient-info-to-warning {
+    background: linear-gradient(to right, var(--dek-info-normal), var(--dek-warning-normal));
+}
+.bg-gradient-info-to-danger {
+    background: linear-gradient(to right, var(--dek-info-normal), var(--dek-danger-normal));
+}
+
+.bg-gradient-success-to-primary {
+    background: linear-gradient(to right, var(--dek-success-normal), var(--dek-primary-normal));
+}
+.bg-gradient-success-to-secondary {
+    background: linear-gradient(to right, var(--dek-success-normal), var(--dek-secondary-normal));
+}
+.bg-gradient-success-to-info {
+    background: linear-gradient(to right, var(--dek-success-normal), var(--dek-info-normal));
+}
+.bg-gradient-success-to-warning {
+    background: linear-gradient(to right, var(--dek-success-normal), var(--dek-warning-normal));
+}
+.bg-gradient-success-to-danger {
+    background: linear-gradient(to right, var(--dek-success-normal), var(--dek-danger-normal));
+}
+
+.bg-gradient-warning-to-primary {
+    background: linear-gradient(to right, var(--dek-warning-normal), var(--dek-primary-normal));
+}
+.bg-gradient-warning-to-secondary {
+    background: linear-gradient(to right, var(--dek-warning-normal), var(--dek-secondary-normal));
+}
+.bg-gradient-warning-to-info {
+    background: linear-gradient(to right, var(--dek-warning-normal), var(--dek-info-normal));
+}
+.bg-gradient-warning-to-success {
+    background: linear-gradient(to right, var(--dek-warning-normal), var(--dek-success-normal));
+}
+.bg-gradient-warning-to-danger {
+    background: linear-gradient(to right, var(--dek-warning-normal), var(--dek-danger-normal));
+}
+
+.bg-gradient-danger-to-primary {
+    background: linear-gradient(to right, var(--dek-danger-normal), var(--dek-primary-normal));
+}
+.bg-gradient-danger-to-secondary {
+    background: linear-gradient(to right, var(--dek-danger-normal), var(--dek-secondary-normal));
+}
+.bg-gradient-danger-to-info {
+    background: linear-gradient(to right, var(--dek-danger-normal), var(--dek-info-normal));
+}
+.bg-gradient-danger-to-success {
+    background: linear-gradient(to right, var(--dek-danger-normal), var(--dek-success-normal));
+}
+.bg-gradient-danger-to-warning {
+    background: linear-gradient(to right, var(--dek-danger-normal), var(--dek-warning-normal));
+}
+
+.transition-all {
+    transition: all 1s;
+}
+
+.btn,
+.form-control,
+.card,
+.toast,
+.add-shadow,
+.btn-select ul {
+    /* box-shadow: 0px 2px 4px -1px rgba(0, 0, 0, 0.01),
+        0px 2px 4px 0px rgba(0, 0, 0, 0.2); */
+}
+.no-shadow {
+    box-shadow: none;
+}

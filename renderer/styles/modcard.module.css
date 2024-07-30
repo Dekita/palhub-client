@@ -1,0 +1,23 @@
+.modcard {
+    position: absolute;
+    left: 6px;
+    top: 6px;
+}
+
+.modicon {
+    color: var(--dek-warning-normal);
+    padding: 12px;
+    height: 48px;
+    width: 48px;
+}
+
+.modname {
+    position: absolute;
+    top: 64px;
+    right: 16px;
+}
+
+.iconsize {
+    font-size: 36px;
+    color: #e4e4e4;
+}
