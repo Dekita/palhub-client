@@ -1,9 +1,5 @@
 # dependencies
 node_modules
-build
-cache
-dist
-
 
 # logs
 *.log
@@ -13,7 +9,8 @@ dist
 next-env.d.ts
 
 # build
-/app
+app
+build
 dist
 
 # local env files
@@ -21,3 +18,4 @@ dist
 
 # additional
 /renderer/public/svgs/font-awesome
+cache
