@@ -13,6 +13,8 @@ publish:
   provider: github
   owner: dekita
   repo: palhub-client
+  releaseType: release
+  private: true
 win: 
   target: nsis
   icon: resources/icon.ico
