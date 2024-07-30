@@ -1,5 +1,5 @@
 <div align="center">
-    <img style="height: 256px; width: auto;" src="resources/palhub-client-header.png" title="Main Logo" />
+    <img style="max-height: 256px; width: auto;" src="resources/palhub-client-header.png" title="Main Logo" />
     <div class="row mt-3">
         <img src="https://img.shields.io/github/downloads/Dekita/palhub-client/total?style=for-the-badge&logo=github">
         <a class="mx-2" href="https://discord.gg/DCXh2TUF2u" target="new">
