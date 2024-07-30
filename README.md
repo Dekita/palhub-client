@@ -10,11 +10,11 @@ NOTE: THIS IS A BETA TESTING BUILD AND SHOULD NOT BE USED BY MUGGLES!!
 
 ## Features
 - 
-- [TODO](/readme/TODO.md) 
+- [TODO](/TODO.md) 
 
 
 ## How To Install
-Download the latest version from [HERE](/releases). Run the installer. Enjoy <3
+Download the latest version from [HERE](https://github.com/Dekita/palhub-client/releases/new). Run the installer. Enjoy <3
 
 
 ## Requirements
