@@ -73,6 +73,8 @@ export default function AutoUpdater({}) {
         // initialize the auto updater
         // window.ipc.invoke('install-update');
 
+        
+
         return () => remove_auto_update_handler();
     }, []);   
 
