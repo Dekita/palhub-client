@@ -32,9 +32,7 @@ NOTE: THIS IS A BETA TESTING BUILD AND SHOULD NOT BE USED BY MUGGLES!!
 
 
 
-# run PalHUB Client Locally
-
-## Usage
+# Run PalHUB Client Locally
 
 ### Download Files
 
@@ -55,12 +53,14 @@ $ yarn (or `npm install`)
 $ pnpm install --shamefully-hoist
 ```
 
-### Run PalHUB Client
+### Run Development Mode
 
 ```
-# development mode
 $ yarn dev (or `npm run dev` or `pnpm run dev`)
+```
 
-# production build
+### Build Application
+
+```
 $ yarn build (or `npm run build` or `pnpm run build`)
 ```
