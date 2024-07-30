@@ -352,8 +352,8 @@ class DEAP {
         }
         // begin checking updates:
 
-        // autoUpdater.checkForUpdates();
-        autoUpdater.checkForUpdatesAndNotify();
+        autoUpdater.checkForUpdates();
+        // autoUpdater.checkForUpdatesAndNotify();
     }
 }
 

@@ -59,13 +59,13 @@ export default function AutoUpdater({}) {
                     setUpdateMessage('Update downloaded.');
                     break;
                 case 'error':
-                    setUpdateMessage('Error updating.');
+                    setUpdateMessage(`Error updating: ${JSON.stringify(data)}`);
                     break;
                 case 'before-quit-for-update':
                     setUpdateMessage('Preparing to update...');
                     break;
                 case 'download-progress':
-                    setUpdateMessage('Downloading...');
+                    setUpdateMessage(`Downloading:  ${JSON.stringify(data)}`);
                     break;
                 case 'initializing':
                     setUpdateMessage('Initializing...');
