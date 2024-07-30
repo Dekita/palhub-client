@@ -17,8 +17,6 @@ publish:
   owner: dekita
   repo: palhub-client
   releaseType: release
-  private: true
-  token: $GH_TOKEN  # Use the environment variable for the GitHub token
 
 win:
   target: nsis
