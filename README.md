@@ -4,8 +4,7 @@
 <div class="mx-auto d-block">
     <img src="https://img.shields.io/github/downloads/Dekita/palhub-client/total?style=for-the-badge&logo=github" class="img-fluid img-thumbnail">
     <a class="mx-2" href="https://discord.gg/DCXh2TUF2u" target="new">
-        <img src="https://img.shields.io/discord/956439276357308446?logo=discord&style=for-the-badge&logoColor=e4e4e4&label=Support%20Server" class="img-fluid img-thumbnail">
-    </a>
+    <img src="https://img.shields.io/discord/956439276357308446?logo=discord&style=for-the-badge&logoColor=e4e4e4&label=Support%20Server" class="img-fluid img-thumbnail"></a>
     <img src="https://img.shields.io/github/stars/Dekita/palhub-client?style=for-the-badge&logo=apache%20spark&logoColor=e4e4e4" class="img-fluid img-thumbnail">
 </div>
 </div>
