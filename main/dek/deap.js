@@ -344,7 +344,9 @@ class DEAP {
             });
         }
         // begin checking updates:
-        autoUpdater.checkForUpdates();
+        
+        // autoUpdater.checkForUpdates();
+        autoUpdater.checkForUpdatesAndNotify();
     }
 }
 

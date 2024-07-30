@@ -19,8 +19,8 @@
         "postinstall": "electron-builder install-app-deps",
         "prettier": "prettier --write .",
         "lint": "next lint",
-        "full": "npm run prettier && npm run lint && npm run build && npm run publish",
-        "publish": "npx electron-builder --publish always"
+        "full": "npm run prettier && npm run lint && npm run publish",
+        "publish": "nextron build --publish always"
     },
     "dependencies": {
         "@bbob/preset-react": "^4.0.3",
