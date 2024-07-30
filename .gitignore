@@ -19,3 +19,4 @@ dist
 # additional
 /renderer/public/svgs/font-awesome
 cache
+.env

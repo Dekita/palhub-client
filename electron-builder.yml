@@ -1,27 +1,34 @@
 appId: com.dekitarpg.palhubclient
 productName: PalHUB Client
 copyright: Copyright © 2024 DekitaRPG@gmail.com
+
 directories:
   output: dist
   buildResources: resources
+
 files:
   - from: .
     filter:
       - package.json
       - app
-publish: 
+
+publish:
   provider: github
   owner: dekita
   repo: palhub-client
   releaseType: release
   private: true
-win: 
+  token: $GH_TOKEN  # Use the environment variable for the GitHub token
+
+win:
   target: nsis
   icon: resources/icon.ico
+
 linux:
   target: AppImage
   icon: resources/icon.png
   category: Utility
+
 nsis:
   allowToChangeInstallationDirectory: true
   uninstallerIcon: resources/icon.ico
@@ -29,5 +36,6 @@ nsis:
   license: LICENSE
   perMachine: true
   oneClick: false
+
 appImage:
   license: LICENSE

@@ -1,0 +1,44 @@
+name: Build and Release Windows App
+
+on:
+  push:
+    tags:
+      - 'v*'  # Triggers the workflow on version tags (e.g., v1.0.0)
+
+jobs:
+  build:
+    runs-on: windows-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v2
+
+    - name: Set up Node.js
+      uses: actions/setup-node@v2
+      with:
+        node-version: '14'
+
+    - name: Install dependencies
+      run: npm install
+
+    - name: Cache Electron and NPM modules
+      uses: actions/cache@v2
+      with:
+        path: |
+          ~/.npm
+          node_modules
+        key: ${{ runner.os }}-npm-cache
+        restore-keys: |
+          ${{ runner.os }}-npm-cache
+
+    - name: Build the Electron app
+      env:
+        GH_TOKEN: ${{ secrets.GH_TOKEN }}  # Ensure your GH_TOKEN is stored in GitHub secrets
+      run: npm run dist  # Assumes "dist" script is configured in your package.json for electron-builder
+
+    - name: Upload release assets
+      uses: softprops/action-gh-release@v1
+      with:
+        files: dist/*
+      env:
+        GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}  # Use the GitHub token from secrets
