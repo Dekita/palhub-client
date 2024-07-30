@@ -346,7 +346,7 @@ class DEAP {
         // define listeners:
         const updater_events = ["checking-for-update", "update-available", "update-not-available", "download-progress", "update-downloaded", "before-quit-for-update", "error"];
         for (const event of updater_events) {
-            autoUpdater.on(event, data => {
+            autoUpdater.on(event, (...data) => {
                 this.main_window?.webContents?.send("auto-updater", event, data);
             });
         }
