@@ -2,6 +2,8 @@
 
 # PalHUB::Client
 
+NOTE: THIS IS A BETA TESTING BUILD AND SHOULD NOT BE USED BY MUGGLES!!
+
 
 ## Additional Details
 
