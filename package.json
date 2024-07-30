@@ -1,12 +1,12 @@
 {
-    "private": true,
+    "private": false,
     "name": "dekita-palhub-client",
     "productName": "PalHUB Client",
     "description": "PalHUB Client written by DekitaRPG",
     "repository": "git@github.com:dekita/palhub-client",
     "author": "DekitaRPG <dekitarpg@gmail.com>",
     "license": "SEE LICENSE IN LICENSE",
-    "version": "0.0.1",
+    "version": "0.0.3",
     "main": "app/background.js",
     "scripts": {
         "dev": "nextron --run-only",
@@ -19,7 +19,8 @@
         "postinstall": "electron-builder install-app-deps",
         "prettier": "prettier --write .",
         "lint": "next lint",
-        "full": "npm run prettier && npm run lint && npm run build"
+        "full": "npm run prettier && npm run lint && npm run build && npm run publish",
+        "publish": "npx electron-builder --publish always"
     },
     "dependencies": {
         "@bbob/preset-react": "^4.0.3",
