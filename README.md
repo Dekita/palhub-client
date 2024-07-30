@@ -1,4 +1,36 @@
+<p align="center"><img style="height: 256px; width: auto;" src="resources/palhub-client-header.png" title="Main Logo" /></p>
+
+# PalHUB::Client
+
+
+## Additional Details
+
+
+## Features
+- 
+
+
+## Requirements
+- Palworld, obviously...
+
+
+## Help Guides
+- 
+
+
+## Credit && Thanks
+- 
+
+## TODO:
+- 
+
+
+
 <p align="center"><img src="https://i.imgur.com/X7dSE68.png"></p>
+
+
+
+# run PalHUB Client Locally
 
 ## Usage
 
