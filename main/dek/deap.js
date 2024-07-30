@@ -339,7 +339,7 @@ class DEAP {
     // Handle automatic updates
     // triggered from createMainWindow:
     static sendUpdaterInfoToRenderer(type, info) {
-        this.main_window?.webContents?.send("updater", type, info);
+        this.main_window?.webContents?.send("auto-updater", type, info);
     }
     static initializeAutoUpdater() {
         if (!app.isPackaged) return;

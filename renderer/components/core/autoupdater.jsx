@@ -40,7 +40,7 @@ export default function AutoUpdater({}) {
     useEffect(() => {
         if (!window.ipc) return console.error('ipc not loaded');
 
-        const remove_auto_update_handler = window.ipc.on('update', (type, data) => {
+        const remove_auto_update_handler = window.ipc.on('auto-updater', (type, data) => {
             console.log('auto-update', {type, data});
             switch (type) {
                 case 'checking-for-update':
@@ -69,6 +69,9 @@ export default function AutoUpdater({}) {
                     break;
             }
         });
+
+        // initialize the auto updater
+        // window.ipc.invoke('install-update');
 
         return () => remove_auto_update_handler();
     }, []);   
