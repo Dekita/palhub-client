@@ -6,7 +6,7 @@
     "repository": "git@github.com:dekita/palhub-client",
     "author": "DekitaRPG <dekitarpg@gmail.com>",
     "license": "SEE LICENSE IN LICENSE",
-    "version": "0.1.9",
+    "version": "0.2.0",
     "main": "app/background.js",
     "scripts": {
         "dev": "nextron --run-only",
