@@ -9,7 +9,10 @@ files:
     filter:
       - package.json
       - app
-publish: null
+publish: 
+  provider: github
+  owner: dekita
+  repo: palhub-client
 win: 
   target: nsis
   icon: resources/icon.ico
