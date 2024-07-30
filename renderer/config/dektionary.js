@@ -8,7 +8,7 @@ export default {
     /**
      *
      */
-    brandname: 'PalHUB v0.0.4',
+    brandname: 'PalHUB Client',
     tagline: 'Custom PalHUB Powered Palworld Server',
 
 
