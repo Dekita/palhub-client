@@ -333,21 +333,14 @@ class DEAP {
         }
         this.main_window.focus();
     }
-    static onAppAutoUpdaterEvent(event_id, ...event_argz) {
-        this.sendUpdaterInfoToRenderer(...arguments);
-    }
-    // Handle automatic updates
-    // triggered from createMainWindow:
-    static sendUpdaterInfoToRenderer(type, info) {
-        this.main_window?.webContents?.send("auto-updater", type, info);
-    }
     static initializeAutoUpdater() {
         if (!app.isPackaged) return;
+        this.main_window?.webContents?.send("auto-updater", 'initializing');
         // define listeners:
         const updater_events = ["checking-for-update", "update-available", "update-not-available", "download-progress", "update-downloaded", "before-quit-for-update", "error"];
         for (const event of updater_events) {
-            autoUpdater.on(event, (...data) => {
-                onAppAutoUpdaterEvent(event, ...data);
+            autoUpdater.on(event, data => {
+                this.main_window?.webContents?.send("auto-updater", event, data);
             });
         }
         // begin checking updates:

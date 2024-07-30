@@ -48,6 +48,8 @@ export default function AutoUpdater({}) {
                     break;
                 case 'update-available':
                     setUpdateMessage('Update available.');
+                    // initialize the auto updater
+                    window.ipc.invoke('install-update');
                     break;
                 case 'update-not-available':
                     setUpdateMessage('No updates available.');
@@ -65,15 +67,15 @@ export default function AutoUpdater({}) {
                 case 'download-progress':
                     setUpdateMessage('Downloading...');
                     break;
+                case 'initializing':
+                    setUpdateMessage('Initializing...');
+                    break;
                 default:
                     break;
             }
         });
 
-        // initialize the auto updater
-        // window.ipc.invoke('install-update');
 
-        
 
         return () => remove_auto_update_handler();
     }, []);   
