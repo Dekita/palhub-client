@@ -32,13 +32,3 @@ automatically connect to the selected server once game loads
 uses api key to send /list-server request to endpoint with mod information
 
 
-
-## Tailahs order of films:
-- 3
-- 6
-- 1
-- 4
-- 2
-- 7-2
-- 5
-- 7-1

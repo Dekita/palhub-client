@@ -10,6 +10,11 @@ NOTE: THIS IS A BETA TESTING BUILD AND SHOULD NOT BE USED BY MUGGLES!!
 
 ## Features
 - 
+- [TODO](/readme/TODO.md) 
+
+
+## How To Install
+Download the latest version from [HERE](/releases). Run the installer. Enjoy <3
 
 
 ## Requirements
@@ -22,14 +27,6 @@ NOTE: THIS IS A BETA TESTING BUILD AND SHOULD NOT BE USED BY MUGGLES!!
 
 ## Credit && Thanks
 - 
-
-## TODO:
-- 
-
-
-
-<p align="center"><img src="https://i.imgur.com/X7dSE68.png"></p>
-
 
 
 # Run PalHUB Client Locally
