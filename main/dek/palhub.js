@@ -109,7 +109,7 @@ export class Client {
                 const fileExists = (filename) => files.some((file) => file.isFile() && file.name === filename);
                 // console.log({ files });
 
-                if (game_path.includes("SteamLibrary")) {
+                if (game_path.includes("steamapps")) {
                     // steam ~ obviously
 
                     // check for the Palworld executable
