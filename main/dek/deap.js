@@ -311,7 +311,10 @@ class DEAP {
     static onAppReady() {
         // create window when electron has initialized.
         this.createWindow("main");
-        this.initializeAutoUpdater();
+
+        setTimeout(()=>{
+            this.initializeAutoUpdater();
+        }, 3000);
     }
     static onAppActivate() {
         // On OS X it's common to re-create a window in the app when the
@@ -334,7 +337,11 @@ class DEAP {
         this.main_window.focus();
     }
     static initializeAutoUpdater() {
-        if (!app.isPackaged) return;
+        console.log('initializing auto-updater:', app.isPackaged);
+        if (!app.isPackaged) {
+            this.main_window?.webContents?.send("auto-updater", 'not-packaged');
+            return;
+        }
         this.main_window?.webContents?.send("auto-updater", 'initializing');
         // define listeners:
         const updater_events = ["checking-for-update", "update-available", "update-not-available", "download-progress", "update-downloaded", "before-quit-for-update", "error"];
@@ -344,7 +351,7 @@ class DEAP {
             });
         }
         // begin checking updates:
-        
+
         // autoUpdater.checkForUpdates();
         autoUpdater.checkForUpdatesAndNotify();
     }
