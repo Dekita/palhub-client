@@ -33,8 +33,8 @@ jobs:
 
     - name: Build the Electron app
       env:
-        GH_TOKEN: ${{ secrets.GH_TOKEN }}  # Ensure your GH_TOKEN is stored in GitHub secrets
-      run: npm run dist  # Assumes "dist" script is configured in your package.json for electron-builder
+        GH_TOKEN: ${{ secrets.GH_TOKEN }}  # GH_TOKEN is stored in GitHub secrets
+      run: npm run build  # Assumes "build" script is configured in package.json for electron-builder
 
     - name: Upload release assets
       uses: softprops/action-gh-release@v1
