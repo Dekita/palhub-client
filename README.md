@@ -1,6 +1,6 @@
 <p align="center"><img style="height: 256px; width: auto;" src="resources/palhub-client-header.png" title="Main Logo" /></p>
 
-<div class="d-flex mb-2">
+<div align="center">
 <div class="mx-auto d-block">
     <img src="https://img.shields.io/github/downloads/Dekita/palhub-client/total?style=for-the-badge&logo=github">
     <a class="mx-2" href="https://discord.gg/DCXh2TUF2u" target="new">
