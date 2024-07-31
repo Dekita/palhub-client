@@ -54,9 +54,9 @@ PalHUB Client aims to be the ULTIMATE Mod Manager for the video game Palworld.
 ### Technical Details
 - [Nexus Mods](https://www.nexusmods.com/) to enable mod downloads/updates. 
 - [Nextron](https://github.com/saltyshiomix/nextron)
--- [Electron](https://www.electronjs.org/)
--- [Next.js](https://nextjs.org/)
--- [React](https://react.dev/)
+    - [Electron](https://www.electronjs.org/)
+    - [Next.js](https://nextjs.org/)
+    - [React](https://react.dev/)
 - Custom API
 - 
 <hr class="mt-1">
