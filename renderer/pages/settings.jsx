@@ -305,7 +305,7 @@ export default function SettingsPage({modals, ThemeController}) {
                             <strong>Get PalHUB Server</strong>
                         </button>
                     </div> */}
-                    <h1 className="font-bold mb-4">App Options</h1>
+                    <h1 className="font-bold mb-3">App Options</h1>
 
                     <div className='row mb-2'>
                         <div className='col-12 col-lg-4'>
