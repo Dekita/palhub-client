@@ -8,9 +8,10 @@ node_modules
 .next
 next-env.d.ts
 
-# build
+# build & Local testing app cache directory
 app
 build
+cache
 dist
 
 # local env files
@@ -18,5 +19,4 @@ dist
 
 # additional
 /renderer/public/svgs/font-awesome
-cache
 .env
