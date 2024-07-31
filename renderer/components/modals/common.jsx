@@ -73,7 +73,7 @@ export function ENVEntryLabel({name, envdatas, tooltip}) {
             <div className="col" style={{maxWidth:'36px'}}>
                 <OverlayTrigger placement={placement} delay={delay} overlay={overlay}>
                     <a
-                        className='btn p-0 border-0 hover-secondary w-100 text-end'
+                        className='p-0 border-0 hover-secondary w-100 text-end'
                         style={button_style}
                         onClick={onClick}>
                         <InfoIcon
