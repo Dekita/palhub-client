@@ -44,7 +44,7 @@ export function prepareDecription(desc, scanning_env) {
 
 export function ENVEntryLabel({name, envdatas, tooltip}) {
 
-    console.log({tooltip})
+    // console.log({tooltip})
     const customStyle = {
         backgroundColor: '#3498db', // Background color
         color: '#ffffff',            // Text color
