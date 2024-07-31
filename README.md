@@ -52,13 +52,12 @@ PalHUB Client aims to be the ULTIMATE Mod Manager for the video game Palworld.
 
 
 ### Technical Details
-- [Nexus Mods](https://www.nexusmods.com/) to enable mod downloads/updates. 
-- [Nextron](https://github.com/saltyshiomix/nextron)
+- [Nextron](https://github.com/saltyshiomix/nextron) (Bundles Next with Electron)
     - [Electron](https://www.electronjs.org/)
     - [Next.js](https://nextjs.org/)
     - [React](https://react.dev/)
-- Custom API
-- 
+- [Nexus Mods](https://www.nexusmods.com/) (Enables mod downloads/updates) 
+- Custom API Endpoints (For Server Listing / User Counts)
 <hr class="mt-1">
 
 
@@ -125,7 +124,7 @@ pnpm run build
 ```
 
 #### Publish Application
-| :exclamation: Requires repository access via GH_TOKEN env variable |
+| :exclamation: Requires repository access via ENV variable `GH_TOKEN` |
 |---|
 
 ```
