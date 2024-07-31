@@ -17,12 +17,73 @@ import DekCheckbox from '@components/core/dek-checkbox';
 import InstallUe4ssModal from '@components/modals/ue4ss-install';
 import DekSelect from '@components/core/dek-select';
 
-async function wait(milliseconds = 1000) {
-    return new Promise((r) => setTimeout(r, milliseconds));
+
+import wait from '@utils/wait';
+
+
+
+const SetupStep = ({step, handleUE4SSInstall}) => {
+    switch (step) {
+        case 0: return <div className='card bg-success border-success2 border my-4 p-3 text-center'>
+            <h4 className='mb-0'><strong>Your all set up!</strong></h4>
+            <p className='px-2 px-xl-5'>
+                Everything seems configured and ready to go. You can now use PalHUB client to easily manage your Palworld game mods using the buttons below!
+            </p>
+            <div className='row gap-2 px-3'>
+                <Link href='/play' className='col btn btn-dark p-3'>
+                    <strong>Play Game</strong>
+                </Link>
+                <Link href='/mods' className='col btn btn-dark p-3'>
+                    <strong>Add Mods</strong>
+                </Link>
+            </div>
+        </div>;
+        case 1: return <div className='card bg-danger border-danger2 border mt-4 p-3 text-center'>
+            <h4 className='mb-0 text-warning'><strong>WARNING</strong></h4>
+            <p>
+                It appears you have not set your Palworld game installation path.<br />
+                Please set the path to your Palworld game installation before continuing.
+            </p>
+        </div>;
+        case 2: return <div className='card bg-danger border-danger2 border mt-4 p-3 text-center'>
+            <h4 className='mb-0 text-warning'><strong>WARNING</strong></h4>
+            <p>
+                It appears you have not set your Nexus Mods API Key.<br />
+                Please set your API Key before continuing.
+            </p>
+        </div>;
+        case 3: return <div className='card bg-danger border-danger2 border mt-4 p-3 text-center'>
+            <h4 className='mb-0 text-warning'><strong>WARNING</strong></h4>
+            <p>
+                It appears you have not set your PalHUB Cache Directory.<br />
+                Please set the path to your PalHUB cache directory before continuing.
+            </p>
+        </div>;
+        case 4: return <div className='card bg-danger border-danger2 border mt-4 p-3 text-center'>
+            <h4 className='mb-0 text-warning'><strong>WARNING</strong></h4>
+            <p>
+                It appears you have not entered a <strong>valid</strong> Palworld game installation path.<br />
+                Please set the path to your Palworld game installation before continuing.
+            </p>
+        </div>;
+        case 5: return <div className='card bg-danger border-danger2 border mt-4 p-3 text-center'>
+            <h4 className='mb-0 text-warning'><strong>WARNING</strong></h4>
+            <p>
+                It appears you do not have the Unreal Engine 4/5 Scripting System installed.<br />
+                UE4SS is required for full mod functionality. It must be installed before continuing.
+            </p>
+            <button
+                className='btn btn-warning p-3 w-100'
+                onClick={handleUE4SSInstall}>
+                <strong>Click here to download & install UE4SS</strong>
+            </button>
+        </div>;
+        default: return null;
+    }
 }
 
 export default function SettingsPage({modals, ThemeController}) {
-    console.log({ThemeController})
+
     // initial settings data for the application
     const [settings, setSettings] = React.useState({
         server_url: 'D:/SteamLibrary/steamapps/common/Palworld',
@@ -35,9 +96,10 @@ export default function SettingsPage({modals, ThemeController}) {
         cache_dir: 'D:/UE_Modding/HL Utils/palhub-client/cache',
 
         has_ue4ss: false,
+        has_exe: false, 
 
         // app options implemented by DEAP <3
-        // ! todo: convert other options to be handled by DEAP..
+        // ! todo: convert other options to be handled by DEAP for v1 rlease..
         'auto-boot': false,
         'auto-play': false,
         'auto-tiny': false,
@@ -79,6 +141,7 @@ export default function SettingsPage({modals, ThemeController}) {
             const path_data = await window.palhub('validateGamePath', game_path);
             const game_type = path_data?.type ?? '{UNKNOWN}';
             
+            console.log({path_data})
             // const server_url = await window.uStore.get('server_url', settings.server_url);
             // const server_data = await window.palhub('validateGamePath', server_url);
             // const server_type = server_data?.type ?? '{UNKNOWN}';
@@ -87,7 +150,8 @@ export default function SettingsPage({modals, ThemeController}) {
             updateSetting('game_path', game_path);
             updateSetting('cache_dir', cache_dir);
             updateSetting('game_type', game_type);
-            updateSetting('has_ue4ss', path_data.has_ue4ss);
+            updateSetting('has_ue4ss', path_data?.has_ue4ss ?? false);
+            updateSetting('has_exe', path_data?.has_exe ?? false);
             // updateSetting('server_url', server_url);
             // updateSetting('server_type', server_type);
 
@@ -134,8 +198,9 @@ export default function SettingsPage({modals, ThemeController}) {
         gamePathTimeoutHandler = setTimeout(async () => {
             const path_data = await window.palhub('validateGamePath', new_value);
             updateSetting('game_path', new_value, true);
-            updateSetting('has_ue4ss', path_data.has_ue4ss);
             updateSetting('game_type', path_data.type);
+            updateSetting('has_ue4ss', path_data.has_ue4ss ?? false);
+            updateSetting('has_exe', path_data?.has_exe ?? false);
             console.log({path_data})
         }, 1000);
     }, []);
@@ -156,6 +221,18 @@ export default function SettingsPage({modals, ThemeController}) {
         cachePathTimeoutHandler = setTimeout(() => {
             updateSetting('cache_dir', new_value, true);
         }, 1000);
+    }, []);
+
+    const onClickPathInput = React.useCallback(async(name, value) => {
+        console.log('clicked path input', name, value);
+        const result = await window.ipc.invoke('open-file-dialog', {
+            title: 'Select Palworld Game Directory',
+            properties: ['openDirectory'],
+            // filters: [
+            //     { name: 'JSON Files', extensions: ['json'] },
+            //     { name: 'All Files', extensions: ['*'] }
+            // ]
+        });
     }, []);
 
     const handleUE4SSInstall = React.useCallback(async() => {
@@ -182,6 +259,15 @@ export default function SettingsPage({modals, ThemeController}) {
 
     console.log({installed_type, settings})
 
+    let current_setup_step = 0;
+    if (!settings.game_path) current_setup_step = 1;
+    if (!settings.api_key) current_setup_step = 2;
+    if (!settings.cache_dir) current_setup_step = 3;
+
+    if (settings.game_path && !settings.has_exe) current_setup_step = 4;
+    if (settings.has_exe && !settings.has_ue4ss) current_setup_step = 5;
+
+
 
 
 
@@ -203,12 +289,15 @@ export default function SettingsPage({modals, ThemeController}) {
                         </p>
                     </div>
 
-                    <ENVEntry 
-                        name="Local Palworld Game Installation Path"
-                        value={settings.game_path}
-                        updateSetting={handleGamePathChange}
-                        tooltip="The path to your Palworld game installation."
-                    />
+                    <div className='' onClick={onClickPathInput}>
+
+                        <ENVEntry 
+                            name="Local Palworld Game Installation Path"
+                            value={settings.game_path}
+                            updateSetting={handleGamePathChange}
+                            tooltip="The path to your Palworld game installation."
+                        />
+                    </div>
 
                     <DekChoice 
                         className='pb-3'
@@ -268,33 +357,10 @@ export default function SettingsPage({modals, ThemeController}) {
                         tooltip="The path to the PalHUB cache directory. This is where mods will be downloaded and stored."
                     />
 
-                    {!settings.has_ue4ss && <div className='card bg-danger border-danger2 border mt-4 p-3 text-center'>
-                        <h4 className='mb-0 text-warning'><strong>WARNING</strong></h4>
-                        <p>
-                            It appears you do not have the Unreal Engine 4/5 Scripting System installed.<br />
-                            UE4SS is required for full mod functionality. It must be installed before continuing.
-                        </p>
-                        <button
-                            className='btn btn-warning p-3 w-100'
-                            onClick={handleUE4SSInstall}>
-                            <strong>Click here to download & install UE4SS</strong>
-                        </button>
-                    </div>}
 
-                    {settings.has_ue4ss && <div className='card bg-success border-success2 border my-4 p-3 text-center'>
-                        <h4 className='mb-0'><strong>Your all set up!</strong></h4>
-                        <p className='px-2 px-xl-5'>
-                            Everything seems configured and ready to go. You can now use PalHUB client to easily manage your Palworld game mods using the buttons below!
-                        </p>
-                        <div className='row gap-2 px-3'>
-                            <Link href='/play' className='col btn btn-dark p-3'>
-                                <strong>Play Game</strong>
-                            </Link>
-                            <Link href='/mods' className='col btn btn-dark p-3'>
-                                <strong>Add Mods</strong>
-                            </Link>
-                        </div>
-                    </div>}
+                    <SetupStep step={current_setup_step} handleUE4SSInstall={handleUE4SSInstall} />
+
+
 
 
                     {/* <div className="text-center my-5">
