@@ -16,6 +16,7 @@
 - [Technical Details](#technical-details)
 <hr class="mt-1">
 
+
 ### What is PalHUB Client
 PalHUB Client aims to be the ULTIMATE Mod Manager for the video game Palworld. 
 
@@ -27,8 +28,8 @@ PalHUB Client aims to be the ULTIMATE Mod Manager for the video game Palworld.
 
 | :exclamation: THIS IS A BETA TESTING BUILD AND SHOULD NOT BE USED BY MUGGLES!! |
 |---|
-
 <hr class="mt-1">
+
 
 ### PalHUB Client Features
 - Painless Installation
@@ -48,18 +49,6 @@ PalHUB Client aims to be the ULTIMATE Mod Manager for the video game Palworld.
 ### Requirements
 - Palworld, obviously...
 <hr class="mt-1">
-
-
-
-### Technical Details
-- [Nextron](https://github.com/saltyshiomix/nextron) (Bundles Next with Electron)
-    - [Electron](https://www.electronjs.org/)
-    - [Next.js](https://nextjs.org/)
-    - [React](https://react.dev/)
-- [Nexus Mods](https://www.nexusmods.com/) (Enables mod downloads/updates) 
-- Custom API Endpoints (For Server Listing / User Counts)
-<hr class="mt-1">
-
 
 
 ### How To Install
@@ -133,6 +122,14 @@ yarn publish
 <hr class="mt-1">
 
 
+### Technical Details
+- [Nextron](https://github.com/saltyshiomix/nextron) (Bundles Next with Electron)
+    - [Electron](https://www.electronjs.org/)
+    - [Next.js](https://nextjs.org/)
+    - [React](https://react.dev/)
+- [Nexus Mods](https://www.nexusmods.com/) (Enables mod downloads/updates) 
+- Custom API Endpoints (For Server Listing / User Counts)
+<hr class="mt-1">
 
 
 ### Help Guides
