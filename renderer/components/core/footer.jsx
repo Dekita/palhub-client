@@ -78,7 +78,7 @@ export default function Footer() {
                 </div>
             </div>
             <div>
-                <a href='https://discord.gg/ZBENfJ7nmV' target='_blank' className='btn hover-secondary'>
+                <a href='https://discord.gg/WyTdramBkm' target='_blank' className='btn hover-secondary'>
                     <IconDiscord
                         height='1.6rem'
                         fill='currentColor'
