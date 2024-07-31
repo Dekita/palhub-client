@@ -226,7 +226,8 @@ export default function CheckModsModal({show,setShow}) {
             const cache_dir = await window.uStore.get('cache_dir');
 
             const config = await window.palhub('readJSON', game_path);
-            const mod_ids = Object.keys(config.mods);
+            if (!config) return console.error('config not loaded');
+            const mod_ids = Object.keys(config?.mods || []);
             setMods(await Promise.all(mod_ids.map(async mod_id => {
                 return await window.nexus(api_key, 'getModInfo', mod_id);
             })));
