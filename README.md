@@ -12,7 +12,7 @@
 ### Table of Contents
 - [How to install](#how-to-install) 
 - [What is PalHUB Client](#what-is-palhub-client) 
-- [RPC Tool Features](#rpc-tool-features) 
+- [PalHUB Client Features](#palhub-client-features) 
 <hr class="mt-1">
 
 ### What is PalHUB Client
@@ -20,6 +20,13 @@ PalHUB Client aims to be the ULTIMATE Mod Manager for the video game Palworld. I
 
 | :exclamation: THIS IS A BETA TESTING BUILD AND SHOULD NOT BE USED BY MUGGLES!! |
 |---|
+
+| :exclamation: THIS IS A BETA TESTING BUILD AND SHOULD NOT BE USED BY MUGGLES!! |
+|---|
+
+| :exclamation: THIS IS A BETA TESTING BUILD AND SHOULD NOT BE USED BY MUGGLES!! |
+|---|
+
 <hr class="mt-1">
 
 ### PalHUB Client Features
@@ -37,13 +44,13 @@ PalHUB Client aims to be the ULTIMATE Mod Manager for the video game Palworld. I
 <hr class="mt-1">
 
 
-## Requirements
+### Requirements
 - Palworld, obviously...
 <hr class="mt-1">
 
 
 
-## Additional Details
+### Additional Details
 <hr class="mt-1">
 
 
@@ -63,7 +70,7 @@ Future releases will automatically download when you launch the application.
 | :exclamation: Node.js is required for development |
 |---|
 
-#### Download Files
+#### Clone Repository
 
 ```
 git clone https://github.com/dekita/palhub-client 
@@ -73,33 +80,58 @@ cd ./palhub-client
 #### Install Dependencies
 
 ```
-$ cd my-app
+# using yarn (recommended)
+yarn 
 
-# using yarn or npm
-$ yarn (or `npm install`)
+# using npm
+npm install
 
 # using pnpm
-$ pnpm install --shamefully-hoist
+pnpm install --shamefully-hoist
 ```
 
 #### Run Development Mode
 
 ```
-$ yarn dev (or `npm run dev` or `pnpm run dev`)
+# using yarn (recommended)
+yarn dev 
+
+# using npm
+npm run dev
+
+# using pnpm
+pnpm run dev
 ```
 
 #### Build Application
 
 ```
-$ yarn build (or `npm run build` or `pnpm run build`)
+# using yarn (recommended)
+yarn build 
+
+#using npm 
+npm run build
+
+# using pnpm 
+pnpm run build
 ```
 
+#### Publish Application
+| :exclamation: Requires repository access via GH_TOKEN env variable |
+|---|
+
+```
+# using yarn (recommended)
+yarn publish
+```
+<hr class="mt-1">
 
 
 
-## Help Guides
+
+### Help Guides
 - 
 
 
-## Credit && Thanks
+### Credit && Thanks
 - 
