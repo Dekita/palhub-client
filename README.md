@@ -13,10 +13,11 @@
 - [How to install](#how-to-install) 
 - [What is PalHUB Client](#what-is-palhub-client) 
 - [PalHUB Client Features](#palhub-client-features) 
+- [Technical Details](#technical-details)
 <hr class="mt-1">
 
 ### What is PalHUB Client
-PalHUB Client aims to be the ULTIMATE Mod Manager for the video game Palworld. It uses the popular mod hosting platform [Nexus Mods](https://www.nexusmods.com/) to enable mod downloads/updates. The application is powered by [Electron](https://www.electronjs.org/), [Next.js](https://nextjs.org/), and [React](https://react.dev/) via [Nextron](https://github.com/saltyshiomix/nextron), alongside a number of custom modules.  
+PalHUB Client aims to be the ULTIMATE Mod Manager for the video game Palworld. 
 
 | :exclamation: THIS IS A BETA TESTING BUILD AND SHOULD NOT BE USED BY MUGGLES!! |
 |---|
@@ -50,7 +51,14 @@ PalHUB Client aims to be the ULTIMATE Mod Manager for the video game Palworld. I
 
 
 
-### Additional Details
+### Technical Details
+- [Nexus Mods](https://www.nexusmods.com/) to enable mod downloads/updates. 
+- [Nextron](https://github.com/saltyshiomix/nextron)
+-- [Electron](https://www.electronjs.org/)
+-- [Next.js](https://nextjs.org/)
+-- [React](https://react.dev/)
+- Custom API
+- 
 <hr class="mt-1">
 
 
