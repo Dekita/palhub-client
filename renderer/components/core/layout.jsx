@@ -5,7 +5,7 @@
 */
 
 import Head from 'next/head';
-import { useState, cloneElement, Children } from 'react';
+import { useState, cloneElement, Children, useMemo } from 'react';
 import { useRouter } from 'next/router';
 import useThemeSystem, { THEMES } from '@hooks/useThemeSystem';
 import SettingsModal from '@components/modals/settings';
@@ -34,20 +34,28 @@ function GoogleTagManager() {
 }
 
 export default function Layout({ children }) {
-    const [showSettingsModal, setShowSettingsModal] = useState(false);
+    // const [showSettingsModal, setShowSettingsModal] = useState(false);
     const [showNavbarModal, setShowNavbarModal] = useState(false);
     const [theme_id, setThemeID] = useThemeSystem();
     const theme = `/themes/${THEMES[theme_id]}.css`;
     const active_route = useRouter().pathname;
 
     const modals = {
-        onClickSettings: () => setShowSettingsModal(true),
+        // onClickSettings: () => setShowSettingsModal(true),
         onClickHamburger: () => setShowNavbarModal(true),
     };
 
     const isbasepath = active_route !== '/';
     const bodystyle = isbasepath ? {overflowY: 'scroll'} : {};
     const commonTitle = "PalHUB Client: Palworld Mod Manager & Server Listing Service";
+
+    const ThemeController = useMemo(() => {
+        return {
+            theme_id,
+            setThemeID,
+            themes: THEMES,
+        }
+    }, [theme_id]);
 
     return (
         <>
@@ -69,15 +77,15 @@ export default function Layout({ children }) {
 
                 <div id='main-body' className='main-body h-full' style={bodystyle}>
                     {/* Add modals data to children to allow settings and store modal control */}
-                    {Children.map(children, (child) => cloneElement(child, { modals }))}
+                    {Children.map(children, (child) => cloneElement(child, { modals, ThemeController }))}
                 </div>
-                <SettingsModal
+                {/* <SettingsModal
                     themes={THEMES}
                     theme_id={theme_id}
                     setThemeID={setThemeID}
-                    show={showSettingsModal}
+                    show={true}
                     setShow={setShowSettingsModal}
-                />
+                /> */}
                 <NavbarModal
                     show={showNavbarModal}
                     setShow={setShowNavbarModal}

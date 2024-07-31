@@ -7,35 +7,33 @@ import { useState } from 'react';
 
 // theme files should be located in /public/themes
 export const THEMES = [
-    'gpt1', 
-    
-    'vivid1',
-
+    'palhub', 
     'ikon',
-
-    'dek-dark',
-    'dek-light',
-
-    'steg1',
-
+    'khakii',
+    
+    
     '1',
     '2',
     '3',
     '4',
     '5',
     '6',
-
-    'burnt-orange',
-    'khakii',
-    'metroid1',
-    'metroid2',
-    'nature1',
-    'nature2',
-    'nature3',
-    'nature4',
-    'purple1',
-    'purple2',
+    '7',
+    '8',
+    '9',
+    
+    // 'vivid1',
+    // 'dek-dark',
+    // 'dek-light',
+    // 'steg1',
+    // 'burnt-orange',
+    // 'nature2',
+    // 'nature3',
+    // 'nature4',
+    // 'purple1',
+    // 'purple2',
 ];
+
 
 export default function useThemeSystem() {
     let base_theme_id = 0;

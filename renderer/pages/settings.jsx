@@ -9,18 +9,20 @@ import Modal from '../components/modal';
 
 import ModCardComponent from '../components/mod-card';
 import AppHeadComponent from '../components/app-head';
-import { ENVEntry } from '@components/modals/common';
+import { ENVEntry, ENVEntryLabel } from '@components/modals/common';
 // import DekSelect from '@components/core/dek-select';
 import DekChoice from "@components/core/dek-choice";
 import DekCheckbox from '@components/core/dek-checkbox';
 
 import InstallUe4ssModal from '@components/modals/ue4ss-install';
+import DekSelect from '@components/core/dek-select';
 
 async function wait(milliseconds = 1000) {
     return new Promise((r) => setTimeout(r, milliseconds));
 }
 
-export default function SettingsPage() {
+export default function SettingsPage({modals, ThemeController}) {
+    console.log({ThemeController})
     // initial settings data for the application
     const [settings, setSettings] = React.useState({
         server_url: 'D:/SteamLibrary/steamapps/common/Palworld',
@@ -44,6 +46,10 @@ export default function SettingsPage() {
         if (store && window.uStore) window.uStore.set(key, value);
         setSettings(current=>({ ...current, [key]: value }));
     }
+
+    const handleThemeChange = (event, newvalue) => {
+        ThemeController.setThemeID(event.target.innerText);
+    };
 
     // load initial settings from store
     React.useEffect(() => {
@@ -161,7 +167,7 @@ export default function SettingsPage() {
 
         <div className="container">
             <div className="col-12 col-md-10 offset-0 offset-md-1 col-lg-8 offset-lg-2">
-                <div className="mx-auto px-3 py-5">
+                <div className="mx-auto px-3 pt-5 pb-4">
                     <h1 className="font-bold mb-4">Settings</h1>
                     <div className='mb-4'>
                         <p className="mb-0">
@@ -250,7 +256,7 @@ export default function SettingsPage() {
                         </button>
                     </div>}
 
-                    {settings.has_ue4ss && <div className='card bg-success border-success2 border mt-4 p-3 text-center'>
+                    {settings.has_ue4ss && <div className='card bg-success border-success2 border my-4 p-3 text-center'>
                         <h4 className='mb-0'><strong>Your all set up!</strong></h4>
                         <p className='px-2 px-xl-5'>
                             Everything seems configured and ready to go. You can now use PalHUB client to easily manage your Palworld game mods using the buttons below!
@@ -274,7 +280,32 @@ export default function SettingsPage() {
                             <strong>Get PalHUB Server</strong>
                         </button>
                     </div> */}
-                    
+                    <h1 className="font-bold mb-4">App Options</h1>
+
+                    <ENVEntryLabel name="Change Color Theme" tooltip="Alter the UI by selecting from a range of spicy color themes.." />
+                    <DekSelect
+                        onChange={handleThemeChange}
+                        active_id={ThemeController.theme_id}
+                        uid='theme-dropdown'>
+                        {ThemeController && ThemeController.themes &&
+                            ThemeController.themes.map((theme, index) => (
+                                <dekItem text={theme} id={index} key={index} />
+                            ))}
+                    </DekSelect>
+
+                    {/* ['palhub', 'ikon', 'khakii', '1..6', 'metroid1', 'metroid2', 'nature1',] */}
+                    <DekChoice 
+                        className='pb-3'
+                        choices={ThemeController.themes}
+                        active={ThemeController.theme_id}
+                        onClick={(i,value)=>{
+                            console.log(`Setting Page: ${value}`)
+                            handleThemeChange({target:{innerText:value}});
+                            // updateJobData('seamless', value === 'Yes')
+                        }}
+                    />
+
+
                 </div>
             </div>
         </div>
