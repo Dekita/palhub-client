@@ -9,45 +9,68 @@
 </div>
 
 
-# PalHUB::Client
+### Table of Contents
+- [How to install](#how-to-install) 
+- [What is PalHUB Client](#what-is-palhub-client) 
+- [RPC Tool Features](#rpc-tool-features) 
+<hr class="mt-1">
 
-NOTE: THIS IS A BETA TESTING BUILD AND SHOULD NOT BE USED BY MUGGLES!!
+### What is PalHUB Client
+PalHUB Client aims to be the ULTIMATE Mod Manager for the video game Palworld. It uses the popular mod hosting platform [Nexus Mods](https://www.nexusmods.com/) to enable mod downloads/updates. 
 
+| :exclamation: THIS IS A BETA TESTING BUILD AND SHOULD NOT BE USED BY MUGGLES!! |
+|---|
+<hr class="mt-1">
 
-## Additional Details
-
-
-## Features
-- 
+### PalHUB Client Features
+- Painless Installation
+- Easily Navigatible Modern UI 
+- Automatic Updates (always the latest version)
+- [todo] Multi Platform Support (win+linux)
+- [todo] Customizable Theme + Multiple Defaults 
+- [todo] Optional Minimize to System Tray
+- [todo] Optional Auto Start on Launch
+- [todo] Optional Auto Minimize App on Launch
+- [todo] Optional Auto Launch App on System Boot
+- [todo] System Notifications
 - [TODO](/TODO.md) 
-
-
-## How To Install
-Download the latest version from [HERE](https://github.com/Dekita/palhub-client/releases/new). Run the installer. Enjoy <3
+<hr class="mt-1">
 
 
 ## Requirements
 - Palworld, obviously...
+<hr class="mt-1">
 
 
-## Help Guides
-- 
+
+## Additional Details
+<hr class="mt-1">
 
 
-## Credit && Thanks
-- 
+
+### How To Install
+Download the latest version from [HERE](https://github.com/Dekita/palhub-client/releases). 
+
+Once downloaded extract and then run the installer.
+
+PalHUB Client is now installed on your PC. Enjoy <3
+
+Future releases will automatically download when you launch the application. 
+<hr class="mt-1">
 
 
-# Run PalHUB Client Locally
+### How to install (development)
+| :exclamation: Node.js is required for development |
+|---|
 
-### Download Files
+#### Download Files
 
 ```
 git clone https://github.com/dekita/palhub-client 
 cd ./palhub-client
 ```
 
-### Install Dependencies
+#### Install Dependencies
 
 ```
 $ cd my-app
@@ -59,14 +82,24 @@ $ yarn (or `npm install`)
 $ pnpm install --shamefully-hoist
 ```
 
-### Run Development Mode
+#### Run Development Mode
 
 ```
 $ yarn dev (or `npm run dev` or `pnpm run dev`)
 ```
 
-### Build Application
+#### Build Application
 
 ```
 $ yarn build (or `npm run build` or `pnpm run build`)
 ```
+
+
+
+
+## Help Guides
+- 
+
+
+## Credit && Thanks
+- 
