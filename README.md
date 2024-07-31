@@ -47,7 +47,8 @@ PalHUB Client aims to be the ULTIMATE Mod Manager for the video game Palworld.
 
 
 ### Requirements
-- Palworld, obviously...
+- [Palworld](https://store.steampowered.com/app/1623730/Palworld/) (obviously)
+- Windows PC (for release version, linux/mac can use dev build)
 <hr class="mt-1">
 
 
