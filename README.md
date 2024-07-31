@@ -35,12 +35,12 @@ PalHUB Client aims to be the ULTIMATE Mod Manager for the video game Palworld.
 - Painless Installation
 - Easily Navigatible Modern UI 
 - Automatic Updates (always the latest version)
+- Customizable Theme + Multiple Defaults 
+- Optional Minimize to System Tray
+- Optional Auto Minimize App on Launch
+- Optional Auto Launch App on System Boot
 - [todo] Multi Platform Support (win+linux)
-- [todo] Customizable Theme + Multiple Defaults 
-- [todo] Optional Minimize to System Tray
-- [todo] Optional Auto Start on Launch
-- [todo] Optional Auto Minimize App on Launch
-- [todo] Optional Auto Launch App on System Boot
+- [todo] Optional Auto Play Game on Launch
 - [todo] System Notifications
 - [TODO](/TODO.md) 
 <hr class="mt-1">
