@@ -72,6 +72,8 @@ export { default as minimize } from '@svgs/font-awesome/fa5/regular/minus.svg';
 export { default as maximize } from '@svgs/font-awesome/fa5/regular/window-maximize.svg';
 export { default as close_window } from '@svgs/font-awesome/fa5/regular/times.svg';
 
+export { default as discord }  from '@svgs/fa6/brands/discord.svg';
+
 
 // export {default as IconPreview} from '@svgs/fa5/duotone/file-image.svg';
 // export {default as IconSliders} from '@svgs/fa5/duotone/tasks-alt.svg';

@@ -8,8 +8,6 @@ import React from 'react';
 import OverlayTrigger from 'react-bootstrap/OverlayTrigger';
 import Tooltip from 'react-bootstrap/Tooltip';
 
-import IconLock from '@svgs/fa5/solid/lock.svg';
-import IconDiscord from '@svgs/fa6/brands/discord.svg';
 import * as CommonIcons from '@config/common-icons';
 
 
@@ -79,7 +77,7 @@ export default function Footer() {
             </div>
             <div>
                 <a href='https://discord.gg/WyTdramBkm' target='_blank' className='btn hover-secondary'>
-                    <IconDiscord
+                    <CommonIcons.discord
                         height='1.6rem'
                         fill='currentColor'
                         style={{ opacity: 0.5 }}
