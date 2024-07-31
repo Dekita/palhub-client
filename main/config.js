@@ -65,7 +65,7 @@ export default {
         'auto-boot': false,
         'auto-play': false,
         'auto-tiny': false,
-        'tiny-tray': true,
+        'tiny-tray': false,
         // creates a random uuid on first boot,
         // that uuid is then used afterwords
         'uuid': randomUUID(),
