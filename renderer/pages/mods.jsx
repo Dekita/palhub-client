@@ -310,7 +310,7 @@ export default function ModsPage() {
                         <div class="input-group">
                             <input 
                                 type='text'
-                                placeholder='Enter a nexus mods url or nexus mod id to view a specific mod.' 
+                                placeholder='Enter a nexus mods url or mod id to view a specific mod.' 
                                 className='form-control form-primary no-radius-end' 
                                 autoComplete="off"
                                 ref={modSearchRef}
