@@ -35,7 +35,15 @@ export default function SettingsPage({modals, ThemeController}) {
         cache_dir: 'D:/UE_Modding/HL Utils/palhub-client/cache',
 
         has_ue4ss: false,
+
+        // app options implemented by DEAP <3
+        // ! todo: convert other options to be handled by DEAP..
+        'auto-boot': false,
+        'auto-play': false,
+        'auto-tiny': false,
+        'tiny-tray': false,    
     });
+
 
     // const [ue4ssProcess, setUE4SSProcess] = React.useState(null);
     const [showUE4SSInstall, setShowUE4SSInstall] = React.useState(false);
@@ -44,6 +52,13 @@ export default function SettingsPage({modals, ThemeController}) {
     const updateSetting = (key, value, store=false) => {
         // console.log('updating setting', key, value, store)
         if (store && window.uStore) window.uStore.set(key, value);
+        setSettings(current=>({ ...current, [key]: value }));
+    }
+
+    const updateConfig = async (key, value) => {
+        console.log('updating config', key, value)
+        if (!window.ipc) return console.error('ipc not loaded');
+        await window.ipc.invoke("set-config", key, value);
         setSettings(current=>({ ...current, [key]: value }));
     }
 
@@ -56,6 +71,7 @@ export default function SettingsPage({modals, ThemeController}) {
         (async () => {
             if (!window.uStore) return console.error('uStore not loaded');
             if (!window.palhub) return console.error('palhub not loaded');
+            if (!window.ipc) return console.error('ipc not loaded');
 
             const api_key   = await window.uStore.get('api_key', settings.api_key);
             const game_path = await window.uStore.get('game_path', settings.game_path);
@@ -74,6 +90,15 @@ export default function SettingsPage({modals, ThemeController}) {
             updateSetting('has_ue4ss', path_data.has_ue4ss);
             // updateSetting('server_url', server_url);
             // updateSetting('server_type', server_type);
+
+            const auto_boot = await window.ipc.invoke("get-config", "auto-boot");
+            const auto_play = await window.ipc.invoke("get-config", "auto-play");
+            const auto_tiny = await window.ipc.invoke("get-config", "auto-tiny");
+            const tiny_tray = await window.ipc.invoke("get-config", "tiny-tray");
+            updateConfig('auto-boot', auto_boot);
+            updateConfig('auto-play', auto_play);
+            updateConfig('auto-tiny', auto_tiny);
+            updateConfig('tiny-tray', tiny_tray);
         })();
     }, []);
 
@@ -282,7 +307,35 @@ export default function SettingsPage({modals, ThemeController}) {
                     </div> */}
                     <h1 className="font-bold mb-4">App Options</h1>
 
-                    <ENVEntryLabel name="Change Color Theme" tooltip="Alter the UI by selecting from a range of spicy color themes.." />
+                    <div className='row mb-2'>
+                        <div className='col-12 col-lg-4'>
+                            <ENVEntry 
+                                name="Launch At Startup"
+                                value={settings['auto-boot']}
+                                updateSetting={(n,v)=>updateConfig('auto-boot', v)}
+                                tooltip="Automatically start the PalHUB client with your computer."
+                            />
+                        </div>
+                        <div className='col-12 col-lg-4'>
+                            <ENVEntry
+                                name="Auto Minimize"
+                                value={settings['auto-tiny']}
+                                updateSetting={(n,v)=>updateConfig('auto-tiny', v)}
+                                tooltip="Launch PalHUB Client in a minimized state when started."
+                            />
+                        </div>
+                        <div className='col-12 col-lg-4'>
+                            <ENVEntry
+                                name="Minimize To Tray"
+                                value={settings['tiny-tray']}
+                                updateSetting={(n,v)=>updateConfig('tiny-tray', v)}
+                                tooltip="Minimize PalHUB Client to the system tray when closed."
+                            />
+                        </div>
+                    </div>
+                    
+
+                    <ENVEntryLabel name="Change Color Theme [beta]" tooltip="Alter the UI by selecting from a range of spicy color themes.." />
                     <DekSelect
                         onChange={handleThemeChange}
                         active_id={ThemeController.theme_id}
@@ -295,7 +348,7 @@ export default function SettingsPage({modals, ThemeController}) {
 
                     {/* ['palhub', 'ikon', 'khakii', '1..6', 'metroid1', 'metroid2', 'nature1',] */}
                     <DekChoice 
-                        className='pb-3'
+                        className='pb-3 mt-1'
                         choices={ThemeController.themes}
                         active={ThemeController.theme_id}
                         onClick={(i,value)=>{
@@ -305,6 +358,17 @@ export default function SettingsPage({modals, ThemeController}) {
                         }}
                     />
 
+                    {/* <ENVEntry
+                        name="Auto Play"
+                        value={settings['auto-play']}
+                        updateSetting={(n,v)=>updateConfig('auto-play', v)}
+                        tooltip="Automatically start playing the game when the client is started."
+                    /> */}
+
+
+
+
+                    
 
                 </div>
             </div>
