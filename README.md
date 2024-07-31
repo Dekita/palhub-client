@@ -124,13 +124,12 @@ pnpm run build
 ```
 
 #### Publish Application
-
+| :exclamation: Requires repository access via ENV variable `GH_TOKEN` |
+|---|
 ```
 # using yarn (recommended)
 yarn publish
 ```
-| :exclamation: Requires repository access via ENV variable `GH_TOKEN` |
-|---|
 <hr class="mt-1">
 
 
