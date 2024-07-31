@@ -98,6 +98,7 @@ class DEAP {
     }
     static setDatastore(store_options) {
         this._datastore = new Store(store_options);
+        console.log('datastore:', this._datastore.store);
     }
     static setUserAgent(agent_str) {
         this._user_agent = `${APP_NAME} ${APP_VERSION} ${agent_str}`.trim();
@@ -208,6 +209,7 @@ class DEAP {
         });
         this._windows[id].setMenu(null);
         this._windows[id].on("minimize", (event) => {
+            // console.log('minimize event:', id, assign_systray, this._datastore.get("tiny-tray"));
             if (assign_systray && this._datastore.get("tiny-tray")) {
                 this._windows[id].setSkipTaskbar(true);
                 this.createTray(this._windows[id]);
