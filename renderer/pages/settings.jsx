@@ -289,15 +289,15 @@ export default function SettingsPage({modals, ThemeController}) {
                         </p>
                     </div>
 
-                    <div className='' onClick={onClickPathInput}>
+                    {/* <div className='' onClick={onClickPathInput}>
+                    </div> */}
 
-                        <ENVEntry 
-                            name="Local Palworld Game Installation Path"
-                            value={settings.game_path}
-                            updateSetting={handleGamePathChange}
-                            tooltip="The path to your Palworld game installation."
-                        />
-                    </div>
+                    <ENVEntry 
+                        name="Local Palworld Game Installation Path"
+                        value={settings.game_path}
+                        updateSetting={handleGamePathChange}
+                        tooltip="The path to your Palworld game installation."
+                    />
 
                     <DekChoice 
                         className='pb-3'
