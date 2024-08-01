@@ -19,6 +19,8 @@ import Link from 'next/link';
 
 export default function MainAppbar() {
 
+    const [appVersion, setAppVersion] = useState('0.0.0');
+
     const onClickMinimizeApp = () => {
         if (window.ipc) window.ipc.invoke('app-action', 'main', 'minimize');
         else console.log('window.ipc not found');
@@ -31,6 +33,13 @@ export default function MainAppbar() {
         if (window.ipc) window.ipc.invoke('app-action', 'main', 'exit');
         else console.log('window.ipc not found');
     }
+
+    useEffect(() => {
+        if (!window.ipc) return;
+        window.ipc.invoke('get-version').then((version) => {
+            setAppVersion(version);
+        });
+    }, []);
 
     // -webkit-user-select: none;-webkit-app-region: drag;
 
@@ -51,7 +60,7 @@ export default function MainAppbar() {
                 <div 
                     className='px-3 text-dark'
                     style={sharedStyle}>
-                    <small><strong>{Dektionary.brandname}</strong></small>
+                    <small><strong>{Dektionary.brandname}</strong> v{appVersion}</small>
                 </div>
 
 
