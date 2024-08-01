@@ -47,7 +47,7 @@ export default function Layout({ children }) {
 
     const isbasepath = active_route !== '/';
     const bodystyle = isbasepath ? {overflowY: 'scroll'} : {};
-    const commonTitle = "PalHUB Client: Palworld Mod Manager & Server Listing Service";
+    const commonTitle = "PalHUB Client";
 
     const ThemeController = useMemo(() => {
         return {

@@ -18,7 +18,7 @@ import { fileURLToPath } from "url";
 import ArchiveHandler from "./archive-handler.js";
 import EventEmitter from "events";
 
-import { exec } from "child_process";
+import { exec, execFile } from "child_process";
 
 export const Emitter = new EventEmitter();
 
@@ -574,11 +574,16 @@ export class Client {
 
     static launchExe(exe_path) {
         console.log("launching exe", exe_path);
-        exec(exe_path, (error, stdout, stderr) => {
+        execFile(exe_path, (error, stdout, stderr) => {
             if (error) return console.error(`exec error: ${error}`);
             console.log(`stdout: ${stdout}`);
             console.error(`stderr: ${stderr}`);
         });
+        // exec(exe_path, (error, stdout, stderr) => {
+        //     if (error) return console.error(`exec error: ${error}`);
+        //     console.log(`stdout: ${stdout}`);
+        //     console.error(`stderr: ${stderr}`);
+        // });
         return true;
     }
 

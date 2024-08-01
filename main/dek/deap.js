@@ -7,7 +7,7 @@
  * how windows behave, and the pages loaded.
  *
  */
-import { app, dialog, ipcMain, BrowserWindow, Menu, Tray } from "electron";
+import { app, dialog, ipcMain, BrowserWindow, Menu, Tray, nativeImage } from "electron";
 import { autoUpdater } from "electron-updater";
 import createLogger, { LoggyBoi } from "../../utils/dek/logger";
 import { createWindow } from './create-window';
@@ -15,7 +15,7 @@ import { createWindow } from './create-window';
 import Store from "electron-store";
 import serve from "electron-serve";
 import path from "path";
-// import fs from 'fs';
+import fs from 'fs';
 
 const IS_PRODUCTION = process.env.NODE_ENV === "production";
 
@@ -167,6 +167,13 @@ class DEAP {
                     return this._windows[id].close();
             }
         });
+        ipcMain.handle('check-image-path', async (event, pathtocheck = this._config.app_icon.ico) => {
+            const thepath = path.join(__dirname, pathtocheck)
+            return {
+                path: thepath,
+                valid: !nativeImage.createFromPath(thepath).isEmpty(),
+            };
+        });
     }
     static addIPCHandler(handle, callback) {
         ipcMain.handle(handle, callback);
@@ -199,7 +206,7 @@ class DEAP {
             transparent: windoe_config.opts.transparent,
             webPreferences: {
                 preload: windoe_config.load,
-                devTools: !app.isPackaged,
+                // devTools: true, //!app.isPackaged,
 
                 enableRemoteModule: false,
                 nodeIntegration: false,
@@ -250,7 +257,13 @@ class DEAP {
     }
     // creates a system tray icon and defines its options
     static createTray(windoe) {
-        this._tray = new Tray(this._config.app_icon.ico);
+        let trayIcon;
+        if(!app.isPackaged) { // when in dev mode
+            trayIcon = this._config.app_icon.ico; 
+        } else { // fix for packaged app
+            trayIcon = path.join(__dirname, './icon.ico');
+        }
+        this._tray = new Tray(nativeImage.createFromPath(trayIcon));
         const menu = this.createTrayMenu(windoe);
         this._tray.on("double-click", () => windoe.show());
         this._tray.setToolTip(windoe.title);
