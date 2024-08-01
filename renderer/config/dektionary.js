@@ -27,8 +27,8 @@ export default {
 
     faqs: [
         {
-            q: `What is PalHUB?`,
-            a: 'PalHUB is a server framework designed to host palworld servers and provide additional features over standard servers.',
+            q: `What is PalHUB Client?`,
+            a: 'PalHUB Client is a mod management application designed to make it easy for users to not only modify their game, but also list modified servers, and make downloading their required mods and joining them, considerably easier.',
         },
         {   q: '',
             a: '',
