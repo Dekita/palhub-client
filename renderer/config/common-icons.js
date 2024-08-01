@@ -16,7 +16,7 @@ export { default as cog } from '@svgs/fa5/duotone/cog.svg';
 export { default as dna } from '@svgs/fa5/duotone/dna.svg';
 export { default as eye } from '@svgs/fa5/duotone/eye.svg';
 export { default as eye_slash } from '@svgs/fa5/duotone/eye-slash.svg';
-export { default as eye_other } from '@svgs/font-awesome/fa5/duotone/low-vision.svg';
+export { default as eye_other } from '@svgs/fa5/duotone/low-vision.svg';
 
 export { default as recycle } from '@svgs/fa5/duotone/recycle.svg';
 export { default as random } from '@svgs/fa5/duotone/random.svg';
@@ -51,32 +51,32 @@ export { default as disks } from '@svgs/fa5/duotone/box-full.svg';
 
 export { default as info } from '@svgs/fa5/regular/info-square.svg';
 
-export { default as star } from '@svgs/font-awesome/fa5/duotone/star.svg';
+export { default as star } from '@svgs/fa5/duotone/star.svg';
 
-export { default as virus } from '@svgs/font-awesome/fa5/duotone/virus.svg';
-export { default as shield } from '@svgs/font-awesome/fa5/duotone/shield-virus.svg';
-// export { default as download } from '@svgs/font-awesome/fa5/duotone/download.svg';
+export { default as virus } from '@svgs/fa5/duotone/virus.svg';
+export { default as shield } from '@svgs/fa5/duotone/shield-virus.svg';
+// export { default as download } from '@svgs/fa5/duotone/download.svg';
 
-export { default as arrow_right } from '@svgs/font-awesome/fa5/duotone/arrow-alt-to-right.svg';
-export { default as arrow_left } from '@svgs/font-awesome/fa5/duotone/arrow-alt-to-left.svg';
-export { default as arrow_up } from '@svgs/font-awesome/fa5/duotone/arrow-alt-to-top.svg';
-export { default as arrow_down } from '@svgs/font-awesome/fa5/duotone/arrow-alt-to-bottom.svg';
+export { default as arrow_right } from '@svgs/fa5/duotone/arrow-alt-to-right.svg';
+export { default as arrow_left } from '@svgs/fa5/duotone/arrow-alt-to-left.svg';
+export { default as arrow_up } from '@svgs/fa5/duotone/arrow-alt-to-top.svg';
+export { default as arrow_down } from '@svgs/fa5/duotone/arrow-alt-to-bottom.svg';
 
-export { default as check } from '@svgs/font-awesome/fa5/duotone/check.svg';
-export { default as check_square } from '@svgs/font-awesome/fa5/duotone/check-square.svg';
-export { default as check_circle } from '@svgs/font-awesome/fa5/duotone/check-circle.svg';
+export { default as check } from '@svgs/fa5/duotone/check.svg';
+export { default as check_square } from '@svgs/fa5/duotone/check-square.svg';
+export { default as check_circle } from '@svgs/fa5/duotone/check-circle.svg';
 
-export { default as trash } from '@svgs/font-awesome/fa5/duotone/times-octagon.svg';
+export { default as trash } from '@svgs/fa5/duotone/times-octagon.svg';
 
-export { default as minimize } from '@svgs/font-awesome/fa5/regular/minus.svg';
-export { default as maximize } from '@svgs/font-awesome/fa5/regular/window-maximize.svg';
-export { default as close_window } from '@svgs/font-awesome/fa5/regular/times.svg';
-export { default as question } from '@svgs/font-awesome/fa5/regular/question-circle.svg';
-export { default as privacy } from '@svgs/font-awesome/fa5/regular/user-secret.svg';
-export { default as terms } from '@svgs/font-awesome/fa5/regular/file-contract.svg';
+export { default as minimize } from '@svgs/fa5/regular/minus.svg';
+export { default as maximize } from '@svgs/fa5/regular/window-maximize.svg';
+export { default as close_window } from '@svgs/fa5/regular/times.svg';
+export { default as question } from '@svgs/fa5/regular/question-circle.svg';
+export { default as privacy } from '@svgs/fa5/regular/user-secret.svg';
+export { default as terms } from '@svgs/fa5/regular/file-contract.svg';
 
 export { default as discord }  from '@svgs/fa6/brands/discord.svg';
-export { default as patreon }  from '@svgs/font-awesome/fa6/brands/patreon.svg';
+export { default as patreon }  from '@svgs/fa6/brands/patreon.svg';
 
 
 // export {default as IconPreview} from '@svgs/fa5/duotone/file-image.svg';
