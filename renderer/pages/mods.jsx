@@ -82,7 +82,7 @@ export default function ModsPage() {
     const show_ads = modlistID > 1;
     const showSaveModList = modlistID === 0;
     // https://www.nexusmods.com/palworld/mods/1204
-    const advertised_mods = [1650, 487, 577, 489]//, 1204];//, 1314, 1650, 1640];
+    const advertised_mods = [577, 1204, 146, 489];//1650, 487, 577, 489]//, 1204];//, 1314, 1650, 1640];
 
     const onRunCommonChecks = () => {
         return window && window.uStore && window.palhub;

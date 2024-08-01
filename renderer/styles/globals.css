@@ -628,3 +628,13 @@ datalist {
 .carousel-indicators {
     margin-bottom: 0;
 }
+
+/* Change the default link color */
+a {
+    color: var(--dek-success-normal); /* Replace with your desired color */
+}
+
+/* Optionally, change the color when the link is hovered */
+a:hover {
+    color: var(--dek-warning-normal); /* Replace with your desired hover color */
+}
