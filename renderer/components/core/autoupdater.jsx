@@ -48,8 +48,6 @@ export default function AutoUpdater({}) {
                     break;
                 case 'update-available':
                     setUpdateMessage('Update available.');
-                    // initialize the auto updater
-                    window.ipc.invoke('install-update');
                     break;
                 case 'update-not-available':
                     setUpdateMessage('No updates available.');
@@ -57,15 +55,17 @@ export default function AutoUpdater({}) {
                     break;
                 case 'update-downloaded':
                     setUpdateMessage('Update downloaded.');
+                    // begin the actual update process after files downloaded the auto updater
+                    setTimeout(() => window.ipc.invoke('install-update'), 3000);
                     break;
                 case 'error':
                     setUpdateMessage(`Error updating: ${JSON.stringify(data)}`);
                     break;
                 case 'before-quit-for-update':
-                    setUpdateMessage('Preparing to update...');
+                    setUpdateMessage('Preparing to update and restart application...');
                     break;
                 case 'download-progress':
-                    setUpdateMessage(`Downloading:  ${JSON.stringify(data)}`);
+                    setUpdateMessage(`Download speed: ${data.bytesPerSecond} - Downloaded ${data.percent}% (${data.transferred}/${data.total})`);
                     break;
                 case 'initializing':
                     setUpdateMessage('Initializing...');

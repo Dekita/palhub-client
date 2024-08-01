@@ -148,7 +148,7 @@ class DEAP {
         //     this._windows[id].emit('window-fully-rendered');
         // });
         ipcMain.handle("install-update", async () => {
-            if (app.isPackaged) autoUpdater.quitAndInstall();
+            if (app.isPackaged) autoUpdater.quitAndInstall(true);
         });
         ipcMain.handle("app-action", async (event, id, action) => {
             console.log('app-action:', id, action);
