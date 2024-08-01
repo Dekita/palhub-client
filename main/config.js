@@ -44,8 +44,8 @@ export default {
     * defines the ico and png files for the app icon
     */
     app_icon: {
-        ico: join(__dirname, '../resources/icon.ico'),
-        png: join(__dirname, '../resources/icon.png'),
+        ico: join(__dirname, '../renderer/public/icon.ico'),
+        png: join(__dirname, '../renderer/public/icon.png'),
     },
     
     /**
