@@ -24,7 +24,7 @@ export default function AboutPage() {
                         This application is built using modern technologies and is designed to be as simple and easy to use as possible. If you encounter any bugs or issues, please let us know!
                     </p>
 
-                    <Link href="https://discord.gg/WyTdramBkm" className='w-100 btn btn-dark hover-success py-3 px-4'>
+                    <Link href="https://discord.gg/WyTdramBkm" target='_blank' className='w-100 btn btn-dark hover-success py-3 px-4'>
                         <CommonIcons.discord
                             height='2rem'
                             fill='currentColor'
