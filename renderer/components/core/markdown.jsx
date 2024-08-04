@@ -9,11 +9,16 @@ import Markdown from 'react-markdown';
 
 // Custom link renderer to open links in a new tab
 const LinkRenderer = (props) => {
-    return (
-        <a href={props.href} target="_blank" rel="noopener noreferrer">
-            {props.children}
-        </a>
-    );
+    if (props.href.startsWith('/')) {
+        return (
+            <a href={props.href}>
+                {props.children}
+            </a>
+        );
+    }
+    return <a href={props.href} target="_blank" rel="noopener noreferrer">
+        {props.children}
+    </a>;
 };
 
 function MarkdownRenderer({ children }) {

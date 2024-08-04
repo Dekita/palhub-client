@@ -1,6 +1,7 @@
 import BrandHeader from '@components/core/brand-header';
 import Container from 'react-bootstrap/Container';
-import Markdown from 'react-markdown';
+// import Markdown from 'react-markdown';
+import MarkdownRenderer from '@components/core/markdown';
 import Dektionary from 'config/dektionary';
 
 // new privacy policy specific to 'PAlHUB mod manager for palworld.
@@ -48,7 +49,8 @@ export default function PrivacyPage({ modals }) {
         <Container className='noverflow'>
             <div className="col-12 col-md-10 offset-0 offset-md-1 col-lg-8 offset-lg-2">
                 <div className="mx-auto px-3 pt-5 pb-4">
-                    <Markdown>{NewPrivacyMarkdown}</Markdown>
+                    {/* <Markdown>{NewPrivacyMarkdown}</Markdown> */}
+                    <MarkdownRenderer>{NewPrivacyMarkdown}</MarkdownRenderer>
                 </div>
             </div>
         </Container>
