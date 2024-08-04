@@ -34,7 +34,7 @@ class ImageTag extends Tag {
 
 class LinkTag extends Tag {
     toHTML() {
-        return `<a class="hover-dark hover-warning" target="_blank" href="${this.params.url}">${this.getContent()}</a>`;
+        return `<a class="hover-dark hover-warning" target="_blank" rel="noopener noreferrer" href="${this.params.url}">${this.getContent()}</a>`;
     }
 }
 
