@@ -41,6 +41,7 @@ export default function MainNavbar({
     const router = useRouter();
     const active_route = router.pathname;
 
+
     return (
         <Navbar className='navbar theme-text'>
             <Container className='theme-text' fluid>
@@ -63,7 +64,7 @@ export default function MainNavbar({
 
                 <Nav className='d-flex d-md-none me-auto'>
                     <div
-                        className='btn p-2 no-shadow hover-dark hover-secondary'
+                        className={`btn p-2 no-shadow hover-dark hover-secondary`}
                         onClick={onClickHamburger}>
                         <CommonIcons.navtoggle
                             height='1.75rem'
@@ -76,11 +77,13 @@ export default function MainNavbar({
                     className='d-none d-md-flex me-auto'
                     activeKey={active_route}>
                     {navbar_items.map((element) => {
+                        const is_this_route = element.href === active_route;
+                        const route_color = is_this_route ? 'text-warning' : 'hover-dark hover-secondary ';
                         return (
                             <Link
                                 href={element.href}
                                 key={element.href}
-                                className='btn hover-dark hover-secondary px-3 no-shadow'>
+                                className={`btn px-3 no-shadow ${route_color}`}>
                                 <strong>{element.text}</strong>
                             </Link>
                         );

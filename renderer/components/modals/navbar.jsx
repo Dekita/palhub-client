@@ -56,7 +56,7 @@ export default function NavbarModal({ show, setShow }) {
                     };
                     return (
                         <a
-                            className='btn no-shadow p-0 w-100 hover-dark text-center'
+                            className={`btn no-shadow p-0 w-100 hover-dark text-center`}
                             onClick={onClick}
                             key={index}>
                             <motion.div

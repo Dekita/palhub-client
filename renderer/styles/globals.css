@@ -316,7 +316,7 @@ small {
     /* height: 192px; */
 }
 
-.anal-cavity svg {
+/* .anal-cavity svg {
     animation-name: svgRotate;
     animation-duration: 2.5s;
     animation-iteration-count: infinite;
@@ -327,7 +327,8 @@ small {
 
 .anal-cavity svg:hover {
     animation-play-state: paused;
-}
+} */
+
 /* limit number of text lines */
 .anal-cavity div, .anal-cavity small {
     display: -webkit-box;
