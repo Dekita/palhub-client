@@ -7,12 +7,24 @@
 import React from 'react';
 import Markdown from 'react-markdown';
 
-function MarkdownRenderer({ markdownText }) {
-  return (
-    <div className="markdown-container">
-        <Markdown>{markdownText}</Markdown>
-    </div>
-  );
+// Custom link renderer to open links in a new tab
+const LinkRenderer = (props) => {
+    return (
+        <a href={props.href} target="_blank" rel="noopener noreferrer">
+            {props.children}
+        </a>
+    );
+};
+
+function MarkdownRenderer({ children }) {
+    const components={
+        a: LinkRenderer,
+    }
+    return (
+        <div className="markdown-container">
+            <Markdown components={components}>{children}</Markdown>
+        </div>
+    );
 }
 
 export default MarkdownRenderer;
