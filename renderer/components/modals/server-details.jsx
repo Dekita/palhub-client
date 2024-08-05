@@ -107,6 +107,22 @@ export default function ServerDetailsModal({show,setShow,server}) {
     };
 
 
+    const onClickJoinServer = useCallback(async() => {
+        console.log('onClickJoinServer');
+
+        if (!window.uStore) return console.error('uStore not loaded');
+        if (!window.palhub) return console.error('palhub not loaded');
+        if (!window.nexus) return console.error('nexus not loaded');
+        if (!server) return;
+
+        const game_path = await window.uStore.get('game_path');
+        if (!game_path) return console.error('game_path not found');
+        const game_data = await window.palhub('validateGamePath', game_path);
+        if (!game_data.has_exe) return console.error('game exe not found');
+        await window.palhub('launchExe', game_data.exe_path);
+
+    }, [server]);
+
 
     const onInstallServerModList = useCallback(async() => {
         console.log('onInstallServerModList');
@@ -305,7 +321,7 @@ export default function ServerDetailsModal({show,setShow,server}) {
                             }}
                         />
                         <div className="col-12 col-sm-4 col-md-3 pt-3">
-                            <button className="btn btn-success px-4 w-100">
+                            <button className="btn btn-success px-4 w-100" onClick={onClickJoinServer}>
                                 <strong>Join Server</strong><br />
                             </button>
                         </div>
