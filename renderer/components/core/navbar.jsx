@@ -91,7 +91,7 @@ export default function MainNavbar({
                 </Nav>
 
                 <Nav className='text-end'>
-                    <div className='btn p-2 no-shadow hover-dark hover-secondary'
+                    <div className={`btn p-2 no-shadow ${active_route === '/settings' ? 'text-warning' : 'hover-dark hover-secondary'}`}
                         onClick={() => router.push('/settings')}>
                         <CommonIcons.cog
                             height='1.75rem'

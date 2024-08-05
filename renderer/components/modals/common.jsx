@@ -16,6 +16,13 @@ import DekSwitch from '@components/core/dek-switch'
 
 
 export function ensureEntryValueType(value, num_type = 'float') {
+    switch (typeof value) {
+        case 'string': return value;
+        case 'number': return value;
+        case 'boolean': return value.toString();
+        default: return value;
+    }
+
     if (typeof value !== 'string') return value;
 
     // const numval = num_type === 'int' ? parseInt(value) : parseFloat(value);
