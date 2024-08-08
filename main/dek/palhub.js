@@ -81,10 +81,17 @@ class DekNexus extends Nexus {
  *
  */
 export class Client {
+
+    static setAppDetails(appName, appVersion) {
+        this.appName = appName;
+        this.appVersion = appVersion;
+        console.log("setAppDetails:", appName, appVersion);
+    }
+
     static async ensureNexusLink(api_key) {
         if (this._nexus) return this._nexus;
-        const appName = "PalHUB";
-        const appVersion = "0.0.1";
+        const appName = this.appName ?? "PalHUB";
+        const appVersion = this.appVersion ?? "0.0.1";
         const defaultGame = "palworld";
         const nexus = new DekNexus({
             defaultGame,
@@ -109,13 +116,9 @@ export class Client {
                 const fileExists = (filename) => files.some((file) => file.isFile() && file.name === filename);
                 // console.log({ files });
 
-                if (game_path.includes("steamapps")) {
-                    // steam ~ obviously
-
+                if (game_path.includes("steamapps")) {// steam ~ obviously
                     // check for the Palworld executable
                     const has_exe = fileExists("Palworld.exe");
-                    // console.log({ has_exe });
-
                     if (has_exe) {
                         const exe_path = path.join(game_path, "Palworld.exe");
                         const ue4ss_path = path.join(game_path, "Pal/Binaries/Win64/dwmapi.dll");
@@ -130,9 +133,41 @@ export class Client {
                         });
                     }
                 }
+                if (game_path.includes('XboxGames')) { // gamepass
+                    // check for the Palworld executable
+                    const has_exe = fileExists("gamelaunchhelper.exe");
+                    if (has_exe) {
+                        const exe_path = path.join(game_path, "gamelaunchhelper.exe");
+                        const ue4ss_path = path.join(game_path, "Pal/Binaries/WinGDK/dwmapi.dll");
+                        const has_ue4ss = await fs.access(ue4ss_path).then(()=>true).catch(()=>false);
+                        console.log({ exe_path, has_exe, ue4ss_path, has_ue4ss });
+                        return resolve({
+                            type: "xbox",
+                            has_exe,
+                            exe_path,
+                            has_ue4ss,
+                            ue4ss_path,
+                        });
+                    }
+                }
+                if (game_path.includes('WindowsApps')) {//! windows store (UNTESTED)
+                    // check for the Palworld executable
+                    const has_exe = fileExists("Palworld.exe");
+                    if (has_exe) {
+                        const exe_path = path.join(game_path, "Palworld.exe");
+                        const ue4ss_path = path.join(game_path, "Pal/Binaries/Win64/dwmapi.dll");
+                        const has_ue4ss = await fs.access(ue4ss_path).then(()=>true).catch(()=>false);
+                        console.log({ exe_path, has_exe, ue4ss_path, has_ue4ss });
+                        return resolve({
+                            type: "windows",
+                            has_exe,
+                            exe_path,
+                            has_ue4ss,
+                            ue4ss_path,
+                        });
+                    }
+                }
 
-                // if (game_path.includes('WindowsApps')) return resolve('windows'); // windows store
-                // if (game_path.includes('XboxGames')) return resolve('xbox'); // xbox game pass
             } catch (error) {
                 console.error("validateGamePath error", error);
             }
@@ -264,7 +299,8 @@ export class Client {
                     install_path = path.join(game_path, "Pal/Content/Paks");
                     break;
                 case "Mods/":
-                    install_path = path.join(game_path, "Pal/Binaries/Win64");
+                    if (game_path.includes('XboxGames')) install_path = path.join(game_path, "Pal/Binaries/WinGDK");
+                    else install_path = path.join(game_path, "Pal/Binaries/Win64");
                     break;
                 default:
                     install_path = game_path;
@@ -352,7 +388,8 @@ export class Client {
                         base_path = game_path;
                         break;
                     case "Mods/":
-                        base_path = path.join(game_path, "Pal/Binaries/Win64");
+                        if (game_path.includes('XboxGames')) base_path = path.join(game_path, "Pal/Binaries/WinGDK");
+                        else base_path = path.join(game_path, "Pal/Binaries/Win64");
                         break;
                     case "LogicMods/":
                         base_path = path.join(game_path, "Pal/Content/Paks");

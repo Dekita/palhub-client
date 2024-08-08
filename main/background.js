@@ -10,16 +10,15 @@
 import { app, ipcMain } from "electron";
 import Store from "electron-store";
 import Dekache from "dekache";
-import { Client, Emitter } from './dek/palhub';
-
-import detectSteamGameInstallation from "./dek/detectSteamGame";
-import detectXboxGameInstallation from "./dek/detectXboxGame";
-
-console.log({ Client, Emitter });
-
 import config from "./config";
 import DEAP from "./dek/deap";
 import DAPI from "./dek/api";
+import { Client, Emitter } from './dek/palhub';
+import detectSteamGameInstallation from "./dek/detectSteamGame";
+// import detectXboxGameInstallation from "./dek/detectXboxGame";
+
+// set the app details for nexus api requests
+Client.setAppDetails(DEAP.name, DEAP.version);
 
 // handle uncaught exceptions && promises
 process.on("uncaughtException", (err) => {
