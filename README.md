@@ -120,6 +120,18 @@ pnpm run build
 # using yarn (recommended)
 yarn publish
 ```
+List current `GH_TOKEN`
+```powershell
+echo $env:GH_TOKEN
+```
+Set New `GH_TOKEN` (single session)
+```powershell
+$env:GH_TOKEN = "your_token_here"
+```
+Set New `GH_TOKEN` (permanently)
+```powershell
+[System.Environment]::SetEnvironmentVariable("GH_TOKEN", "your_token_here", [System.EnvironmentVariableTarget]::User)
+```
 <hr class="mt-1">
 
 
