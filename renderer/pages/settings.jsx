@@ -20,8 +20,6 @@ import DekSelect from '@components/core/dek-select';
 
 import wait from '@utils/wait';
 
-
-
 const SetupStep = ({step, handleUE4SSInstall}) => {
     switch (step) {
         case 0: return <div className='card bg-success border-success2 border my-4 p-3 text-center'>
@@ -83,6 +81,8 @@ const SetupStep = ({step, handleUE4SSInstall}) => {
 }
 
 export default function SettingsPage({modals, ThemeController}) {
+
+
 
     // initial settings data for the application
     const [settings, setSettings] = React.useState({
@@ -163,6 +163,9 @@ export default function SettingsPage({modals, ThemeController}) {
             updateConfig('auto-play', auto_play);
             updateConfig('auto-tiny', auto_tiny);
             updateConfig('tiny-tray', tiny_tray);
+
+            const game_install = await window.ipc.invoke("detect-game-installation");
+            console.log({game_install})
         })();
     }, []);
 

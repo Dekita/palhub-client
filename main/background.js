@@ -12,6 +12,9 @@ import Store from "electron-store";
 import Dekache from "dekache";
 import { Client, Emitter } from './dek/palhub';
 
+import detectSteamGameInstallation from "./dek/detectSteamGame";
+import detectXboxGameInstallation from "./dek/detectXboxGame";
+
 console.log({ Client, Emitter });
 
 import config from "./config";
@@ -120,6 +123,11 @@ ipcMain.handle("nexus", async (event, api_key, functionName, ...functionArgs) =>
 ipcMain.handle("palhub", async (event, action, ...args) => {
     if (!Client[action]) return console.error(`PalHUB function ${action} not found`);
     return await Client[action](...args);
+});
+
+ipcMain.handle("detect-game-installation", async (event) => {
+    // await detectXboxGameInstallation("palworld");
+    return await detectSteamGameInstallation("1623730");
 });
 
 

@@ -122,7 +122,7 @@ export default function ModListModal({show,setShow, mods}) {
 
                 {/* map mods into a table */}
                 {modConfig && <ModTable mods={mods.map(mod => {
-                    const modConfigEntry = modConfig?.mods[mod.mod_id];
+                    const modConfigEntry = modConfig?.mods?.[mod.mod_id];
                     if (!modConfigEntry) return null;
                     const {file_id, file_name} = modConfigEntry;
                     return {
