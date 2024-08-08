@@ -130,7 +130,6 @@ ipcMain.handle("detect-game-installation", async (event) => {
     return await detectSteamGameInstallation("1623730");
 });
 
-
 Emitter.on("download-mod-file", (download_data) => {
     DEAP.main_window.webContents.send("download-mod-file", download_data);
 });
