@@ -56,10 +56,12 @@ export default async function detectSteamGameInstallation(appId) {
 
         if (gamePath) {
             console.log(`Game found at: ${gamePath}`);
+            return gamePath;
         } else {
             console.log('Game not found');
         }
     } catch (err) {
         console.error('Error detecting game installation:', err);
     }
+    return null;
 }

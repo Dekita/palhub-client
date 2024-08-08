@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { cache } from 'react'
 import Link from 'next/link'
 import Image from 'next/image'
 
@@ -88,12 +88,11 @@ export default function SettingsPage({modals, ThemeController}) {
     const [settings, setSettings] = React.useState({
         server_url: 'D:/SteamLibrary/steamapps/common/Palworld',
         server_type: '{UNKNOWN}',
-        game_path: '',
         game_type: '{UNKNOWN}',
+        game_path: '', // D:\SteamLibrary\steamapps\common\Palworld
+        cache_dir: '', // D:\PalHUB\Client\cache
         show_key: false,
-        api_key: '',
-
-        cache_dir: 'D:/UE_Modding/HL Utils/palhub-client/cache',
+        api_key: '', // nexus mods api key
 
         has_ue4ss: false,
         has_exe: false, 
@@ -136,10 +135,22 @@ export default function SettingsPage({modals, ThemeController}) {
             if (!window.ipc) return console.error('ipc not loaded');
 
             const api_key   = await window.uStore.get('api_key', settings.api_key);
-            const game_path = await window.uStore.get('game_path', settings.game_path);
-            const cache_dir = await window.uStore.get('cache_dir', settings.cache_dir);
-            const path_data = await window.palhub('validateGamePath', game_path);
-            const game_type = path_data?.type ?? '{UNKNOWN}';
+
+            let game_path = await window.uStore.get('game_path', settings.game_path);
+            let cache_dir = await window.uStore.get('cache_dir', settings.cache_dir);
+            let path_data = await window.palhub('validateGamePath', game_path);
+
+            if (!!!game_path && !!!cache_dir) {
+                console.log("Detecting game installation..")
+                const new_path = await window.ipc.invoke("detect-game-installation");
+                const new_data = await window.palhub('validateGamePath', new_path);
+                if (new_path && new_data?.type) {
+                    game_path = new_path;
+                    path_data = new_data;
+                    cache_dir = game_path ? `${game_path}\\PalHubCache` : '';
+                    console.log({game_path, cache_dir})
+                }
+            }
             
             console.log({path_data})
             // const server_url = await window.uStore.get('server_url', settings.server_url);
@@ -147,9 +158,9 @@ export default function SettingsPage({modals, ThemeController}) {
             // const server_type = server_data?.type ?? '{UNKNOWN}';
             
             updateSetting('api_key', api_key);
-            updateSetting('game_path', game_path);
-            updateSetting('cache_dir', cache_dir);
-            updateSetting('game_type', game_type);
+            updateSetting('game_path', game_path, true);
+            updateSetting('cache_dir', cache_dir, true);
+            updateSetting('game_type', path_data?.type ?? '{UNKNOWN}');
             updateSetting('has_ue4ss', path_data?.has_ue4ss ?? false);
             updateSetting('has_exe', path_data?.has_exe ?? false);
             // updateSetting('server_url', server_url);
@@ -164,8 +175,6 @@ export default function SettingsPage({modals, ThemeController}) {
             updateConfig('auto-tiny', auto_tiny);
             updateConfig('tiny-tray', tiny_tray);
 
-            const game_install = await window.ipc.invoke("detect-game-installation");
-            console.log({game_install})
         })();
     }, []);
 
