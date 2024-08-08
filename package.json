@@ -23,10 +23,10 @@
         "publish": "nextron build --publish always"
     },
     "dependencies": {
-        "@bbob/preset-react": "^4.0.3",
-        "@bbob/react": "^4.0.3",
+        "@bbob/preset-react": "^4.1.0",
+        "@bbob/react": "^4.1.0",
         "@nexusmods/nexus-api": "^1.1.5",
-        "adm-zip": "^0.5.14",
+        "adm-zip": "^0.5.15",
         "bbcode-to-react": "^0.2.9",
         "bent": "^7.3.12",
         "blurhash": "^2.0.5",
@@ -39,9 +39,9 @@
         "electron-store": "^8.2.0",
         "electron-updater": "^6.2.1",
         "follow-redirects": "^1.15.6",
-        "framer-motion": "^11.3.1",
+        "framer-motion": "^11.3.24",
         "json-stringify-pretty-compact": "^4.0.0",
-        "luxon": "^3.4.4",
+        "luxon": "^3.5.0",
         "node-unrar-js": "^2.0.2",
         "react": "^18.3.1",
         "react-blurhash": "^0.3.0",
@@ -59,12 +59,13 @@
     },
     "devDependencies": {
         "@svgr/webpack": "^8.1.0",
-        "autoprefixer": "^10.4.19",
-        "electron": "^31.0.1",
+        "autoprefixer": "^10.4.20",
+        "electron": "^31.3.1",
         "electron-builder": "^24.13.3",
-        "next": "^14.2.4",
+        "next": "^14.2.5",
         "nextron": "^9.1.0",
-        "postcss": "^8.4.38",
-        "tailwindcss": "^3.4.3"
+        "postcss": "^8.4.41",
+        "postcss-import": "^16.1.0",
+        "tailwindcss": "^3.4.9"
     }
 }
