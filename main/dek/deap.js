@@ -148,7 +148,7 @@ class DEAP {
         //     this._windows[id].emit('window-fully-rendered');
         // });
         ipcMain.handle("install-update", async () => {
-            if (app.isPackaged) autoUpdater.quitAndInstall(true);
+            if (app.isPackaged) autoUpdater.quitAndInstall(true, true);
         });
         ipcMain.handle("app-action", async (event, id, action) => {
             console.log('app-action:', id, action);
@@ -362,7 +362,7 @@ class DEAP {
         const updater_events = ["checking-for-update", "update-available", "update-not-available", "download-progress", "update-downloaded", "before-quit-for-update", "error"];
         for (const event of updater_events) {
             autoUpdater.on(event, (...data) => {
-                this.main_window?.webContents?.send("auto-updater", event, data);
+                this.main_window?.webContents?.send("auto-updater", event, ...data);
             });
         }
         // begin checking updates:

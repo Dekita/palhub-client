@@ -35,6 +35,12 @@ export default function AutoUpdater({}) {
     const active_route = router.pathname;
 
     const [updateMessage, setUpdateMessage] = useState();
+    const [canInstallUpdate, setCanInstallUpdate] = useState(false);
+
+    const beginInstallUpdate = () => {
+        if (!window.ipc) return console.error('ipc not loaded');
+        window.ipc.invoke('install-update');
+    }
 
 
     useEffect(() => {
@@ -55,8 +61,7 @@ export default function AutoUpdater({}) {
                     break;
                 case 'update-downloaded':
                     setUpdateMessage('Update downloaded.');
-                    // begin the actual update process after files downloaded the auto updater
-                    setTimeout(() => window.ipc.invoke('install-update'), 3000);
+                    setCanInstallUpdate(true);
                     break;
                 case 'error':
                     setUpdateMessage(`Error updating: ${JSON.stringify(data)}`);
@@ -74,16 +79,16 @@ export default function AutoUpdater({}) {
                     break;
             }
         });
-
-
-
         return () => remove_auto_update_handler();
-    }, []);   
+    }, [active_route]); 
+
+    const showUpdateMessage = updateMessage || canInstallUpdate;
 
     return <>
-        {updateMessage && <div className='container mt-5 alert alert-danger border-2 border-danger2 text-center'>
+        {showUpdateMessage && <div className='container mt-5 alert alert-danger border-2 border-danger2 text-center'>
             <div className='px-3 text-white'>
-                <small><strong>{updateMessage}</strong></small>
+                {updateMessage && <small><strong>{updateMessage}</strong></small>}
+                {canInstallUpdate && <button className='btn btn-danger mt-2' onClick={beginInstallUpdate}>Install Update</button>}
             </div>
         </div>}
     </>;
