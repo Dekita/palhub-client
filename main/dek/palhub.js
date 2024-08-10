@@ -291,26 +291,39 @@ export class Client {
         });
     }
 
-    static determineInstallPath(game_path, entry) {
+    static determineInstallPath(game_path, firstFileEntry) {
         let install_path = game_path;
-        if (entry.isDirectory) {
-            switch (entry.entryName) {
-                case "LogicMods/":
-                    install_path = path.join(game_path, "Pal/Content/Paks");
+        if (firstFileEntry.isDirectory) {
+            switch (firstFileEntry.entryName) {
+                case "Pal/":
+                    install_path = game_path;
+                    break;
+                case "Binaries/":
+                    install_path = path.join(game_path, "Pal/Binaries");
+                    break;
+                case "Win64/":
+                    install_path = path.join(game_path, "Pal/Binaries/Win64");
+                    break;
+                case "WinGDK/":
+                    install_path = path.join(game_path, "Pal/Binaries/WinGDK");
                     break;
                 case "Mods/":
                     if (game_path.includes('XboxGames')) install_path = path.join(game_path, "Pal/Binaries/WinGDK");
                     else install_path = path.join(game_path, "Pal/Binaries/Win64");
                     break;
-                default:
-                    install_path = game_path;
+                case "Content/":
+                    install_path = path.join(game_path, "Pal/Content");
+                    break;
+                case "Paks/":
+                    install_path = path.join(game_path, "Pal/Content/Paks");
+                    break;
+                case "LogicMods/":
+                    install_path = path.join(game_path, "Pal/Content/Paks/LogicMods");
+                    break;
+                default: // ~mods/ or unknown mod type ~ assume regular .pak replacement
+                    install_path = path.join(game_path, "Pal/Content/Paks/~mods");
                     break;
             }
-            // } else if (firstEntry.entryName.endsWith('.pak')) {
-            //     // unknown mod type ~ assume regular .pak replacement
-            //     const install_path = path.join(game_path, 'Pal/Content/Paks/~mods');
-            //     archive.extractAllTo(install_path, true);
-            //     console.log('extracted to:', install_path);
         } else {
             // unknown mod type ~ assume regular .pak replacement
             install_path = path.join(game_path, "Pal/Content/Paks/~mods");
@@ -387,14 +400,30 @@ export class Client {
                     case "Pal/":
                         base_path = game_path;
                         break;
+                    case "Binaries/":
+                        base_path = path.join(game_path, "Pal/Binaries");
+                        break;
+                    case "Win64/":
+                        base_path = path.join(game_path, "Pal/Binaries/Win64");
+                        break;
+                    case "WinGDK/":
+                        base_path = path.join(game_path, "Pal/Binaries/WinGDK");
+                        break;
                     case "Mods/":
                         if (game_path.includes('XboxGames')) base_path = path.join(game_path, "Pal/Binaries/WinGDK");
                         else base_path = path.join(game_path, "Pal/Binaries/Win64");
                         break;
-                    case "LogicMods/":
+
+                    case "Content/":
+                        base_path = path.join(game_path, "Pal/Content");
+                        break;
+                    case "Paks/":
                         base_path = path.join(game_path, "Pal/Content/Paks");
                         break;
-                    default:
+                    case "LogicMods/":
+                        base_path = path.join(game_path, "Pal/Content/Paks/LogicMods");
+                        break;
+                    default: // ~mods/ or unknown mod type ~ assume regular .pak replacement
                         base_path = path.join(game_path, "Pal/Content/Paks/~mods");
                         break;
                 }

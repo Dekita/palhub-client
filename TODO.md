@@ -1,6 +1,10 @@
 
 # PalHUB Client: 
-- subcontract making the about page to gpt, obviously
+- fix issue when fresh install, mods page is empty: 
+https://cdn.discordapp.com/attachments/1260632122759315588/1271789769944203424/23.png?ex=66b89e05&is=66b74c85&hm=81e4b59c5445ebf80b910ca0a79e6ca9acf9c5e51d61383c64dcc28e4222f0de&
+
+- fix vbs location using setExternalVBSLocation
+
 
 # PalHUB Server: 
 - uses api key to send /list-server request to endpoint with mod information

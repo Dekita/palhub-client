@@ -12,6 +12,10 @@ files:
       - package.json
       - app
 
+extraFiles:
+  - from: resources/vbs
+    to: resources/vbs
+
 publish:
   provider: github
   owner: dekita

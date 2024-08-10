@@ -68,7 +68,7 @@ class DEAP {
     /**
      * setup app using given config
      */
-    static setup(config = {}) {
+    static setup(config = {}, callback=()=>{}) {
         this._tray = null;
         this._windows = {};
         this._config = config;
@@ -92,6 +92,7 @@ class DEAP {
             // }
         });
         logger.info(app.getAppPath());
+        if (callback) callback(this);
     }
     static setInstanceLock(single) {
         if (single && !app.requestSingleInstanceLock({})) app.quit();

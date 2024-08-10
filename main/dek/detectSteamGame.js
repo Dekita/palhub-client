@@ -1,9 +1,21 @@
 const fs = require('fs');
 const path = require('path');
 const vdf = require('vdf');
-const regedit = require('regedit');
+const regedit = require('regedit'); //.promisified
 
-const steamRegistryKey = 'HKLM\\Software\\Wow6432Node\\Valve\\Steam';
+const steamRegistryKey = 'HKLM\\Software\\Wow6432Node\\Valve\\Steam'; //64bit
+const steamRegistry32b = 'HKLM\\Software\\Valve\\Steam'; //32bit steam isntall
+
+export function updateVBS(app_path) {
+    // Assuming the files lie in <app>/resources/my-location
+    const vbsDirectory = path.join(app_path, './resources/vbs');
+    if (!fs.existsSync(vbsDirectory)) {
+        console.error('VBS directory not found:', vbsDirectory);
+        return;
+    }
+    console.log('Setting external VBS location:', vbsDirectory);
+    regedit.setExternalVBSLocation(vbsDirectory);
+}
 
 function getSteamPathFromRegistry() {
     return new Promise((resolve, reject) => {
