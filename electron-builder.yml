@@ -12,6 +12,7 @@ files:
       - package.json
       - app
 
+# - from: node_modules/regedit/vbs
 extraFiles:
   - from: resources/vbs
     to: resources/vbs
