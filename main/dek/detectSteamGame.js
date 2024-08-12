@@ -6,9 +6,9 @@ const regedit = require('regedit'); //.promisified
 const steamRegistryKey = 'HKLM\\Software\\Wow6432Node\\Valve\\Steam'; //64bit
 const steamRegistry32b = 'HKLM\\Software\\Valve\\Steam'; //32bit steam isntall
 
-export function updateVBS(app_path) {
+export function setExternalVBS(...path_segments) {
     // Assuming the files lie in <app>/resources/my-location
-    const vbsDirectory = path.join(app_path, './resources/vbs');
+    const vbsDirectory = path.join(...path_segments);
     if (!fs.existsSync(vbsDirectory)) {
         console.error('VBS directory not found:', vbsDirectory);
         return;
@@ -71,9 +71,11 @@ export default async function detectSteamGameInstallation(appId) {
             return gamePath;
         } else {
             console.log('Game not found');
+            return 'Game not found';
         }
     } catch (err) {
         console.error('Error detecting game installation:', err);
+        return err.message;
     }
     return null;
 }

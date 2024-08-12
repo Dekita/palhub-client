@@ -14,7 +14,7 @@ import config from "./config";
 import DEAP from "./dek/deap";
 import DAPI from "./dek/api";
 import { Client, Emitter } from './dek/palhub';
-import detectSteamGameInstallation, {updateVBS} from "./dek/detectSteamGame";
+import detectSteamGameInstallation, {setExternalVBS} from "./dek/detectSteamGame";
 // import detectXboxGameInstallation from "./dek/detectXboxGame";
 
 // set the app details for nexus api requests
@@ -147,10 +147,12 @@ Emitter.on("ue4ss-process", (type, data) => {
 
 
 DEAP.setup(config, ()=>{
-    // update regedit script path
-    updateVBS(DEAP.app.getAppPath());
+    if (process.platform === 'win32') { // update regedit script path
+        // In a packaged app, resourcesPath points to the resources directory
+        if (DEAP.app.isPackaged) setExternalVBS(process.resourcesPath, 'vbs'); 
+        else setExternalVBS(DEAP.app.getAppPath(), 'resources/vbs'); // Development mode
+    }
 });
-
 
 DEAP.addIPCHandler("get-user-count", async () => {
     // if (!DEAP.app.isPackaged) return 0;
