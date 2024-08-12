@@ -120,7 +120,8 @@ pnpm run build
 # using yarn (recommended)
 yarn publish
 ```
-List current `GH_TOKEN`
+
+List current `GH_TOKEN` (powershell)
 ```powershell
 echo $env:GH_TOKEN
 ```
