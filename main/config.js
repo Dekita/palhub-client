@@ -1,9 +1,18 @@
+/*
+* ########################################
+* # PalHUB::Client by dekitarpg@gmail.com
+* ########################################
+* 
+* This file handles all configuration options for the palhub client.
+* Config data is used to define how the app and windows behave.
+* 
+*/
+
+
 /**
 * system: PalHUB Client
 * author: dekitarpg@gmail.com
 * 
-* This file handles all configuration options for the palhub client.
-* Config data is used to define how the app and windows behave.
 */
 
 // load modules used for generating config:
@@ -35,9 +44,11 @@ export default {
 
     /**
     * handle_rejections:
-    * determine if DEAP should handle unhandled promise rejections
+    * handle_exceptions:
+    * determine if DEAP should handle unhandled promise rejections/exceptions
     */
     handle_rejections: true, 
+    handle_exceptions: true,
 
     /**
     * app_icon:

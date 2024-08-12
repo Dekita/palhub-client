@@ -315,9 +315,12 @@ class DEAP {
         app.setLoginItemSettings({ openAtLogin });
     }
     static launch() {
-        // if (this._config.handle_rejections) {
-        //     process.on('unhandledRejection', logger.error);
-        // }
+        if (this._config.handle_rejections) {
+            process.on('unhandledRejection', logger.error);
+        }
+        if (this._config.handle_exceptions) {
+            process.on('uncaughtException', logger.error);
+        }
         app.on("ready", () => this.onAppReady());
         app.on("activate", () => this.onAppActivate());
         app.on("before-quit", () => this.onBeforeQuitApp());
