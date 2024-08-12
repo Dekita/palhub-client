@@ -4,14 +4,15 @@
 ########################################
 */
 
+
 import { contextBridge, ipcRenderer } from 'electron';
 
 // expose the user data (electron-store) API to the renderer process
 contextBridge.exposeInMainWorld('uStore', {
     async get(key, value) { return await ipcRenderer.invoke('uStore', 'get', key, value) },
-    set(key, value) { ipcRenderer.send('uStore', 'set', key, value) },
-    delete(key) { ipcRenderer.send('uStore', 'delete', key) },
-    clear() { ipcRenderer.send('uStore', 'clear') },
+    set(key, value) { ipcRenderer.invoke('uStore', 'set', key, value) },
+    delete(key) { ipcRenderer.invoke('uStore', 'delete', key) },
+    clear() { ipcRenderer.invoke('uStore', 'clear') },
 });
 
 // expose nexus functionality to renderer process
