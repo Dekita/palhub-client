@@ -27,7 +27,12 @@ export default async (event, api_key, functionName, ...functionArgs) => {
     const getUncachedValue = async () => {
         const nexus = await Client.ensureNexusLink(api_key);
         if (!nexus[functionName]) return console.error(`Nexus function ${functionName} not found`);
-        return await nexus[functionName](...functionArgs);
+        try {
+            return await nexus[functionName](...functionArgs);
+        } catch (error) {
+            console.error(`Nexus function ${functionName} failed`, error);
+        }
+        return null;
     }
     // return uncached value when checking rate limit, as each other request 
     // will also update the rate limit data, so we don't need to cache it.
