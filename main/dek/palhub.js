@@ -116,58 +116,40 @@ export class Client {
                 const fileExists = (filename) => files.some((file) => file.isFile() && file.name === filename);
                 // console.log({ files });
 
-                if (game_path.includes("steamapps")) {// steam ~ obviously
-                    // check for the Palworld executable
-                    const has_exe = fileExists("Palworld.exe");
-                    if (has_exe) {
-                        const exe_path = path.join(game_path, "Palworld.exe");
-                        const ue4ss_path = path.join(game_path, "Pal/Binaries/Win64/dwmapi.dll");
-                        const has_ue4ss = await fs.access(ue4ss_path).then(()=>true).catch(()=>false);
-                        console.log({ exe_path, has_exe, ue4ss_path, has_ue4ss });
-                        return resolve({
-                            type: "steam",
-                            has_exe,
-                            exe_path,
-                            has_ue4ss,
-                            ue4ss_path,
-                        });
-                    }
-                }
-                if (game_path.includes('XboxGames')) { // gamepass
-                    // check for the Palworld executable
-                    const has_exe = fileExists("gamelaunchhelper.exe");
-                    if (has_exe) {
-                        const exe_path = path.join(game_path, "gamelaunchhelper.exe");
-                        const ue4ss_path = path.join(game_path, "Pal/Binaries/WinGDK/dwmapi.dll");
-                        const has_ue4ss = await fs.access(ue4ss_path).then(()=>true).catch(()=>false);
-                        console.log({ exe_path, has_exe, ue4ss_path, has_ue4ss });
-                        return resolve({
-                            type: "xbox",
-                            has_exe,
-                            exe_path,
-                            has_ue4ss,
-                            ue4ss_path,
-                        });
-                    }
-                }
-                if (game_path.includes('WindowsApps')) {//! windows store (UNTESTED)
-                    // check for the Palworld executable
-                    const has_exe = fileExists("Palworld.exe");
-                    if (has_exe) {
-                        const exe_path = path.join(game_path, "Palworld.exe");
-                        const ue4ss_path = path.join(game_path, "Pal/Binaries/Win64/dwmapi.dll");
-                        const has_ue4ss = await fs.access(ue4ss_path).then(()=>true).catch(()=>false);
-                        console.log({ exe_path, has_exe, ue4ss_path, has_ue4ss });
-                        return resolve({
-                            type: "windows",
-                            has_exe,
-                            exe_path,
-                            has_ue4ss,
-                            ue4ss_path,
-                        });
-                    }
-                }
+                const content_path = path.join(game_path, "Pal/Content");
+                const pak_path = path.join(game_path, "Pal/Content/Paks");
 
+                if (fileExists("Palworld.exe")) { // steam/windows
+                    const exe_path = path.join(game_path, "Palworld.exe");
+                    const ue4ss_path = path.join(game_path, "Pal/Binaries/Win64/dwmapi.dll");
+                    const has_ue4ss = await fs.access(ue4ss_path).then(()=>true).catch(()=>false);
+                    return resolve({
+                        type: "steam",
+                        has_exe: true,
+                        exe_path,
+                        pak_path,
+                        has_ue4ss,
+                        ue4ss_path,
+                        content_path,
+                    });
+                }
+                if (fileExists("gamelaunchhelper.exe")) { // xbox gamepass
+                    const exe_path = path.join(game_path, "gamelaunchhelper.exe");
+                    const ue4ss_path = path.join(game_path, "Pal/Binaries/WinGDK/dwmapi.dll");
+                    const has_ue4ss = await fs.access(ue4ss_path).then(()=>true).catch(()=>false);
+                    // console.log({ exe_path, has_exe, ue4ss_path, has_ue4ss });
+                    return resolve({
+                        type: "xbox",
+                        has_exe: true,
+                        exe_path,
+                        pak_path,
+                        has_ue4ss,
+                        ue4ss_path,
+                        content_path,
+                    });
+                }
+                // cant seem to validate game.. unknown path
+                throw new Error("Unknown game path");
             } catch (error) {
                 console.error("validateGamePath error", error);
             }
