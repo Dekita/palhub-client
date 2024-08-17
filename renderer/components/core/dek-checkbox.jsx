@@ -20,6 +20,7 @@ export default function DekCheckbox({
     iconPos='right',
     style = {},
     className = '',
+    color = 'secondary',
     labels=[null,null],
 }) {
     const [active, setActive] = useState(checked);
@@ -42,7 +43,7 @@ export default function DekCheckbox({
     if (inline)
         return (
             <>
-                <div className={'d-inline-block hover-dark hover-secondary ' + className}
+                <div className={`d-inline-block hover-dark hover-${color} ${className}`}
                     onClick={onClickedBox}
                     style={{ cursor: 'pointer', ...style }}>
                     {iconPos === 'left' ? (<div className=''>
