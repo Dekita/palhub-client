@@ -517,7 +517,7 @@ input[type="range"].thin {
 }
 
 .theme-bg {
-    background-color: var(--dek-body-color);
+    background-color: var(--dek-body-color) !important;
     color: var(--dek-text-color);
 }
 .theme-text {
@@ -1007,6 +1007,9 @@ input[type="range"].thin {
 }
 .bg-danger {
     background-color: var(--dek-danger-normal) !important;
+}
+.bg-danger2 {
+    background-color: var(--dek-danger-light) !important;
 }
 .border-danger {
     border-color: var(--dek-danger-normal) !important;
