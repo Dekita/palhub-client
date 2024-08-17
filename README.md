@@ -1,3 +1,5 @@
+
+
 <div align="center">
     <img style="max-height: 256px; width: auto;" src="resources/palhub-client-header.png" title="Main Logo" />
     <div class="row mt-3">
