@@ -19,7 +19,7 @@ import useScreenSize from '@hooks/useScreenSize';
 import MarkdownRenderer from '@components/core/markdown';
 import BBCodeRenderer from "@components/core/bbcode";
 
-import { ENVEntry, ensureEntryValueType } from '@components/modals/common';
+import { ENVEntry, ENVEntry_Input, ensureEntryValueType } from '@components/modals/common';
 // import DekSelect from '@components/core/dek-select';
 import DekSwitch from '@components/core/dek-switch'
 import DekChoice from "@components/core/dek-choice";
@@ -29,6 +29,7 @@ import ModFileCard from '@components/core/mod-file-card';
 import Link from "next/link";
 
 import wait from '@utils/wait';
+import DekCheckbox from "@components/core/dek-checkbox";
 
 
 const serverLongDescription=`
@@ -108,20 +109,43 @@ export default function ServerDetailsModal({show,setShow,server}) {
 
 
     const onClickJoinServer = useCallback(async() => {
-        console.log('onClickJoinServer');
+        try {
+            if (!window.uStore) return console.error('uStore not loaded');
+            if (!window.palhub) return console.error('palhub not loaded');
+            if (!window.nexus) return console.error('nexus not loaded');
+            if (!server) return;
+    
+            const game_path = await window.uStore.get('game_path');
+            if (!game_path) return console.error('game_path not found');
 
-        if (!window.uStore) return console.error('uStore not loaded');
-        if (!window.palhub) return console.error('palhub not loaded');
-        if (!window.nexus) return console.error('nexus not loaded');
-        if (!server) return;
+            const game_data = await window.palhub('validateGamePath', game_path);
+            if (!game_data.has_exe) return console.error('game exe not found');
+    
+            // const api_key = await window.uStore.get('api_key');
+            const cache_dir = await window.uStore.get('cache_dir');
+    
+            // check all required mods are installed:
+            for (const [index, {mod, file}] of servermodFiles.entries()) {
+                const is_downloaded = await window.palhub('checkModFileIsDownloaded', cache_dir, file);
+                const is_installed = await window.palhub('checkModIsInstalled', game_path, mod, file);
+                if (!is_downloaded) throw new Error('mod not downloaded:', mod, file);
+                if (is_installed) throw new Error('mod not installed:', mod, file);
+            }
+    
+            await window.palhub('writeJSON', game_path.content_path, {
+                "auto-join-server": {
+                    "path": server.palhubServerURL,
+                    "pass": "",
+                }
+            }, 'palhub.launch.config.json');
+    
+            await window.palhub('launchExe', game_data.exe_path);
+        } catch (error) {
+            console.log('onClickJoinServer error:', error);
+        }
 
-        const game_path = await window.uStore.get('game_path');
-        if (!game_path) return console.error('game_path not found');
-        const game_data = await window.palhub('validateGamePath', game_path);
-        if (!game_data.has_exe) return console.error('game exe not found');
-        await window.palhub('launchExe', game_data.exe_path);
 
-    }, [server]);
+    }, [server, servermodFiles]);
 
 
     const onInstallServerModList = useCallback(async() => {
@@ -154,7 +178,7 @@ export default function ServerDetailsModal({show,setShow,server}) {
 
         const total = servermodFiles.length;
         for (const [index, {mod, file}] of servermodFiles.entries()) {
-            console.log({index, mod, file});
+            // console.log({index, mod, file});
 
             addLogMessage(`Processing Mod... ${index+1} / ${total}`);
             // downloadMod(cache_path, download_url, mod, file)
@@ -320,21 +344,29 @@ export default function ServerDetailsModal({show,setShow,server}) {
                                 setServerpageID(i);
                             }}
                         />
-                        <div className="col-12 col-sm-4 col-md-3 pt-3">
-                            <button className="btn btn-success px-4 w-100" onClick={onClickJoinServer}>
+                        <div className="col-12 col-sm-4 col-md-3 pt-sm-3 pt-0 py-3">
+                            <button className="btn btn-success px-4 w-100" onClick={onClickJoinServer} disabled>
                                 <strong>Join Server</strong><br />
                             </button>
                         </div>
                     </div>
                 </>}
 
-
+                <div className="alert alert-danger text-center">
+                    <div className="container">
+                        <strong>NOTE:</strong> You must install the required mods to join this server.
+                    </div>
+                    <div className="container">
+                        <strong>NOTE:</strong> A password is required to join this server.
+                    </div>
+                </div>
 
                 {/* <MarkdownRenderer markdownText={serverLongDescriptionMD} /> */}
 
                 <Carousel interval={null} indicators={false} controls={false} className='theme-border' activeIndex={serverpageID}>
                     <Carousel.Item className="container-fluid">
-                        <BBCodeRenderer bbcodeText={serverLongDescription} />
+                        {/* <BBCodeRenderer bbcodeText={server.longServerDescription} /> */}
+                        <MarkdownRenderer>{server.longServerDescription}</MarkdownRenderer>
                         <div className="text-center mb-1">
                             <Link href={`https://discord.gg/WyTdramBkm`} target='_blank' className='btn btn-warning p-2 px-4'>
                                 <strong>Join {server.serverName} Discord</strong><br />
@@ -345,6 +377,57 @@ export default function ServerDetailsModal({show,setShow,server}) {
 
                     <Carousel.Item className="container-fluid">
                         <div className="row">
+                            <div className="card bg-secondary border border-secondary2 pt-3 px-3 pb-2 mb-3">
+                                {/* <ENVEntry 
+                                    name="Server Password"
+                                    value={''}
+                                    type="password"
+                                    updateSetting={()=>{}}
+                                    tooltip="This server requires a password to join."
+                                /> */}
+
+                                <input 
+                                    type="password"
+                                    placeholder="Enter Server Password Here.."
+                                    className='form-control form-dark theme-bg mb-1' 
+                                    // disabled={working}
+                                    autoComplete="off"
+                                    // list="fruitsList"
+                                    style={{ width: '100%' }}
+                                />
+
+                                <div className="row px-2">
+                                    <div className="col">
+                                        <DekCheckbox
+                                            inline={true}
+                                            color="dark"
+                                            text="Show Server Password"
+                                            iconPos='left'
+                                            checked={false}
+                                            onClick={(newval) => {
+                                                console.log(newval);
+                                                // updateSetting('show_key', newval);
+                                            }}
+                                        />
+                                    </div>
+                                    <div className="col text-end">
+                                        <DekCheckbox
+                                            inline={true}
+                                            color="dark"
+                                            text="Remember Server Password"
+                                            // iconPos='left'
+                                            checked={true}
+                                            onClick={(newval) => {
+                                                console.log(newval);
+                                                // updateSetting('show_key', newval);
+                                            }}
+                                        />
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div className="row">
                         {Object.keys(server).sort().map((key, i) => {
                             const disallowed = [
                                 'mods',
@@ -352,8 +435,7 @@ export default function ServerDetailsModal({show,setShow,server}) {
                                 'serverName',
                                 'gameVersion',
                                 'serverDescription',
-                                'serverLongDescription',
-                                'serverLongDescriptionMD',
+                                'longServerDescription',
                                 'serverURL',
                                 'discordURL',
                                 'rESTAPIPort',
@@ -369,6 +451,7 @@ export default function ServerDetailsModal({show,setShow,server}) {
                                 'serverPassword',
                                 'publicIP',
                                 'autoSaveSpan',
+                                'palhubServerURL',
                             ]
                             if (disallowed.includes(key)) return null;
                             return <div key={i} className='col-12 col-md-6'>
