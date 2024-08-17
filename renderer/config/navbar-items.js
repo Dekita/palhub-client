@@ -22,12 +22,12 @@ navbar_items.push({
     image: '/img/heap2.png',
 });
 
-navbar_items.push({
-    href: '/servers',
-    text: "Servers",
-    desc: 'Find PalHUB Servers!',
-    image: '/img/heap2.png',
-});
+// navbar_items.push({
+//     href: '/servers',
+//     text: "Servers",
+//     desc: 'Find PalHUB Servers!',
+//     image: '/img/heap2.png',
+// });
 
 navbar_items.push({
     href: '/about',
