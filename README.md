@@ -23,7 +23,9 @@
 ### What is PalHUB Client
 PalHUB Client aims to be the ULTIMATE Mod Manager for the video game Palworld. Allowing players to effortlessly manage their mods, save/load mod collections to/from a modlist, and most importantly, view/install the requirements for modified servers!! 
 
-Additionally, if you run a server where connecting clients need to have specific mods. This is a plug and play solution to the many many hours you've spent helping users get mods setup to join your server! Simply share your server mod list, or list your server in palhub client using the `PalHUB Client (Server Listing Mod)` (coming soon:..)
+Additionally, if you run a server where connecting clients need to have specific mods. This is a plug and play solution to the many many hours you've spent helping users get mods setup to join your server! Simply share your server mod list, and users can install all requirements with the click of a button!! 
+
+List your server in palhub client using the `PalHUB Client (Server Listing Mod)` (coming soon:..)
 
 | :exclamation: THIS APP IS IN BETA, JUST LIKE THE GAME!! PLEASE REPORT ANY BUGS |
 |---|
