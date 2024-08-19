@@ -12,10 +12,11 @@
 
 
 ### Table of Contents
-- [How to install](#how-to-install) 
-- [How to install (development)](./readme/install-dev.md)
 - [What is PalHUB Client](#what-is-palhub-client) 
 - [PalHUB Client Features](#palhub-client-features) 
+- [Download Latest Release](./releases)
+- [How to install (release)](#how-to-install) 
+- [How to install (development)](./readme/install-dev.md)
 - [Technical Details](#technical-details)
 <hr class="mt-1">
 
