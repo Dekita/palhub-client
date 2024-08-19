@@ -37,27 +37,32 @@ PalHUB Client aims to be the ULTIMATE Mod Manager for the video game Palworld.
 ### PalHUB Client Features
 - Painless Installation
 - Easily Navigatible Modern UI 
-- Automatic Updates (always the latest version)
+- Download & Install Mods From [NexusMods](https://www.nexusmods.com/)
+- Effortlessly manage your mod library and active mods with minimal clicks 
+- Allows for listing modified servers, their required mods, discord support server, and additional information 
+- Allows for joining modified servers, downloading their required mod list, or joining their discord support server
+- Automatically join into selected server as game launches (completely skips title screen) 
+- Automatic App Updates (PalHUB Client will always be the latest version)
 - Customizable Theme + Multiple Defaults 
 - Optional Minimize to System Tray
 - Optional Auto Minimize App on Launch
 - Optional Auto Launch App on System Boot
-- [todo] Multi Platform Support (win+linux)
-- [todo] Optional Auto Play Game on Launch
-- [todo] System Notifications
-- [TODO](/TODO.md) 
+- [TO-DO] Multi Platform Support (win+linux)
+- [TO-DO] Optional Auto Play Game on Launch
+- [TO-DO] System Notifications
 <hr class="mt-1">
 
 
 ### Requirements
-- [Palworld](https://store.steampowered.com/app/1623730/Palworld/) (obviously)
-- Windows PC (for release version, linux/mac can use dev build)
+- [Palworld](https://store.steampowered.com/app/1623730/Palworld/) Installed on your machine (steam or gamepass versions supported)
+- A [NexusMods](https://www.nexusmods.com/) account, to allow for downloading mods via their api.
+- Windows PC (for release version, linux/mac can use developer build directly with node.js installed)
 <hr class="mt-1">
 
 
 ### Help Guides
-- 
+- TODO
 
 
 ### Credit && Thanks
-- 
+- TODO
