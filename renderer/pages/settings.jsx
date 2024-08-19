@@ -407,7 +407,7 @@ export default function SettingsPage({modals, ThemeController}) {
                                 name="Minimize To Tray"
                                 value={settings['tiny-tray']}
                                 updateSetting={(n,v)=>updateConfig('tiny-tray', v)}
-                                tooltip="Minimize PalHUB Client to the system tray when closed."
+                                tooltip="Send PalHUB Client to the system tray when minized."
                             />
                         </div>
                     </div>
