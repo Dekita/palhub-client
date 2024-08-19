@@ -9,6 +9,7 @@
         <img src="https://img.shields.io/github/stars/Dekita/palhub-client?style=for-the-badge&logo=apache%20spark&logoColor=e4e4e4">
     </div>
 </div>
+<hr class="mt-1">
 
 
 ### What is PalHUB Client
@@ -60,14 +61,6 @@ List your server in palhub client using the `PalHUB Client (Server Listing Mod)`
 - A [NexusMods](https://www.nexusmods.com/) account, to allow for downloading mods via their api.
 - Windows PC (for release version, linux/mac can use developer build directly with node.js installed)
 <hr class="mt-1">
-
-
-### Help Guides
-- TODO
-
-
-### Credit && Thanks
-- TODO
 
 
 ### Technical Details
