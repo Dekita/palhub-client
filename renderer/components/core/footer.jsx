@@ -9,6 +9,7 @@ import OverlayTrigger from 'react-bootstrap/OverlayTrigger';
 import Tooltip from 'react-bootstrap/Tooltip';
 
 import * as CommonIcons from '@config/common-icons';
+import { Image } from 'react-bootstrap';
 
 
 export default function Footer() {
@@ -56,6 +57,10 @@ export default function Footer() {
 
     const tooltip_text = 'Nexus Mods API Rate Limits: Hourly / Daily';
     const overlay = <Tooltip className="text-end">{tooltip_text}</Tooltip>;
+    const overlayD = <Tooltip className="text-end">
+        <Image src='https://img.shields.io/discord/1132980259596271657?logo=discord&style=for-the-badge&logoColor=e4e4e4&label=Support%20Server' fluid />
+        {/* <iframe src="https://discord.com/widget?id=1132980259596271657&theme=dark" width="350" height="500" allowtransparency="true" frameborder="0" sandbox="allow-popups allow-popups-to-escape-sandbox allow-same-origin allow-scripts"></iframe> */}
+    </Tooltip>;
     const delay = { show: 100, hide: 250 };
 
     return (
@@ -65,7 +70,6 @@ export default function Footer() {
                     <OverlayTrigger placement='top' delay={delay} overlay={overlay}>
                         <small className='px-5'>{rateLimits.toString()}</small>
                     </OverlayTrigger>
-
                 </div>
                 <div className='col text-end'>
                     <CommonIcons.account
@@ -76,13 +80,15 @@ export default function Footer() {
                 </div>
             </div>
             <div>
-                <a href='https://discord.gg/WyTdramBkm' target='_blank' className='btn hover-secondary'>
-                    <CommonIcons.discord
-                        height='1.6rem'
-                        fill='currentColor'
-                        style={{ opacity: 0.5 }}
-                    />
-                </a>
+                <OverlayTrigger placement='left' delay={delay} overlay={overlayD}>
+                    <a href='https://discord.gg/WyTdramBkm' target='_blank' className='btn hover-secondary'>
+                        <CommonIcons.discord
+                            height='1.6rem'
+                            fill='currentColor'
+                            style={{ opacity: 0.5 }}
+                            />
+                    </a>
+                    </OverlayTrigger>
             </div>
         </footer>
     );
