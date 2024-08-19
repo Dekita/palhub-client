@@ -21,9 +21,11 @@
 
 
 ### What is PalHUB Client
-PalHUB Client aims to be the ULTIMATE Mod Manager for the video game Palworld. 
+PalHUB Client aims to be the ULTIMATE Mod Manager for the video game Palworld. Allowing players to effortlessly manage their mods, save/load mod collections to/from a modlist, and most importantly, view/install the requirements for modified servers!! 
 
-| :exclamation: THIS IS A BETA TESTING BUILD AND SHOULD NOT BE USED BY MUGGLES!! |
+Additionally, if you run a server where connecting clients need to have specific mods. This is a plug and play solution to the many many hours you've spent helping users get setup to join your server! 
+
+| :exclamation: THIS APP IS IN BETA, JUST LIKE THE GAME!! PLEASE REPORT ANY BUGS |
 |---|
 
 | :exclamation: THIS IS A BETA TESTING BUILD AND SHOULD NOT BE USED BY MUGGLES!! |
@@ -66,3 +68,13 @@ PalHUB Client aims to be the ULTIMATE Mod Manager for the video game Palworld.
 
 ### Credit && Thanks
 - TODO
+
+
+### Technical Details
+- [Nextron](https://github.com/saltyshiomix/nextron) (Bundles Next with Electron)
+    - [Electron](https://www.electronjs.org/)
+    - [Next.js](https://nextjs.org/)
+    - [React](https://react.dev/)
+- [Nexus Mods](https://www.nexusmods.com/) (Enables mod downloads/updates) 
+- Custom API Endpoints (For Server Listing / User Counts)
+<hr class="mt-1">
