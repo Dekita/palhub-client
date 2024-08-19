@@ -2,6 +2,7 @@
 ### How to install (development)
 | :exclamation: Node.js is required for development |
 |---|
+<hr class="mt-1">
 
 #### Clone Repository
 
@@ -9,6 +10,7 @@
 git clone https://github.com/dekita/palhub-client 
 cd ./palhub-client
 ```
+<hr class="mt-1">
 
 #### Install Dependencies
 
@@ -22,6 +24,7 @@ npm install
 # using pnpm
 pnpm install --shamefully-hoist
 ```
+<hr class="mt-1">
 
 #### Run Development Mode
 
@@ -35,6 +38,7 @@ npm run dev
 # using pnpm
 pnpm run dev
 ```
+<hr class="mt-1">
 
 #### Build Application
 
@@ -48,6 +52,7 @@ npm run build
 # using pnpm 
 pnpm run build
 ```
+<hr class="mt-1">
 
 #### Publish Application
 | :exclamation: Requires repository access via ENV variable `GH_TOKEN` |
@@ -69,15 +74,7 @@ Set New `GH_TOKEN` (permanently)
 ```powershell
 [System.Environment]::SetEnvironmentVariable("GH_TOKEN", "your_token_here", [System.EnvironmentVariableTarget]::User)
 ```
-<hr class="mt-1">
 
 
-### Technical Details
-- [Nextron](https://github.com/saltyshiomix/nextron) (Bundles Next with Electron)
-    - [Electron](https://www.electronjs.org/)
-    - [Next.js](https://nextjs.org/)
-    - [React](https://react.dev/)
-- [Nexus Mods](https://www.nexusmods.com/) (Enables mod downloads/updates) 
-- Custom API Endpoints (For Server Listing / User Counts)
-<hr class="mt-1">
+
 
