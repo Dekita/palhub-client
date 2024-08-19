@@ -15,9 +15,8 @@
 - [What is PalHUB Client](#what-is-palhub-client) 
 - [PalHUB Client Features](#palhub-client-features) 
 - [Download Latest Release](./releases)
-- [How to install (release)](./resources/readme/install.md)
-- [How to install (development)](./resources/readme/install-dev.md)
-- [Technical Details](#technical-details)
+- [How to Install App](./resources/readme/install.md)
+- [Developer Build](./resources/readme/install-dev.md)
 <hr class="mt-1">
 
 
