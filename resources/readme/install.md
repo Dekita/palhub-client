@@ -24,6 +24,7 @@ Easy! If you have any doubts, before you fully run the installer, drop the setup
 
 | :exclamation: BKav Pro is annoying:.. |
 |---|
+
 The antivirus Bkav Pro *may* show a false positive for `W32.AIDetectMalware`. According to security researchers at hackerdose.com. "This is quite typical for installation files like Setup.exe and Setup.msi. We’ve also seen it on legitimate utility software installations that came from the official source and executable file plugins for well-known products like music mixing and editing software. This identification is especially prevalent when downloading files via torrents or third-party installers." [learn more here](https://hackerdose.com/malware/w32-aidetectmalware-bkav-pro/)
 
 If you encounter a Virus Total report suggesting anything malicious is within the application, please report it immediately via [discord](https://discord.gg/WyTdramBkm)
