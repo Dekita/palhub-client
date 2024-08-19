@@ -16,9 +16,10 @@ While installing simply follow the on-screen instructions to get the app running
 ### Why Does This Happen?! 
 Because a few years ago windows decided they wanted $250/yr for a windows code signing license!! I'm just a small developer who, unfortunately, doesnt have that kind of spare cash. 
 
+<hr class="mt-1">
 
 ### How To Be Sure The App Is Safe??
-Easy! Before you fully run the installer, drop the setup.exe file into the [Virus Total Website](https://www.virustotal.com)! Virus Total will then scan the file with over 50 different antivirus scanners and report the results.. If you encounter a Virus Total report with multiple antivirus vendors suggesting the application is malicious, please report it immediately via [discord](https://discord.gg/WyTdramBkm)! 
+Easy! Before you fully run the installer, drop the setup.exe file into the [Virus Total Website](https://www.virustotal.com)! Virus Total will then scan the file with over 50 different antivirus scanners and report the results.. If you encounter a Virus Total report with multiple antivirus vendors suggesting the application is malicious, please report it immediately via [Discord Support Server](https://discord.gg/WyTdramBkm)! 
 
 | :exclamation: BKav Pro False Positive :exclamation: |
 |---|
