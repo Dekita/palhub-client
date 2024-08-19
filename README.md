@@ -20,13 +20,13 @@ Additionally, if you run a server where connecting clients need to have specific
 
 List your server in palhub client using the `PalHUB Client (Server Listing Mod)` (coming soon:..)
 
-| :exclamation: THIS APP IS IN BETA, JUST LIKE THE GAME!! PLEASE REPORT ANY BUGS |
+| :exclamation: THIS APP IS IN BETA, JUST LIKE THE GAME!! PLEASE REPORT ANY BUGS! |
 |---|
 
-| :exclamation: THIS APP IS IN BETA, JUST LIKE THE GAME!! PLEASE REPORT ANY BUGS |
+| :exclamation: THIS APP IS IN BETA, JUST LIKE THE GAME!! PLEASE REPORT ANY BUGS! |
 |---|
 
-| :exclamation: THIS APP IS IN BETA, JUST LIKE THE GAME!! PLEASE REPORT ANY BUGS |
+| :exclamation: THIS APP IS IN BETA, JUST LIKE THE GAME!! PLEASE REPORT ANY BUGS! |
 |---|
 <hr class="mt-1">
 
