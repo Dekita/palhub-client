@@ -387,7 +387,7 @@ export default function ServerDetailsModal({show,setShow,server}) {
                         {/* <BBCodeRenderer bbcodeText={server.longServerDescription} /> */}
                         <MarkdownRenderer>{server.longServerDescription}</MarkdownRenderer>
                         {server.discordServerID && <div className="text-center mb-1">
-                            <Link href={`https://discord.gg/WyTdramBkm`} target='_blank' className='btn btn-warning p-2 px-4'>
+                            <Link href={`https://discord.gg/${server.discordServerID}`} target='_blank' className='btn btn-warning p-2 px-4'>
                                 <strong>Join {server.serverName} Discord</strong><br />
                                 <small>opens in your default browser</small>
                             </Link>
