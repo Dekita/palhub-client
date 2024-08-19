@@ -85,6 +85,12 @@ export default function ServerDetailsModal({show,setShow,server}) {
     const [isComplete, setIsComplete] = useState(false);
     const logRef = useRef(null);
 
+
+    const [showPassword, setShowPassword] = useState(false);
+    const [rememberPassword, setRememberPassword] = useState(true);
+    const passwordRef = useRef(null);
+
+
     const addLogMessage = (message) => {
         setLogMessages(old => [...old, message]);
         if (logRef.current) {
@@ -129,23 +135,29 @@ export default function ServerDetailsModal({show,setShow,server}) {
                 const is_downloaded = await window.palhub('checkModFileIsDownloaded', cache_dir, file);
                 const is_installed = await window.palhub('checkModIsInstalled', game_path, mod, file);
                 if (!is_downloaded) throw new Error('mod not downloaded:', mod, file);
-                if (is_installed) throw new Error('mod not installed:', mod, file);
+                if (!is_installed) throw new Error('mod not installed:', mod, file);
             }
-    
-            await window.palhub('writeJSON', game_path.content_path, {
+
+            if (rememberPassword) {
+                await window.serverCache.set(server.palhubServerURL, passwordRef.current.value);
+            }
+            // await window.uStore.set('remeber_server_passwords', rememberPassword);
+
+            console.log('writing launch config:', game_data.content_path);
+            await window.palhub('writeJSON', game_data.content_path, {
                 "auto-join-server": {
                     "path": server.palhubServerURL,
-                    "pass": "",
+                    "pass": passwordRef.current.value,
                 }
             }, 'palhub.launch.config.json');
-    
+   
+            console.log('launching game:', game_data.exe_path);
             await window.palhub('launchExe', game_data.exe_path);
         } catch (error) {
             console.log('onClickJoinServer error:', error);
         }
 
-
-    }, [server, servermodFiles]);
+    }, [server, servermodFiles, passwordRef, rememberPassword]);
 
 
     const onInstallServerModList = useCallback(async() => {
@@ -267,6 +279,7 @@ export default function ServerDetailsModal({show,setShow,server}) {
             if (!window.uStore) return console.error('uStore not loaded');
             if (!window.palhub) return console.error('palhub not loaded');
             if (!window.nexus) return console.error('nexus not loaded');
+            if (!window.serverCache) return console.error('serverCache not loaded');
             if (!server) return;
             const api_key = await window.uStore.get('api_key');
 
@@ -299,9 +312,15 @@ export default function ServerDetailsModal({show,setShow,server}) {
                 await addModAndFile(mod_id, file_id, 'blocked');
             }
             
+            if (rememberPassword) {
+                console.log('getting:/...', server.palhubServerURL);
+                const password = await window.serverCache.get(server.palhubServerURL);
+                if (password) passwordRef.current.value = password;
+            }
+
             setServerModFiles(server_mod_files);
         })();
-    }, [server]);
+    }, [server, rememberPassword, passwordRef]);
 
 
     if (!server) return null;
@@ -345,7 +364,7 @@ export default function ServerDetailsModal({show,setShow,server}) {
                             }}
                         />
                         <div className="col-12 col-sm-4 col-md-3 pt-sm-3 pt-0 py-3">
-                            <button className="btn btn-success px-4 w-100" onClick={onClickJoinServer} disabled>
+                            <button className="btn btn-success px-4 w-100" onClick={onClickJoinServer} >
                                 <strong>Join Server</strong><br />
                             </button>
                         </div>
@@ -367,12 +386,12 @@ export default function ServerDetailsModal({show,setShow,server}) {
                     <Carousel.Item className="container-fluid">
                         {/* <BBCodeRenderer bbcodeText={server.longServerDescription} /> */}
                         <MarkdownRenderer>{server.longServerDescription}</MarkdownRenderer>
-                        <div className="text-center mb-1">
+                        {server.discordServerID && <div className="text-center mb-1">
                             <Link href={`https://discord.gg/WyTdramBkm`} target='_blank' className='btn btn-warning p-2 px-4'>
                                 <strong>Join {server.serverName} Discord</strong><br />
                                 <small>opens in your default browser</small>
                             </Link>
-                        </div>
+                        </div>}
                     </Carousel.Item>
 
                     <Carousel.Item className="container-fluid">
@@ -387,13 +406,14 @@ export default function ServerDetailsModal({show,setShow,server}) {
                                 /> */}
 
                                 <input 
-                                    type="password"
+                                    type={showPassword ? 'text' : 'password'}
                                     placeholder="Enter Server Password Here.."
                                     className='form-control form-dark theme-bg mb-1' 
                                     // disabled={working}
                                     autoComplete="off"
                                     // list="fruitsList"
                                     style={{ width: '100%' }}
+                                    ref={passwordRef}
                                 />
 
                                 <div className="row px-2">
@@ -403,11 +423,8 @@ export default function ServerDetailsModal({show,setShow,server}) {
                                             color="dark"
                                             text="Show Server Password"
                                             iconPos='left'
-                                            checked={false}
-                                            onClick={(newval) => {
-                                                console.log(newval);
-                                                // updateSetting('show_key', newval);
-                                            }}
+                                            checked={showPassword}
+                                            onClick={setShowPassword}
                                         />
                                     </div>
                                     <div className="col text-end">
@@ -416,11 +433,8 @@ export default function ServerDetailsModal({show,setShow,server}) {
                                             color="dark"
                                             text="Remember Server Password"
                                             // iconPos='left'
-                                            checked={true}
-                                            onClick={(newval) => {
-                                                console.log(newval);
-                                                // updateSetting('show_key', newval);
-                                            }}
+                                            checked={rememberPassword}
+                                            onClick={setRememberPassword}
                                         />
                                     </div>
                                 </div>
