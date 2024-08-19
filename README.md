@@ -29,8 +29,10 @@ List your server in palhub client using the `PalHUB Client (Server Listing Mod)`
 
 | :exclamation: THIS APP IS IN BETA, JUST LIKE THE GAME!! PLEASE REPORT ANY BUGS |
 |---|
+
 | :exclamation: THIS APP IS IN BETA, JUST LIKE THE GAME!! PLEASE REPORT ANY BUGS |
 |---|
+
 | :exclamation: THIS APP IS IN BETA, JUST LIKE THE GAME!! PLEASE REPORT ANY BUGS |
 |---|
 <hr class="mt-1">
