@@ -11,7 +11,7 @@
 </div>
 
 
-### Table of Contents
+### The Things Your Probably Looking For
 - [What is PalHUB Client](#what-is-palhub-client) 
 - [PalHUB Client Features](#palhub-client-features) 
 - [Download Latest Release](./releases)
