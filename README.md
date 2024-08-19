@@ -38,8 +38,9 @@ List your server in palhub client using the `PalHUB Client (Server Listing Mod)`
 
 
 ### PalHUB Client Features
-- Painless Installation
+- Painless Installation 
 - Easily Navigatible Modern UI 
+- Guided Setup After Install (w/Automatic Steam Game Path Detection)
 - Download & Install Mods From [NexusMods](https://www.nexusmods.com/)
 - Effortlessly manage your mod library and active mods with minimal clicks 
 - Allows for listing modified servers, their required mods, discord support server, and additional information 
