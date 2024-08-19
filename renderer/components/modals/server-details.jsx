@@ -90,6 +90,9 @@ export default function ServerDetailsModal({show,setShow,server}) {
     const [rememberPassword, setRememberPassword] = useState(true);
     const passwordRef = useRef(null);
 
+    const [hasGotMods, setHasGotMods] = useState(false);
+    const [hasGotPassword, setHasGotPassword] = useState(false);
+
 
     const addLogMessage = (message) => {
         setLogMessages(old => [...old, message]);
@@ -155,6 +158,8 @@ export default function ServerDetailsModal({show,setShow,server}) {
             await window.palhub('launchExe', game_data.exe_path);
         } catch (error) {
             console.log('onClickJoinServer error:', error);
+            setHasGotPassword(passwordRef.current?.value?.length);
+            setHasGotMods(false);
         }
 
     }, [server, servermodFiles, passwordRef, rememberPassword]);
@@ -282,7 +287,9 @@ export default function ServerDetailsModal({show,setShow,server}) {
             if (!window.serverCache) return console.error('serverCache not loaded');
             if (!server) return;
             const api_key = await window.uStore.get('api_key');
-
+            const game_path = await window.uStore.get('game_path');
+            const cache_dir = await window.uStore.get('cache_dir');
+    
             const server_mod_files = [];
 
             const addModAndFile = async (mod_id, file_id, type) => {
@@ -307,20 +314,33 @@ export default function ServerDetailsModal({show,setShow,server}) {
                 const file_id = server.mods.optional[mod_id];
                 await addModAndFile(mod_id, file_id, 'optional');
             }
-            for (const mod_id in server.mods.blocked) {
-                const file_id = server.mods.blocked[mod_id];
-                await addModAndFile(mod_id, file_id, 'blocked');
-            }
+            // for (const mod_id in server.mods.blocked) {
+            //     const file_id = server.mods.blocked[mod_id];
+            //     await addModAndFile(mod_id, file_id, 'blocked');
+            // }
             
             if (rememberPassword) {
                 console.log('getting:/...', server.palhubServerURL);
                 const password = await window.serverCache.get(server.palhubServerURL);
-                if (password) passwordRef.current.value = password;
+                if (password && passwordRef.current) passwordRef.current.value = password;
             }
 
             setServerModFiles(server_mod_files);
+
+            // check if password is required:
+            const wants_password = server.serverPassword?.length;
+            const has_password = passwordRef?.current?.value?.length;
+            setHasGotPassword(wants_password ? has_password : true);
+
+            // check all required mods are installed:
+            for (const [index, {mod, file}] of servermodFiles.entries()) {
+                const is_downloaded = await window.palhub('checkModFileIsDownloaded', cache_dir, file);
+                const is_installed = await window.palhub('checkModIsInstalled', game_path, mod, file);
+                if (!is_downloaded || !is_installed) return setHasGotMods(false);
+            }
+            setHasGotMods(true);
         })();
-    }, [server, rememberPassword, passwordRef]);
+    }, [server, rememberPassword, passwordRef?.current?.value]);
 
 
     if (!server) return null;
@@ -371,14 +391,14 @@ export default function ServerDetailsModal({show,setShow,server}) {
                     </div>
                 </>}
 
-                <div className="alert alert-danger text-center">
-                    <div className="container">
+                {(!hasGotMods || !hasGotPassword) && <div className="alert alert-danger text-center">
+                    {!hasGotMods && <div className="container">
                         <strong>NOTE:</strong> You must install the required mods to join this server.
-                    </div>
-                    <div className="container">
+                    </div>}
+                    {!hasGotPassword && <div className="container">
                         <strong>NOTE:</strong> A password is required to join this server.
-                    </div>
-                </div>
+                    </div>}
+                </div>}
 
                 {/* <MarkdownRenderer markdownText={serverLongDescriptionMD} /> */}
 
