@@ -1,10 +1,8 @@
 
 ### How To Install
-Download the latest exe release version from [HERE](https://github.com/Dekita/palhub-client/releases). 
-
-Once downloaded extract and then run the installer.
-
-PalHUB Client is now installed on your PC. Enjoy <3
+- Download the latest exe release version from [HERE](https://github.com/Dekita/palhub-client/releases). 
+- Once downloaded extract and then run the installer.
+- PalHUB Client is now installed on your PC. Enjoy <3
 
 Future releases will automatically download when you launch the application. 
 <hr class="mt-1">
@@ -16,11 +14,12 @@ While installing simply follow the on-screen instructions to get the app running
 
 
 ### Why Does This Happen?! 
-Because a few years ago windows decided they wanted $250/yr for a windows code signing license. I'm just a small developer who, unfortunately, doesnt have that kind of spare cash. :'( 
+Because a few years ago windows decided they wanted $250/yr for a windows code signing license!! I'm just a small developer who, unfortunately, doesnt have that kind of spare cash. 
 
 
 ### How To Be Sure The App Is Safe??
-Easy! If you have any doubts, before you fully run the installer, drop the setup.exe file into the [Virus Total Website](https://www.virustotal.com)! Virus Total will then scan the file with over 50 different antivirus scanners and report the results.. 
+Easy! Before you fully run the installer, drop the setup.exe file into the [Virus Total Website](https://www.virustotal.com)! 
+Virus Total will then scan the file with over 50 different antivirus scanners and report the results.. 
 
 | :exclamation: BKav Pro False Positive :exclamation: |
 |---|
