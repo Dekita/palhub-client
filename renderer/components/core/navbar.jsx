@@ -24,6 +24,7 @@ import DekCheckbox from '@components/core/dek-checkbox';
 import Image from 'next/image';
 
 import navbar_items from '@config/navbar-items';
+import AutoUpdater from '@components/core/autoupdater';
 
 const NSFWIcons = {
     enabled: CommonIcons.eye,
@@ -91,12 +92,18 @@ export default function MainNavbar({
                 </Nav>
 
                 <Nav className='text-end'>
-                    <div className={`btn p-2 no-shadow ${active_route === '/settings' ? 'text-warning' : 'hover-dark hover-secondary'}`}
-                        onClick={() => router.push('/settings')}>
-                        <CommonIcons.cog
-                            height='1.75rem'
-                            fill='currentColor'
-                        />
+                    <div className='row'>
+                        <div className='col-auto'>
+                            <AutoUpdater />
+                        </div>
+
+                        <div className={`col btn p-2 pe-4 no-shadow ${active_route === '/settings' ? 'text-warning' : 'hover-dark hover-secondary'} my-auto`}
+                            onClick={() => router.push('/settings')}>
+                            <CommonIcons.cog
+                                height='1.75rem'
+                                fill='currentColor'
+                            />
+                        </div>
                     </div>
                 </Nav>
             </Container>

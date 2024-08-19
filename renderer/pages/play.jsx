@@ -17,7 +17,6 @@ import CheckModsModal from '@components/modals/mod-check';
 import LoadListModal from '@components/modals/load-list';
 import PlayVanillaModal from '@components/modals/play-vanilla';
 
-import AutoUpdater from '@components/core/autoupdater';
 
 export default function PlayPage() {
     const router = useRouter();
@@ -95,8 +94,6 @@ export default function PlayPage() {
         <CheckModsModal show={showCheckModsModal} setShow={setShowCheckModsModal} />
         <LoadListModal show={showLoadListModal} setShow={setShowLoadListModal} />
         <PlayVanillaModal show={showPlayVanillaModal} setShow={setShowPlayVanillaModal} onRunGameExe={onRunGameExe} />
-
-        <AutoUpdater />
 
         <div className="container">
             <div className="mx-auto px-3 pt-5 pb-4">

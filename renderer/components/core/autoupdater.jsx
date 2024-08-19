@@ -50,30 +50,32 @@ export default function AutoUpdater({}) {
             console.log('auto-update', {type, data});
             switch (type) {
                 case 'checking-for-update':
-                    setUpdateMessage('Checking for updates...');
+                    setUpdateMessage('Checking for updates:..');
                     break;
                 case 'update-available':
-                    setUpdateMessage('Update available.');
+                    setUpdateMessage('Update available!');
                     break;
                 case 'update-not-available':
-                    setUpdateMessage('No updates available.');
+                    setUpdateMessage('No updates available!');
                     setTimeout(() => setUpdateMessage(null), 3000);
                     break;
                 case 'update-downloaded':
-                    setUpdateMessage('Update downloaded.');
+                    setUpdateMessage(null);
                     setCanInstallUpdate(true);
                     break;
                 case 'error':
                     setUpdateMessage(`Error updating: ${JSON.stringify(data)}`);
                     break;
                 case 'before-quit-for-update':
-                    setUpdateMessage('Preparing to update and restart application...');
+                    setUpdateMessage('Preparing update:..');
                     break;
                 case 'download-progress':
-                    setUpdateMessage(`Download speed: ${data.bytesPerSecond} - Downloaded ${data.percent}% (${data.transferred}/${data.total})`);
+                    const {bytesPerSecond, percent, transferred, total} = data;
+                    const mbps = (bytesPerSecond / 1024 / 1024).toFixed(2);
+                    setUpdateMessage(`UPDATING @ ${mbps} MB/s - ${percent}% (${transferred}/${total})`);        
                     break;
                 case 'initializing':
-                    setUpdateMessage('Initializing...');
+                    setUpdateMessage('Initializing:..');
                     break;
                 default:
                     break;
@@ -82,14 +84,16 @@ export default function AutoUpdater({}) {
         return () => remove_auto_update_handler();
     }, [active_route]); 
 
-    const showUpdateMessage = updateMessage || canInstallUpdate;
+    const showUpdateMessage = true;//updateMessage || canInstallUpdate;
 
     return <>
-        {showUpdateMessage && <div className='container mt-5 alert alert-danger border-2 border-danger2 text-center'>
-            <div className='px-3 text-white'>
-                {updateMessage && <small><strong>{updateMessage}</strong></small>}
-                {canInstallUpdate && <button className='btn btn-danger mt-2' onClick={beginInstallUpdate}>Install Update</button>}
-            </div>
+        {showUpdateMessage && <div className='container text-center'>
+            {updateMessage && <div className='text-white alert alert-danger border-2 border-danger2 py-1 px-3 mt-3'>
+                <small><strong>{updateMessage}</strong></small>
+            </div>}
+            {canInstallUpdate && <button className='btn btn-sm btn-info mt-2 px-3' onClick={beginInstallUpdate}>
+                <small><strong>INSTALL UPDATE</strong></small>
+            </button>}
         </div>}
     </>;
 }
