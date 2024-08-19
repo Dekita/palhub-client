@@ -37,4 +37,5 @@ for (const event of ['download-mod-file', 'install-mod-file', 'extract-mod-file'
     Emitter.on(event, (...args) => DEAP.main_window.webContents.send(event, ...args));
 }
 
+// launch the electron app via DEAP wrapper
 DEAP.launch();

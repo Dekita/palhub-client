@@ -15,6 +15,13 @@ contextBridge.exposeInMainWorld('uStore', {
     clear() { ipcRenderer.invoke('uStore', 'clear') },
 });
 
+contextBridge.exposeInMainWorld('serverCache', {
+    async get(key, value) { return await ipcRenderer.invoke('serverCache', 'get', key, value) },
+    set(key, value) { ipcRenderer.invoke('serverCache', 'set', key, value) },
+    delete(key) { ipcRenderer.invoke('serverCache', 'delete', key) },
+    clear() { ipcRenderer.invoke('serverCache', 'clear') },
+});
+
 // expose nexus functionality to renderer process
 contextBridge.exposeInMainWorld('nexus', async(...args) => {
     // console.log('nexus exposeInMainWorld:', ...args);
