@@ -12,7 +12,7 @@ Future releases will automatically download when you launch the application.
 #### NOTE:
 While installing simply follow the on-screen instructions to get the app running on your computer. If you receive a security warning when installing the application saying Windows protected your PC, click the `More info` link then the `Run anyway` button.
 <div align="center">
-    <img style="max-height: 256px; width: auto;" src="https://github.com/Dekita/palhub-client/resources/app-warning.png" title="app-warning-image" />
+    <img style="max-height: 256px; width: auto;" src="/resources/app-warning.png" title="app-warning-image" />
 </div>
 
 #### Why Does This Happen?! 
