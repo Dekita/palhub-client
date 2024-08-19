@@ -11,15 +11,6 @@
 </div>
 
 
-### The Things Your Probably Looking For
-- [What is PalHUB Client](#what-is-palhub-client) 
-- [PalHUB Client Features](#palhub-client-features) 
-- [Download Latest Release](./releases)
-- [How to Install App](./resources/readme/install.md)
-- [Developer Build](./resources/readme/install-dev.md)
-<hr class="mt-1">
-
-
 ### What is PalHUB Client
 PalHUB Client aims to be the ULTIMATE Mod Manager for the video game Palworld. Allowing players to effortlessly manage their mods, save/load mod collections to/from a modlist, and most importantly, view/install the requirements for modified servers!! 
 
@@ -35,6 +26,13 @@ List your server in palhub client using the `PalHUB Client (Server Listing Mod)`
 
 | :exclamation: THIS APP IS IN BETA, JUST LIKE THE GAME!! PLEASE REPORT ANY BUGS |
 |---|
+<hr class="mt-1">
+
+
+### Download Link & Install Guides
+- [Download Latest Release](./releases)
+- [How to Install App](./resources/readme/install.md)
+- [Developer Build](./resources/readme/install-dev.md)
 <hr class="mt-1">
 
 
