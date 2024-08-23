@@ -78,6 +78,8 @@ export { default as terms } from '@svgs/fa5/regular/file-contract.svg';
 export { default as discord }  from '@svgs/fa6/brands/discord.svg';
 export { default as patreon }  from '@svgs/fa6/brands/patreon.svg';
 
+export { default as plus } from '@svgs/fa5/duotone/plus-square.svg';
+
 
 // export {default as IconPreview} from '@svgs/fa5/duotone/file-image.svg';
 // export {default as IconSliders} from '@svgs/fa5/duotone/tasks-alt.svg';

@@ -32,42 +32,6 @@ import wait from '@utils/wait';
 import DekCheckbox from "@components/core/dek-checkbox";
 
 
-const serverLongDescription=`
-[b][size=150]Welcome to [Your Server Name], the Ultimate Custom Palworld Experience![/size][/b]
-
-Dive into an enhanced world of adventure and creativity with our custom modified Palworld game server. We've taken the core elements you love and added unique features to bring you an unparalleled gaming experience.
-
-[b]Features:[/b]
-
-[list]
-[*][b]Custom Pals and Abilities:[/b] Discover exclusive Pals with unique abilities that you won't find anywhere else.
-[*][b]Expanded Maps:[/b] Explore new territories and hidden areas with our expanded and intricately designed maps.
-[*][b]Enhanced Crafting System:[/b] Enjoy a more complex and rewarding crafting system with additional recipes and materials.
-[*][b]Dynamic Events:[/b] Participate in exclusive server-wide events and challenges that keep the gameplay fresh and exciting.
-[*][b]Player-Driven Economy:[/b] Engage in a robust, player-driven economy with customized trading options and unique items.
-[*][b]Community-Focused:[/b] Join a friendly and active community with regular updates, events, and a dedicated support team to ensure the best gaming experience.
-[/list]
-
-Join [Your Server Name] today and experience Palworld like never before!
-`;
-
-const serverLongDescriptionMD=`
-###### **Welcome to [Your Server Name], the Ultimate Custom Palworld Experience!**
-
-Dive into an enhanced world of adventure and creativity with our custom modified Palworld game server. We've taken the core elements you love and added unique features to bring you an unparalleled gaming experience.
-
-## Features:
-
-- **Custom Pals and Abilities:** Discover exclusive Pals with unique abilities that you won't find anywhere else.
-- **Expanded Maps:** Explore new territories and hidden areas with our expanded and intricately designed maps.
-- **Enhanced Crafting System:** Enjoy a more complex and rewarding crafting system with additional recipes and materials.
-- **Dynamic Events:** Participate in exclusive server-wide events and challenges that keep the gameplay fresh and exciting.
-- **Player-Driven Economy:** Engage in a robust, player-driven economy with customized trading options and unique items.
-- **Community-Focused:** Join a friendly and active community with regular updates, events, and a dedicated support team to ensure the best gaming experience.
-
-Join [Your Server Name] today and experience Palworld like never before!
-`;
-
 export default function ServerDetailsModal({show,setShow,server}) {
 
     const {isDesktop} = useScreenSize();
@@ -146,9 +110,11 @@ export default function ServerDetailsModal({show,setShow,server}) {
             }
             // await window.uStore.set('remeber_server_passwords', rememberPassword);
 
+            
             console.log('writing launch config:', game_data.content_path);
             await window.palhub('writeJSON', game_data.content_path, {
                 "auto-join-server": {
+                    // Handle IPv4-mapped IPv6 addresses (like ::ffff:172.24.0.6)
                     "path": server.palhubServerURL,
                     "pass": passwordRef.current.value,
                 }
@@ -415,7 +381,7 @@ export default function ServerDetailsModal({show,setShow,server}) {
                     </Carousel.Item>
 
                     <Carousel.Item className="container-fluid">
-                        <div className="row">
+                        {server?.serverPassword?.length && <div className="row">
                             <div className="card bg-secondary border border-secondary2 pt-3 px-3 pb-2 mb-3">
                                 {/* <ENVEntry 
                                     name="Server Password"
@@ -459,7 +425,7 @@ export default function ServerDetailsModal({show,setShow,server}) {
                                     </div>
                                 </div>
                             </div>
-                        </div>
+                        </div>}
 
                         <div className="row">
                         {Object.keys(server).sort().map((key, i) => {
@@ -486,6 +452,7 @@ export default function ServerDetailsModal({show,setShow,server}) {
                                 'publicIP',
                                 'autoSaveSpan',
                                 'palhubServerURL',
+                                'discordServerID',
                             ]
                             if (disallowed.includes(key)) return null;
                             return <div key={i} className='col-12 col-md-6'>

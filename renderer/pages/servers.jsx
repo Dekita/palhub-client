@@ -27,6 +27,8 @@ import { useRouter } from 'next/router';
 
 import useSwrJSON from '@hooks/useSwrJSON';
 
+import * as CommonIcons from '@config/common-icons';
+
 /**
 {
     "success": true,
@@ -131,7 +133,7 @@ export default function ServersPage() {
     const [modSearch, setModSearch] = React.useState('');
     const modSearchRef = React.useRef(null);
 
-    const {data, error, loading, mutate } = useSwrJSON(`http://localhost:3000/api/server-ping`);
+    const {data, error, loading, mutate } = useSwrJSON(`http://palhub.dekitarpg.com/api/server-ping`);
     if (loading) return (<h1>Loading...</h1>);
     if (error) return (<h1>{error}</h1>);
     // return (<pre>{data}</pre>);
@@ -227,11 +229,9 @@ export default function ServersPage() {
                             <Carousel interval={6900} className='w-100' indicators={true} style={{height: 234}}>
                                 {data?.servers?.map((server, i) => {
 
-                                    server.serverName = "DéKanto";
-                                    server.serverDescription = "A server for the DéKanto modpack, featuring a variety of mods and custom content for Palworld.\nJoin us on Discord for more information and to get started!";
-
-                                    server.splashURL = "https://staticdelivery.nexusmods.com/mods/6063/images/1313/1313-1712987634-744711640.png";
-
+                                    // server.serverName = "DéKanto";
+                                    // server.serverDescription = "A server for the DéKanto modpack, featuring a variety of mods and custom content for Palworld.\nJoin us on Discord for more information and to get started!";
+                                    // server.splashURL = "https://staticdelivery.nexusmods.com/mods/6063/images/1313/1313-1712987634-744711640.png";
 
                                     return <Carousel.Item key={i} className=''>
                                         <div className='container-fluid'>
@@ -283,6 +283,26 @@ export default function ServersPage() {
                     {data?.servers?.map((server, i) => 
                         <ServerCardComponent key={i} server={server} onClick={onClickServerCard} ad={show_ads && i < 2} />
                     )}
+
+                    <div className="col-12 col-md-6 col-lg-4 col-xl-3 mb-2">
+                        <div className='card theme-border chartcard cursor-pointer' onClick={()=>router.push('/faq')}>
+                            <div className='card-body text-start p-0'>
+                                <div className='card-title p-1 mb-0 bg-warning'>
+                                    <div className="ratio ratio-16x9 theme-bg rounded">
+                                        <CommonIcons.plus fill='currentColor' className="bg-dark p-3" />
+                                    </div>
+                                </div>
+                                <div className='anal-cavity px-2 mb-2'>
+                                    <strong className='text-warning'>List Your Modified Server Here!!</strong>
+                                    <small>--</small>
+                                    <span>Get access to the PalHUB API to list your server here, share it with the community, and get more players!</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>  
+
+
+
                 </div>
             </div>
         </div>
