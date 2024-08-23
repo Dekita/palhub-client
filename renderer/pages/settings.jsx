@@ -391,7 +391,7 @@ export default function SettingsPage({modals, ThemeController}) {
                                 name="Launch At Startup"
                                 value={settings['auto-boot']}
                                 updateSetting={(n,v)=>updateConfig('auto-boot', v)}
-                                tooltip="Automatically start the PalHUB client with your computer."
+                                tooltip="Automatically start the PalHUB Client with your computer."
                             />
                         </div>
                         <div className='col-12 col-lg-4'>
