@@ -27,7 +27,7 @@ export default function BrandHeader({ words = commonWords, tagline, type }) {
 
     return (
         <motion.div
-            className='page-header-bg'
+            className='bg-darker text-white'
             style={{
                 width: '100%',
                 height: '100%',
