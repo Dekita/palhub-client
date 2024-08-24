@@ -133,7 +133,7 @@ export default function ServersPage() {
     const [modSearch, setModSearch] = React.useState('');
     const modSearchRef = React.useRef(null);
 
-    const {data, error, loading, mutate } = useSwrJSON(`http://palhub.dekitarpg.com/api/server-ping`);
+    const {data, error, loading, mutate } = useSwrJSON(`https://palhub.dekitarpg.com/api/server-ping`);
     if (loading) return (<h1>Loading...</h1>);
     if (error) return (<h1>{error}</h1>);
     // return (<pre>{data}</pre>);
