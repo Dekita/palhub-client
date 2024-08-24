@@ -281,26 +281,22 @@ export class Client {
                     install_path = game_path;
                     break;
                 case "Binaries/":
-                    install_path = path.join(game_path, "Pal/Binaries");
+                case "Content/":
+                    install_path = path.join(game_path, "Pal");
                     break;
                 case "Win64/":
-                    install_path = path.join(game_path, "Pal/Binaries/Win64");
-                    break;
                 case "WinGDK/":
-                    install_path = path.join(game_path, "Pal/Binaries/WinGDK");
+                    install_path = path.join(game_path, "Pal/Binaries");
                     break;
                 case "Mods/":
                     if (game_path.includes('XboxGames')) install_path = path.join(game_path, "Pal/Binaries/WinGDK");
                     else install_path = path.join(game_path, "Pal/Binaries/Win64");
                     break;
-                case "Content/":
+                case "Paks/":
                     install_path = path.join(game_path, "Pal/Content");
                     break;
-                case "Paks/":
-                    install_path = path.join(game_path, "Pal/Content/Paks");
-                    break;
                 case "LogicMods/":
-                    install_path = path.join(game_path, "Pal/Content/Paks/LogicMods");
+                    install_path = path.join(game_path, "Pal/Content/Paks");
                     break;
                 default: // ~mods/ or unknown mod type ~ assume regular .pak replacement
                     install_path = path.join(game_path, "Pal/Content/Paks/~mods");
@@ -383,27 +379,23 @@ export class Client {
                         base_path = game_path;
                         break;
                     case "Binaries/":
-                        base_path = path.join(game_path, "Pal/Binaries");
+                    case "Content/":
+                        base_path = path.join(game_path, "Pal");
                         break;
                     case "Win64/":
-                        base_path = path.join(game_path, "Pal/Binaries/Win64");
-                        break;
                     case "WinGDK/":
-                        base_path = path.join(game_path, "Pal/Binaries/WinGDK");
+                        base_path = path.join(game_path, "Pal/Binaries");
                         break;
                     case "Mods/":
                         if (game_path.includes('XboxGames')) base_path = path.join(game_path, "Pal/Binaries/WinGDK");
                         else base_path = path.join(game_path, "Pal/Binaries/Win64");
                         break;
 
-                    case "Content/":
+                    case "Paks/":
                         base_path = path.join(game_path, "Pal/Content");
                         break;
-                    case "Paks/":
-                        base_path = path.join(game_path, "Pal/Content/Paks");
-                        break;
                     case "LogicMods/":
-                        base_path = path.join(game_path, "Pal/Content/Paks/LogicMods");
+                        base_path = path.join(game_path, "Pal/Content/Paks");
                         break;
                     default: // ~mods/ or unknown mod type ~ assume regular .pak replacement
                         base_path = path.join(game_path, "Pal/Content/Paks/~mods");
