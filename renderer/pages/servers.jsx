@@ -279,6 +279,13 @@ export default function ServersPage() {
                 </div>
           
 
+                <div className='row pt-2'>
+                    <div className='col card bg-danger text-center p-3 border border-2 border-warning'>
+                        <strong>THE SERVER LISTING FEATURE IS CURRENTLY IN BETA</strong>
+                    </div>
+                </div>
+
+
                 <div className="row mt-3">
                     {data?.servers?.map((server, i) => 
                         <ServerCardComponent key={i} server={server} onClick={onClickServerCard} ad={show_ads && i < 2} />
@@ -294,7 +301,7 @@ export default function ServersPage() {
                                 </div>
                                 <div className='anal-cavity px-2 mb-2 pt-2'>
                                     <strong className='text-warning'>List Your Modified Server Here!!</strong>
-                                    <small>-- FEATURE COMING SOON</small>
+                                    <small className='text-dark'>-- FEATURE COMING SOON</small>
                                     <span>Get access to the PalHUB API to list your server here, share it with the community, and get more players!</span>
                                 </div>
                             </div>
