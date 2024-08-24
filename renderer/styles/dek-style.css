@@ -532,6 +532,12 @@ input[type="range"].thin {
 .bg-dark {
     background-color: var(--dek-darker-2) !important;
 }
+.bg-darker {
+    background-color: var(--dek-darker-3) !important;
+}
+.bg-darkest {
+    background-color: var(--dek-darker-4) !important;
+}
 .border-dark {
     border-color: var(--dek-darker-2) !important;
 }
