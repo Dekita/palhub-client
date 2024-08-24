@@ -109,7 +109,7 @@ export default function ServerCardComponent({ server, onClick=()=>{}, ad=false }
 
 
                 <div className='anal-cavity px-2'>
-                    <small className='text-secondary mb-0'>{server.serverName ?? 'n/a'}</small>
+                    <p className='text-secondary mb-0 font-bold truncate'>{server.serverName ?? 'n/a'}</p>
                     <small className='text-dark'><small>
                         <div className='d-flex'>
                             <div className='col-6'>

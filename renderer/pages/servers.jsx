@@ -292,9 +292,9 @@ export default function ServersPage() {
                                         <CommonIcons.plus fill='currentColor' className="bg-dark p-3" />
                                     </div>
                                 </div>
-                                <div className='anal-cavity px-2 mb-2'>
+                                <div className='anal-cavity px-2 mb-2 pt-2'>
                                     <strong className='text-warning'>List Your Modified Server Here!!</strong>
-                                    <small>--</small>
+                                    <small>-- FEATURE COMING SOON</small>
                                     <span>Get access to the PalHUB API to list your server here, share it with the community, and get more players!</span>
                                 </div>
                             </div>

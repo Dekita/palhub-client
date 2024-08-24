@@ -1,3 +1,4 @@
+
 const DEFAULT_EXAMPLE_MOD_LISTING = {
     "name": "Quivern Rainbowdragon",
     "summary": "New look with colorful feathers for the Quivern :D",
@@ -63,7 +64,7 @@ export default function ModCardComponent({ mod, onClick=()=>{}, ad=false }) {
 
 
                 <div className='anal-cavity px-2'>
-                    <small className='text-secondary mb-0'>{mod.name ?? 'n/a'}</small>
+                    <p className='text-secondary mb-0 truncate font-bold'>{mod.name ?? 'n/a'}</p>
                     <small><small><Link href={mod.uploaded_users_profile_url} target='_blank' className='hover-dark'>{mod.uploaded_by}</Link></small></small>
                     <div className='text-white' dangerouslySetInnerHTML={{__html:DOMPurify.sanitize(mod.summary)}}></div>
                 </div>
