@@ -73,8 +73,10 @@ const DEFAULT_EXAMPLE_SERVER_LISTING = {
     "supplyDropSpan": 180,
     "DekitaWasHere": true,
     "gameVersion": "v0.3.4.56710",
-
-    "splashURL": "https://staticdelivery.nexusmods.com/mods/6063/images/1313/1313-1712987634-744711640.png"
+    "discordServerID": "https://discord.gg/8Z8ZzZ8Z8Z",
+    "splashURL": "https://staticdelivery.nexusmods.com/mods/6063/images/1313/1313-1712987634-744711640.png",
+    "playerCount": 0,
+    "fps": 60,
 }
 
 // InputComponent.js
@@ -117,7 +119,7 @@ export default function ServerCardComponent({ server, onClick=()=>{}, ad=false }
                             </div>
                             <div className='col-6 text-end'>
                                 {/* <CommonIcons.account fill='currentColor' height="0.9rem" /> */}
-                                <span className='ps-1'>Players: {'??'} / {server.serverPlayerMaxNum}</span>
+                                <span className='ps-1'>Players: {server.playerCount} / {server.serverPlayerMaxNum}</span>
                             </div>
                         </div>
                     </small></small>
