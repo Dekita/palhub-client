@@ -105,7 +105,7 @@ export default function ServerDetailsModal({show,setShow,server}) {
                 if (!is_installed) throw new Error('mod not installed:', mod, file);
             }
 
-            if (rememberPassword) {
+            if (rememberPassword && passwordRef?.current?.value?.length) {
                 await window.serverCache.set(server.palhubServerURL, passwordRef.current.value);
             }
             // await window.uStore.set('remeber_server_passwords', rememberPassword);
@@ -116,7 +116,7 @@ export default function ServerDetailsModal({show,setShow,server}) {
                 "auto-join-server": {
                     // Handle IPv4-mapped IPv6 addresses (like ::ffff:172.24.0.6)
                     "path": server.palhubServerURL,
-                    "pass": passwordRef.current.value,
+                    "pass": passwordRef?.current?.value ?? '',
                 }
             }, 'palhub.launch.config.json');
    
@@ -124,7 +124,7 @@ export default function ServerDetailsModal({show,setShow,server}) {
             await window.palhub('launchExe', game_data.exe_path);
         } catch (error) {
             console.log('onClickJoinServer error:', error);
-            setHasGotPassword(passwordRef.current?.value?.length);
+            setHasGotPassword(passwordRef?.current?.value?.length);
             setHasGotMods(false);
         }
 
