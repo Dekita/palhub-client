@@ -186,7 +186,8 @@ export default function ServersPage() {
         })();
     }, [modlistID]);
 
-    console.log({mods, ads})
+    // console.log({mods, ads})
+    // console.log({server})
 
 
 
