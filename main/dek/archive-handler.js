@@ -70,8 +70,13 @@ class ArchiveHandler extends EventEmitter {
     }
 
     async extractEntry(entry, outputPath) {
-        const outputFilePath = path.join(outputPath, entry.entryName);
+        if (!!!entry.outputPath) return;
+
+        // const outputFilePath = path.join(outputPath, entry.entryName);
+        const outputFilePath = path.join(outputPath, entry.outputPath ?? entry.entryName);
         console.log('extracting:', entry.entryName, 'to:', outputFilePath);
+
+
 
         this.emit('extracting', {
             entry: entry.entryName,
@@ -90,12 +95,16 @@ class ArchiveHandler extends EventEmitter {
         return new Promise(resolve => setTimeout(resolve, ms));
     }
 
-    async extractAllTo(outputPath, overwrite = true) {
+    async extractAllTo(outputPath, overwrite = true, ignores = []) {
         console.log('extracting to:', outputPath);
         // await this.wait();
         const entries = await this.getEntries();
         console.log('got entries:', entries);
         for (const entry of entries) {
+            if (ignores.includes(entry.entryName)) {
+                console.log('ignoring:', entry.entryName);
+                continue;
+            }
             // await this.wait();
             await this.extractEntry(entry, outputPath);
             // await this.wait();

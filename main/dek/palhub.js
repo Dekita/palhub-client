@@ -273,10 +273,37 @@ export class Client {
         });
     }
 
-    static determineInstallPath(game_path, firstFileEntry) {
+    static determineInstallPath(game_path, entries) {
         let install_path = game_path;
+
+        // determine the actual first entry, ignoring any 'root' directories that may be present
+        const allowedRoots = ["Pal", "Binaries", "Content", "Win64", "WinGDK", "Mods", "Paks", "LogicMods", "~mods"];
+
+        let ignoredRoots = '';
+        const firstFileEntry = entries.find((entry) => {
+            const replaced = entry.entryName.replace(ignoredRoots, '');
+            const root = replaced.split('/').shift();
+            console.log({ root, replaced });
+            if (allowedRoots.includes(root)) return true;
+            if (entry.isDirectory) ignoredRoots = `${root}/`;
+            return false;
+        }) ?? entries[0];
+
+        // set the output path for each entry based on the ignored roots
+        for (const entry of entries) {
+            entry.outputPath = entry.entryName.replace(ignoredRoots, '');
+        }
+
+        // if the entry is a file and not in the allowed roots, ignore it
+        const part_checker = part => allowedRoots.includes(part);
+        const ignored_files = entries.filter(({isDirectory=false, entryName=''}) => { 
+            return !isDirectory && !entryName.split('/').some(part_checker);
+        }).map(({entryName}) => entryName);
+
+        console.log({ firstFileEntry, ignoredRoots, ignored_files });
+
         if (firstFileEntry.isDirectory) {
-            switch (firstFileEntry.entryName) {
+            switch (firstFileEntry.outputPath) {
                 case "Pal/":
                     install_path = game_path;
                     break;
@@ -286,7 +313,7 @@ export class Client {
                     break;
                 case "Win64/":
                 case "WinGDK/":
-                    install_path = path.join(game_path, "Pal/Binaries");
+                    install_path = path.join(game_path, "Pal/Binaries"); 
                     break;
                 case "Mods/":
                     if (game_path.includes('XboxGames')) install_path = path.join(game_path, "Pal/Binaries/WinGDK");
@@ -306,7 +333,8 @@ export class Client {
             // unknown mod type ~ assume regular .pak replacement
             install_path = path.join(game_path, "Pal/Content/Paks/~mods");
         }
-        return install_path;
+
+        return [install_path, ignored_files];
     }
 
 
@@ -327,9 +355,8 @@ export class Client {
                 //     console.log({ entry });
                 // }
 
-                // determine install type from first entry
-                const firstEntry = entries[0];
-                const install_path = this.determineInstallPath(game_path, firstEntry);
+                // determine the root path to install this mods files to
+                const [install_path, ignored_files] = this.determineInstallPath(game_path, entries);
 
                 Emitter.emit("install-mod-file", {
                     install_path,
@@ -347,10 +374,10 @@ export class Client {
                 });
 
                 console.log("extracted to:", install_path);
-                await archive.extractAllTo(install_path, true);
+                await archive.extractAllTo(install_path, true, ignored_files);
 
                 // add mod data to the config file
-                await this.addModDataToJSON(game_path, mod, file, entries);
+                await this.addModDataToJSON(game_path, mod, file, entries, ignored_files);
 
 
                 return resolve({ success: true });
@@ -444,8 +471,8 @@ export class Client {
                 // iterate over the mod files and check if they exist
                 const config = await this.readJSON(game_path);
                 const mod_data = config.mods[mod.mod_id];
-                const entries = mod_data.entries;
-                const base_path = this.determineInstallPath(game_path, { entryName: entries[0] });
+                const entries = mod_data.entries.map((entry) => ({ entryName: entry }));
+                const [base_path, ignored_files] = this.determineInstallPath(game_path, entries);
 
                 const results = {};
                 for (const entry of entries) {
@@ -532,16 +559,17 @@ export class Client {
 
 
 
-    static async addModDataToJSON(game_path, mod, file, entries) {
+    static async addModDataToJSON(game_path, mod, file, entries, ignored_files) {
+        const filter = entry => entry.outputPath && !ignored_files.includes(entry.entryName);
+        const mapper = entry => entry.outputPath ?? entry.entryName;
         const config = await this.readJSON(game_path);
         config.mods = config.mods || {};
         config.mods[mod.mod_id] = {
             version: file.version,
             file_id: file.file_id,
             file_name: file.file_name,
-            entries: entries.map((entry) => entry.entryName),
+            entries: entries.filter(filter).map(mapper),
         };
-
         return await this.writeJSON(game_path, config);
     }
 
