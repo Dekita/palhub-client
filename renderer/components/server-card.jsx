@@ -104,6 +104,11 @@ export default function ServerCardComponent({ server, onClick=()=>{}, ad=false }
                     <div className="ratio ratio-16x9">
                         <Image src={server.splashURL} alt={server.name} fluid thumbnail />
                     </div>
+                    {false && <div className={styles.modcard}>
+                        <div className='p-0'>
+                            <span className='alert bg-info px-1 py-0'>{server.allowConnectPlatform}</span>
+                        </div>
+                    </div>}
                     {ad && <div className={styles.modcard}>
                         <IconComponent fill='currentColor' className={styles.modicon}/>
                     </div>}
@@ -114,10 +119,13 @@ export default function ServerCardComponent({ server, onClick=()=>{}, ad=false }
                     <p className='text-secondary mb-0 font-bold truncate'>{server.serverName ?? 'n/a'}</p>
                     <small className='text-dark'><small>
                         <div className='d-flex'>
-                            <div className='col-6'>
+                            <div className='col'>
                                 {server.gameVersion}
                             </div>
-                            <div className='col-6 text-end'>
+                            <div className='col text-center'>
+                                {server.allowConnectPlatform.toUpperCase()}
+                            </div>
+                            <div className='col text-end'>
                                 {/* <CommonIcons.account fill='currentColor' height="0.9rem" /> */}
                                 <span className='ps-1'>Players: {server.playerCount} / {server.serverPlayerMaxNum}</span>
                             </div>
@@ -126,6 +134,7 @@ export default function ServerCardComponent({ server, onClick=()=>{}, ad=false }
     
                     {/* <Link href={server.uploaded_users_profile_url} target='_blank' className='hover-dark'>{server.uploaded_by}</Link> */}
                     <div className='text-white' dangerouslySetInnerHTML={{__html:DOMPurify.sanitize(server.serverDescription)}}></div>
+                    {/* <div className='badge bg-info m-1'>{server.allowConnectPlatform}</div> */}
                 </div>
             </Card.Body>
         </Card>
