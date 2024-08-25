@@ -72,7 +72,7 @@ export default function AutoUpdater({}) {
                 case 'download-progress':
                     const {bytesPerSecond, percent, transferred, total} = data;
                     const mbps = (bytesPerSecond / 1024 / 1024).toFixed(2);
-                    setUpdateMessage(`UPDATING @ ${mbps} MB/s - ${percent}% (${transferred}/${total})`);        
+                    setUpdateMessage(`UPDATING @ ${mbps} MB/s - ${percent.toFixed(2)}%`);
                     break;
                 case 'initializing':
                     setUpdateMessage('Initializing:..');
@@ -83,12 +83,12 @@ export default function AutoUpdater({}) {
         });
 
         // // for testing
-        // const data = {bytesPerSecond: 1000, percent: 50, transferred: 500, total: 1000};
+        // const data = {bytesPerSecond: 1000345543534, percent: 50, transferred: 500, total: 1000};
         // const {bytesPerSecond, percent, transferred, total} = data;
         // const mbps = (bytesPerSecond / 1024 / 1024).toFixed(2);
-        // setUpdateMessage(`UPDATING @ ${mbps} MB/s - ${percent}% (${transferred}/${total})`);        
+        // setUpdateMessage(`UPDATING @ ${mbps} MB/s - ${percent.toFixed(2)}%`);
         // setUpdateMessage(null);
-        // setCanInstallUpdate(true);
+        // setCanInstallUpdate(false);
 
         return () => remove_auto_update_handler();
     }, [active_route]); 
