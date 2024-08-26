@@ -121,7 +121,8 @@ export class Client {
 
                 if (fileExists("Palworld.exe")) { // steam/windows
                     const exe_path = path.join(game_path, "Palworld.exe");
-                    const ue4ss_path = path.join(game_path, "Pal/Binaries/Win64/dwmapi.dll");
+                    const ue4ss_root = path.join(game_path, "Pal/Binaries/Win64");
+                    const ue4ss_path = path.join(ue4ss_root, "dwmapi.dll");
                     const has_ue4ss = await fs.access(ue4ss_path).then(()=>true).catch(()=>false);
                     return resolve({
                         type: "steam",
@@ -130,12 +131,14 @@ export class Client {
                         pak_path,
                         has_ue4ss,
                         ue4ss_path,
+                        ue4ss_root,
                         content_path,
                     });
                 }
                 if (fileExists("gamelaunchhelper.exe")) { // xbox gamepass
                     const exe_path = path.join(game_path, "gamelaunchhelper.exe");
-                    const ue4ss_path = path.join(game_path, "Pal/Binaries/WinGDK/dwmapi.dll");
+                    const ue4ss_root = path.join(game_path, "Pal/Binaries/WinGDK");
+                    const ue4ss_path = path.join(ue4ss_root, "dwmapi.dll");
                     const has_ue4ss = await fs.access(ue4ss_path).then(()=>true).catch(()=>false);
                     // console.log({ exe_path, has_exe, ue4ss_path, has_ue4ss });
                     return resolve({
@@ -145,6 +148,7 @@ export class Client {
                         pak_path,
                         has_ue4ss,
                         ue4ss_path,
+                        ue4ss_root,
                         content_path,
                     });
                 }
@@ -537,6 +541,17 @@ export class Client {
 
     static get json_filename() {
         return "palhub.config.json";
+    }
+
+
+    static joinPath(...args) {
+        return path.join(...args);
+    }
+    static async readFile(...args) {
+        return await fs.readFile(...args);
+    }
+    static async writeFile(...args) {
+        return await fs.writeFile(...args);
     }
 
     static async readJSON(base_path, filename) {
