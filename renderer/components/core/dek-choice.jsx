@@ -26,7 +26,7 @@ export default function DekChoice({
                 {choices.map((choice, i) => {
                     const Icon = icons[i];
                     const isActive = active === i;
-                    const deClass = 'btn '+(isActive ? `btn-${color}` : `btn-dark hover-${color}`)+(disabled?' disabled':'');
+                    const deClass = 'w-100 btn '+(isActive ? `btn-${color}` : `btn-dark hover-${color}`)+(disabled?' disabled':'');
                     const deClick = ()=> {
                         if (disabled) return;
                         // setActiveID(i);
