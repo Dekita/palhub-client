@@ -12,10 +12,10 @@ import AppHeadComponent from '../components/app-head';
 import { ENVEntry, ENVEntryLabel } from '@components/modals/common';
 // import DekSelect from '@components/core/dek-select';
 import DekChoice from "@components/core/dek-choice";
+import DekSelect from '@components/core/dek-select';
 import DekCheckbox from '@components/core/dek-checkbox';
 
 import InstallUe4ssModal from '@components/modals/ue4ss-install';
-import DekSelect from '@components/core/dek-select';
 
 
 import wait from '@utils/wait';
