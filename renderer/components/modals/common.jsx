@@ -74,12 +74,12 @@ export function ENVEntryLabel({name, envdatas, tooltip}) {
 
     return <div className="px-2 pb-2">
         <div className="row">
-            <div className="col">
-                <strong>{name}</strong>
+            <div className="col truncate">
+                <p className="mb-0 font-bold truncate">{name}</p>
             </div>
             <div className="col" style={{maxWidth:'36px'}}>
                 <OverlayTrigger placement={placement} delay={delay} overlay={overlay}>
-                    <a
+                    <div
                         className='p-0 border-0 hover-secondary w-100 text-end'
                         style={button_style}
                         onClick={onClick}>
@@ -88,7 +88,7 @@ export function ENVEntryLabel({name, envdatas, tooltip}) {
                             width={icon_size}
                             height={icon_size}
                         />
-                    </a>
+                    </div>
                 </OverlayTrigger>
             </div>
         </div>
@@ -150,11 +150,14 @@ export function ENVEntry_Bool({name, value, updateSetting, defaults, envdatas, t
     </div>
 }
 
-export function ENVEntry({name, value, updateSetting, defaults, envdatas, tooltip, type}) {
+export function ENVEntry({name=null, value=null, updateSetting=()=>{}, defaults={}, envdatas={}, tooltip='', type=''}) {
     // value = ensureEntryValueType(value);
-    const passthrough = {name, value, updateSetting, defaults, envdatas, tooltip, type};
-
     // console.log(`entry for ${name}:`, typeof value, {name, value})
+
+    if (type === 'numbool') value = value === '1';
+    const passthrough = {name, value, updateSetting, defaults, envdatas, tooltip, type};
+    if (type === 'numbool') return <ENVEntry_Bool {...passthrough} />
+
     switch (typeof value) {
         case 'string': return <ENVEntry_Input {...passthrough} />
         case 'number': return <ENVEntry_Input {...passthrough} type='number' />
