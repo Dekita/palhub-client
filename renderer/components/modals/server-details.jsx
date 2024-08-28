@@ -306,7 +306,7 @@ export default function ServerDetailsModal({show,setShow,server}) {
             }
             setHasGotMods(true);
         })();
-    }, [server, rememberPassword, passwordRef?.current?.value]);
+    }, [show]);//server, rememberPassword, passwordRef?.current?.value]);
 
 
     if (!server) return null;
