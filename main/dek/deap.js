@@ -128,7 +128,7 @@ class DEAP {
             const filters = [{ name: "Stylesheet", extensions: ["css"] }];
             return await dialog.showSaveDialog({ filters });
         });
-        ipcMain.handle("get-config", async (event, key, defaultvalue) => {
+        ipcMain.handle("get-config", async (event, key, defaultvalue=null) => {
             return this._datastore.get(key, defaultvalue);
         });
         ipcMain.handle("set-config", async (event, key, value) => {
