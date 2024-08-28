@@ -16,6 +16,7 @@ import DekSelect from '@components/core/dek-select';
 import DekCheckbox from '@components/core/dek-checkbox';
 
 import InstallUe4ssModal from '@components/modals/ue4ss-install';
+import Ue4ssSettingsModal from '@components/modals/ue4ss-settings';
 
 
 import wait from '@utils/wait';
@@ -108,6 +109,7 @@ export default function SettingsPage({modals, ThemeController}) {
 
     // const [ue4ssProcess, setUE4SSProcess] = React.useState(null);
     const [showUE4SSInstall, setShowUE4SSInstall] = React.useState(false);
+    const [showUE4SSSettings, setShowUE4SSSettings] = React.useState(false);
 
     // function to update a single setting
     const updateSetting = (key, value, store=false) => {
@@ -286,15 +288,30 @@ export default function SettingsPage({modals, ThemeController}) {
     return <React.Fragment>
 
         <InstallUe4ssModal show={showUE4SSInstall} setShow={setShowUE4SSInstall} />
-
+        <Ue4ssSettingsModal show={showUE4SSSettings} setShow={setShowUE4SSSettings} />
+        
 
         <div className="container">
             <div className="col-12 col-md-10 offset-0 offset-md-1 col-lg-8 offset-lg-2">
                 <div className="mx-auto px-3 pt-5 pb-4">
-                    <h1 className="font-bold mb-4">Settings</h1>
+
+                    <div className='row mb-3'>
+                        <div className='col-4'>
+                            <h1 className="font-bold">Settings</h1>
+                        </div>
+                        <div className='col-8 text-end'>
+                            {settings?.has_ue4ss && <>
+                                <div className='btn btn-dark px-3' onClick={() => setShowUE4SSSettings(true)}>
+                                    <strong>Edit UE4SS Settings</strong>
+                                </div>
+                            </>}
+                        </div>
+                    </div>
+
+
                     <div className='mb-4'>
                         <p className="mb-0">
-                            Welcome to PalHUB Client, the ultimate Palworld mod manager.
+                            Welcome to PalHUB Client, the ultimate Palworld mod manager and modified server listing service.
                         </p>
                         <p className="">
                             To get started, please configure the settings below.
