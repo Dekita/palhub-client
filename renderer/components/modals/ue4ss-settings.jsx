@@ -20,7 +20,7 @@ import DekSelect from '@components/core/dek-select';
 import DekCheckbox from '@components/core/dek-checkbox';
 import IconX from '@svgs/fa5/regular/window-close.svg';
 
-
+import replaceUe4ssIniKeyValue from '@utils/replaceIniKey';
 
 
 const UE4SS_NUMBOOLS = [
@@ -62,14 +62,6 @@ const IGNORED_UE4SS_CONFIG = [
     'bUseUObjectArrayCache',
 ];
 
-
-const replaceUe4ssIniKeyValue = (iniContentString, section, key, newValue) => {
-    // Create a regular expression to match the specific section and key
-    const sectionRegex = new RegExp(`\\[${section}\\][\\s\\S]*?${key}\\s*=\\s*.*`, 'g');
-    const replacer = s => s.replace(new RegExp(`(${key}\\s*=\\s*)[^\\n]*`), `$1${newValue}`);
-    // Replace the old key-value pair with the new value
-    return iniContentString.replace(sectionRegex, replacer);
-}
 
 
 
@@ -167,7 +159,7 @@ export default function Ue4ssSettingsModal({show,setShow}) {
     }, [settings]);
 
 
-    if (settings) console.log(settings.General)
+    if (settings) console.log(settings)
 
 
 
