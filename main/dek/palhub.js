@@ -9,7 +9,7 @@
 import Nexus from "@nexusmods/nexus-api";
 
 // import stringify from "json-stringify-pretty-compact";
-import { createReadStream, createWriteStream } from "fs";
+import { createReadStream, createWriteStream, watchFile, unwatchFile, readFileSync } from "fs";
 import fs from "node:fs/promises";
 import path from "node:path";
 import {https} from "follow-redirects";
@@ -705,12 +705,28 @@ export class Client {
             // extract the zip to the game directory
             await archive.extractAllTo(ue4ss_install_dir, true);
 
+            Emitter.emit("ue4ss-process", 'complete', { success: true });
+
             return true;
 
         } catch (error) {
+            Emitter.emit("ue4ss-process", 'error', error);
             console.error("downloadAndInstallUE4SS error", error);
         }
         return false;
+    }
+
+
+    static watchForFileChanges(file_path) {
+        watchFile(file_path, {interval: 250} , (curr, prev) => {
+            const change_data = {path: file_path, curr, prev};
+            const file_data = readFileSync(file_path, 'utf-8');
+            Emitter.emit("watched-file-change", change_data, file_data);
+        });
+        // return () => unwatchFile(file_path);
+    }
+    static unwatchFileChanges(file_path) {
+        unwatchFile(file_path);
     }
 
 
