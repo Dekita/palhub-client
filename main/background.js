@@ -33,7 +33,7 @@ for (const key in ipcHandlers) {
 }
 
 // handle events from DEAP that should be forwarded to the renderer process
-for (const event of ['download-mod-file', 'install-mod-file', 'extract-mod-file', 'ue4ss-process']) {
+for (const event of ['download-mod-file', 'install-mod-file', 'extract-mod-file', 'ue4ss-process', 'watched-file-change']) {
     Emitter.on(event, (...args) => DEAP.main_window.webContents.send(event, ...args));
 }
 
