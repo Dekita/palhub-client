@@ -15,11 +15,20 @@ export default function LogsPage(props) {
     const [ue4ssLogs, setUE4SSLogs] = React.useState("");
 
     React.useEffect(() => {
+        // Ensure the palhub library is loaded
+        if (!window.ipc) return console.error('ipc not loaded');
+        if (!window.uStore) return console.error('uStore not loaded');
+        if (!window.palhub) return console.error('palhub not loaded');
+        if (!window.nexus) return console.error('nexus not loaded');
+
+        
+        let log_path = null; // data = {path, curr, prev}
+        const logChangeHandler = (data, contents) => setUE4SSLogs(contents.trim());
+        const removeChangeHandler = window.ipc.on('watched-file-change', logChangeHandler);
+
+        // Initialize the logs
         (async () => {
             try {
-                if (!window.uStore) return console.error('uStore not loaded');
-                if (!window.palhub) return console.error('palhub not loaded');
-                if (!window.nexus) return console.error('nexus not loaded');
     
                 const api_key = await window.uStore.get('api_key');
                 if (!api_key) return router.push('/settings');
@@ -31,24 +40,43 @@ export default function LogsPage(props) {
                 if (!game_data.has_exe) return router.push('/settings');
                 if (!game_data.has_ue4ss) return router.push('/settings');
     
-                const log_path = await window.palhub('joinPath', game_data.ue4ss_root, 'UE4SS.log');
+                log_path = await window.palhub('joinPath', game_data.ue4ss_root, 'UE4SS.log');
                 const log_string = await window.palhub('readFile', log_path, {encoding : 'utf-8'});
     
-                setUE4SSLogs(log_string);
+                setUE4SSLogs(log_string.trim());
+
+                // Watch for changes in the UE4SS.log file
+                // and update the state with the new contents
+                await window.palhub('watchForFileChanges', log_path);
+
             } catch (error) {
                 console.error(error);
                 setUE4SSLogs(`Error fetching logs:\n${error.message}`);
             }
         })();
-    }, []);
 
+            
+        // Remove the watcher when the component is unmounted
+        return () => {
+            removeChangeHandler();
+            if (log_path) window.palhub('unwatchFileChanges', log_path);
+        }
+    }, []);
+    
+    React.useEffect(() => {
+        if (!document) return;
+        const main_body = document.getElementById('main-body');
+        if (!main_body) return;
+        // scroll to the bottom of the logs
+        main_body.scrollTo(0, main_body.scrollHeight);
+    }, [ue4ssLogs]);
 
     return <>
-        <BrandHeader
+        {/* <BrandHeader
             type='altsmall'
             words={words}
             tagline={title.replace(':', '')}
-        />
+        /> */}
         <Container className='text-start pt-5 noverflow'>
             <pre>{ue4ssLogs}</pre>
         </Container>
