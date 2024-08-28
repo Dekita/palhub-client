@@ -48,6 +48,7 @@ export default function BrandHeader({ words = commonWords, tagline, type }) {
                     className='text-center w-100'>
                     <Image
                         src='/logo.webp'
+                        alt="PalHUB's Logo"
                         width={image_size}
                         height={image_size}
                         unoptimized={true}
