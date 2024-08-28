@@ -7,33 +7,12 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import IconX from '@svgs/fa5/regular/window-close.svg';
 
-import Carousel from 'react-bootstrap/Carousel';
-import Button from 'react-bootstrap/Button';
 import Modal from 'react-bootstrap/Modal';
-// import Col from 'react-bootstrap/Col';
-// import Row from 'react-bootstrap/Row';
-
 // import useMediaQuery from '@hooks/useMediaQuery';
 import useScreenSize from '@hooks/useScreenSize';
+import replaceUe4ssIniKeyValue from '@utils/replaceIniKey';
 
-import MarkdownRenderer from '@components/core/markdown';
-import BBCodeRenderer from "@components/core/bbcode";
 
-import { ENVEntry } from '@components/modals/common';
-// import DekSelect from '@components/core/dek-select';
-import DekSwitch from '@components/core/dek-switch'
-import DekChoice from "@components/core/dek-choice";
-// import DekCheckbox from '@components/core/dek-checkbox';
-
-import ModFileCard from '@components/core/mod-file-card';
-import Link from "next/link";
-import { version } from "dompurify";
-
-import ModTable from '@components/core/mod-table';
-
-async function wait(milliseconds = 1000) {
-    return new Promise((r) => setTimeout(r, milliseconds));
-}
 
 export default function InstallUe4ssModal({show,setShow}) {
 
@@ -58,6 +37,26 @@ export default function InstallUe4ssModal({show,setShow}) {
         setLogMessages([]);
     };
 
+    // initialize the ue4ss installation's configuration
+    const setUe4ssDefaultSettings = useCallback(async() => {
+        if (!window.uStore) return console.error('uStore not loaded');
+        if (!window.palhub) return console.error('palhub not loaded');
+        if (!window.nexus) return console.error('nexus not loaded');
+        try {
+            addLogMessage('Setting UE4SS Default Settings');
+            const game_path = await window.uStore.get('game_path');
+            const game_data = await window.palhub('validateGamePath', game_path);
+            const ini_path = await window.palhub('joinPath', game_data.ue4ss_root, 'UE4SS-settings.ini');
+            let updated_ini = await window.palhub('readFile', ini_path, {encoding : 'utf-8'});
+            updated_ini = replaceUe4ssIniKeyValue(updated_ini, 'General', 'bUseUObjectArrayCache', false);
+            //  do any other configuration initialization changes here. 
+            await window.palhub('writeFile', ini_path, updated_ini, {encoding : 'utf-8'});
+            addLogMessage('Successfully set General.bUseUObjectArrayCache to false');
+        } catch (error) {
+            console.error(error);
+        }
+    }, []);
+
     useEffect(() => {
         if (!window.ipc) return console.error('ipc not loaded');
 
@@ -69,6 +68,15 @@ export default function InstallUe4ssModal({show,setShow}) {
 
                 case 'extract':
                 addLogMessage(`Extracting: ${data.outputPath}`);
+                break;
+
+                case 'error': 
+                addLogMessage(data);
+                break;
+
+                case 'complete':
+                addLogMessage('UE4SS Installation Complete!');
+                setUe4ssDefaultSettings();
                 break;
             }
         });
