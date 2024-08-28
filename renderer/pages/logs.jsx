@@ -16,24 +16,29 @@ export default function LogsPage(props) {
 
     React.useEffect(() => {
         (async () => {
-            if (!window.uStore) return console.error('uStore not loaded');
-            if (!window.palhub) return console.error('palhub not loaded');
-            if (!window.nexus) return console.error('nexus not loaded');
-
-            const api_key = await window.uStore.get('api_key');
-            if (!api_key) return router.push('/settings');
-            
-            const game_path = await window.uStore.get('game_path');
-            if (!game_path) return router.push('/settings');
-            
-            const game_data = await window.palhub('validateGamePath', game_path);
-            if (!game_data.has_exe) return router.push('/settings');
-            if (!game_data.has_ue4ss) return router.push('/settings');
-
-            const log_path = await window.palhub('joinPath', game_data.ue4ss_root, 'UE4SS.log');
-            const log_string = await window.palhub('readFile', log_path, {encoding : 'utf-8'});
-
-            setUE4SSLogs(log_string);
+            try {
+                if (!window.uStore) return console.error('uStore not loaded');
+                if (!window.palhub) return console.error('palhub not loaded');
+                if (!window.nexus) return console.error('nexus not loaded');
+    
+                const api_key = await window.uStore.get('api_key');
+                if (!api_key) return router.push('/settings');
+                
+                const game_path = await window.uStore.get('game_path');
+                if (!game_path) return router.push('/settings');
+                
+                const game_data = await window.palhub('validateGamePath', game_path);
+                if (!game_data.has_exe) return router.push('/settings');
+                if (!game_data.has_ue4ss) return router.push('/settings');
+    
+                const log_path = await window.palhub('joinPath', game_data.ue4ss_root, 'UE4SS.log');
+                const log_string = await window.palhub('readFile', log_path, {encoding : 'utf-8'});
+    
+                setUE4SSLogs(log_string);
+            } catch (error) {
+                console.error(error);
+                setUE4SSLogs(`Error fetching logs:\n${error.message}`);
+            }
         })();
     }, []);
 
