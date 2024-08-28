@@ -247,6 +247,19 @@ small {
     pointer-events: none; /* Ensure the background doesn't interfere with mouse events */
 }
 
+.game-bg-palworld1::before {
+    background: url('/img/3Pals.png') no-repeat center center fixed;
+    background-size: cover;
+}
+.game-bg-palworld2::before {
+    background: url('/img/Grizzbolt.png') no-repeat center center fixed;
+    background-size: cover;
+}
+.game-bg-palworld3::before {
+    background: url('/img/Lamball.png') no-repeat center center fixed;
+    background-size: cover;
+}
+
 
 @media (min-width: 576px) {
     .footer {

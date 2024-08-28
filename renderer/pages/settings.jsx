@@ -1,14 +1,6 @@
-import React, { cache } from 'react'
+import React from 'react'
 import Link from 'next/link'
-import Image from 'next/image'
 
-import Input from '../components/input';
-import Button from '../components/button';
-import Navbar from '../components/navbar';
-import Modal from '../components/modal';
-
-import ModCardComponent from '../components/mod-card';
-import AppHeadComponent from '../components/app-head';
 import { ENVEntry, ENVEntryLabel } from '@components/modals/common';
 // import DekSelect from '@components/core/dek-select';
 import DekChoice from "@components/core/dek-choice";
@@ -17,7 +9,6 @@ import DekCheckbox from '@components/core/dek-checkbox';
 
 import InstallUe4ssModal from '@components/modals/ue4ss-install';
 import Ue4ssSettingsModal from '@components/modals/ue4ss-settings';
-
 
 import wait from '@utils/wait';
 
@@ -83,8 +74,6 @@ const SetupStep = ({step, handleUE4SSInstall}) => {
 
 export default function SettingsPage({modals, ThemeController}) {
 
-
-
     // initial settings data for the application
     const [settings, setSettings] = React.useState({
         server_url: 'D:/SteamLibrary/steamapps/common/Palworld',
@@ -103,9 +92,8 @@ export default function SettingsPage({modals, ThemeController}) {
         'auto-boot': false,
         'auto-play': false,
         'auto-tiny': false,
-        'tiny-tray': false,    
+        'tiny-tray': false,
     });
-
 
     // const [ue4ssProcess, setUE4SSProcess] = React.useState(null);
     const [showUE4SSInstall, setShowUE4SSInstall] = React.useState(false);
@@ -125,10 +113,6 @@ export default function SettingsPage({modals, ThemeController}) {
         setSettings(current=>({ ...current, [key]: value }));
     }
 
-    const handleThemeChange = (event, newvalue) => {
-        ThemeController.setThemeID(event.target.innerText);
-    };
-
     // load initial settings from store
     React.useEffect(() => {
         (async () => {
@@ -136,8 +120,7 @@ export default function SettingsPage({modals, ThemeController}) {
             if (!window.palhub) return console.error('palhub not loaded');
             if (!window.ipc) return console.error('ipc not loaded');
 
-            const api_key   = await window.uStore.get('api_key', settings.api_key);
-
+            const api_key = await window.uStore.get('api_key', settings.api_key);
             let game_path = await window.uStore.get('game_path', settings.game_path);
             let cache_dir = await window.uStore.get('cache_dir', settings.cache_dir);
             let path_data = await window.palhub('validateGamePath', game_path);
@@ -153,11 +136,7 @@ export default function SettingsPage({modals, ThemeController}) {
                     console.log({game_path, cache_dir})
                 }
             }
-            
-            console.log({path_data})
-            // const server_url = await window.uStore.get('server_url', settings.server_url);
-            // const server_data = await window.palhub('validateGamePath', server_url);
-            // const server_type = server_data?.type ?? '{UNKNOWN}';
+            // console.log({path_data})
             
             updateSetting('api_key', api_key);
             updateSetting('game_path', game_path, true);
@@ -176,20 +155,8 @@ export default function SettingsPage({modals, ThemeController}) {
             updateConfig('auto-play', auto_play);
             updateConfig('auto-tiny', auto_tiny);
             updateConfig('tiny-tray', tiny_tray);
-
         })();
     }, []);
-
-    // React.useEffect(() => {
-    //     if (!window.ipc) return console.error('ipc not loaded');
-
-    //     const remove_ue4ss_handler = window.ipc.on('ue4ss-process', (type, data) => {
-    //         setUE4SSProcess({ type, data });
-    //     });
-
-    //     return () => remove_ue4ss_handler();
-    // }, []);    
-
 
     // handles updating the password when a user types. 
     // has a small delay before hiding the password
@@ -265,32 +232,24 @@ export default function SettingsPage({modals, ThemeController}) {
         setShowUE4SSInstall(false);
     }, []);
 
-
     const install_types = ['steam','windows','xbox'];//, '{UNKNOWN}'];
     const installed_type = React.useMemo(() => {
         return install_types.indexOf(settings.game_type);
     }, [settings]);
 
-    console.log({installed_type, settings})
-
+    // determine the current setup step
     let current_setup_step = 0;
     if (!settings.game_path) current_setup_step = 1;
     if (!settings.api_key) current_setup_step = 2;
     if (!settings.cache_dir) current_setup_step = 3;
-
     if (settings.game_path && !settings.has_exe) current_setup_step = 4;
     if (settings.has_exe && !settings.has_ue4ss) current_setup_step = 5;
 
-
-
-
-
+    // console.log({installed_type, settings})
+    
     return <React.Fragment>
-
         <InstallUe4ssModal show={showUE4SSInstall} setShow={setShowUE4SSInstall} />
         <Ue4ssSettingsModal show={showUE4SSSettings} setShow={setShowUE4SSSettings} />
-        
-
         <div className="container">
             <div className="col-12 col-md-10 offset-0 offset-md-1 col-lg-8 offset-lg-2">
                 <div className="mx-auto px-3 pt-5 pb-4">
@@ -307,7 +266,6 @@ export default function SettingsPage({modals, ThemeController}) {
                             </>}
                         </div>
                     </div>
-
 
                     <div className='mb-4'>
                         <p className="mb-0">
@@ -386,22 +344,9 @@ export default function SettingsPage({modals, ThemeController}) {
                         tooltip="The path to the PalHUB cache directory. This is where mods will be downloaded and stored."
                     />
 
-
                     <SetupStep step={current_setup_step} handleUE4SSInstall={handleUE4SSInstall} />
 
-
-
-
-                    {/* <div className="text-center my-5">
-                        <button
-                            className='btn btn-secondary p-3 m-2'
-                            onClick={() => window.open('https://palhub.com', '_blank')}
-                            style={{ width: 256 }}>
-                            <strong>Get PalHUB Server</strong>
-                        </button>
-                    </div> */}
                     <h1 className="font-bold mb-3">App Options</h1>
-
                     <div className='row mb-2'>
                         <div className='col-12 col-lg-4'>
                             <ENVEntry 
@@ -428,43 +373,41 @@ export default function SettingsPage({modals, ThemeController}) {
                             />
                         </div>
                     </div>
-                    
 
                     <ENVEntryLabel name="Change Color Theme [beta]" tooltip="Alter the UI by selecting from a range of spicy color themes.." />
-                    <DekSelect
-                        onChange={handleThemeChange}
-                        active_id={ThemeController.theme_id}
-                        uid='theme-dropdown'>
-                        {ThemeController && ThemeController.themes &&
-                            ThemeController.themes.map((theme, index) => (
-                                <dekItem text={theme} id={index} key={index} />
-                            ))}
-                    </DekSelect>
-
-                    {/* ['palhub', 'ikon', 'khakii', '1..6', 'metroid1', 'metroid2', 'nature1',] */}
                     <DekChoice 
                         className='pb-3 mt-1'
                         choices={ThemeController.themes}
                         active={ThemeController.theme_id}
                         onClick={(i,value)=>{
-                            console.log(`Setting Page: ${value}`)
-                            handleThemeChange({target:{innerText:value}});
-                            // updateJobData('seamless', value === 'Yes')
+                            // updateSetting('theme-id', value, true);
+                            ThemeController.setThemeID(value);
                         }}
                     />
-
+                    <DekChoice 
+                        className='pb-3'
+                        disabled={false}
+                        choices={['3pals','Grizzbolt','Lamball']}
+                        active={ThemeController.bg_id}
+                        onClick={(i,value)=>{
+                            // updateSetting('theme-bg', value, true);
+                            ThemeController.setBgID(i);
+                        }}
+                    />                    
                     {/* <ENVEntry
                         name="Auto Play"
                         value={settings['auto-play']}
                         updateSetting={(n,v)=>updateConfig('auto-play', v)}
                         tooltip="Automatically start playing the game when the client is started."
                     /> */}
-
-
-
-
-                    
-
+                    {/* <div className="text-center my-5">
+                        <button
+                            className='btn btn-secondary p-3 m-2'
+                            onClick={() => window.open('https://palhub.com', '_blank')}
+                            style={{ width: 256 }}>
+                            <strong>Get PalHUB Server</strong>
+                        </button>
+                    </div> */}                    
                 </div>
             </div>
         </div>

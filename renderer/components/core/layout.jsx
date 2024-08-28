@@ -35,10 +35,11 @@ function GoogleTagManager() {
 
 export default function Layout({ children }) {
     // const [showSettingsModal, setShowSettingsModal] = useState(false);
+    const [theme_id, setThemeID, bg_id, setBgID] = useThemeSystem();
     const [showNavbarModal, setShowNavbarModal] = useState(false);
-    const [theme_id, setThemeID] = useThemeSystem();
     const theme = `/themes/${THEMES[theme_id]}.css`;
     const active_route = useRouter().pathname;
+    const bg = `game-bg-palworld${bg_id+1}`;
 
     const modals = {
         // onClickSettings: () => setShowSettingsModal(true),
@@ -54,8 +55,11 @@ export default function Layout({ children }) {
             theme_id,
             setThemeID,
             themes: THEMES,
+            bg_id, setBgID,
         }
-    }, [theme_id]);
+    }, [theme_id, bg_id]);
+
+    console.log({theme_id, bg_id});
 
     return (
         <>
@@ -74,8 +78,7 @@ export default function Layout({ children }) {
             <div className='vh-100 theme-bg selection-secondary app-border'>
                 <Appbar />
                 <Navbar modals={modals} />
-
-                <div id='main-body' className='main-body h-full' style={bodystyle}>
+                <div id='main-body' className={`main-body h-full ${bg}`} style={bodystyle}>
                     {/* Add modals data to children to allow settings and store modal control */}
                     {Children.map(children, (child) => cloneElement(child, { modals, ThemeController }))}
                 </div>
