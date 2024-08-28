@@ -36,6 +36,13 @@ navbar_items.push({
     image: '/img/heap2.png',
 });
 
+navbar_items.push({
+    href: '/logs',
+    text: "Logs",
+    desc: 'View UE4SS Log File!',
+    image: '/img/heap2.png',
+});
+
 // navbar_items.push({
 //     href: '/faq',
 //     text: dektionary.navlinks.faq,
