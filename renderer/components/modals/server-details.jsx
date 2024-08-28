@@ -453,6 +453,8 @@ export default function ServerDetailsModal({show,setShow,server}) {
                                 'autoSaveSpan',
                                 'palhubServerURL',
                                 'discordServerID',
+                                'playerCount',
+                                'fps',
                             ]
                             if (disallowed.includes(key)) return null;
                             return <div key={i} className='col-12 col-md-6'>
