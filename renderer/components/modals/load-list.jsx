@@ -245,6 +245,7 @@ export default function LoadListModal({show,setShow}) {
                 }
             } catch (error) {
                 addLogMessage(`Error Downloading Mod: ${mod.name}`);
+                addLogMessage(error.message);
                 console.log('download error:', error);
             }
             await wait(wait_between);
@@ -256,6 +257,7 @@ export default function LoadListModal({show,setShow}) {
                 console.log({install});
             } catch (error) {
                 addLogMessage(`Error Installing Mod: ${mod.name}`);
+                addLogMessage(error.message);
                 console.log('install error:', error);
             }
             await wait(wait_between);

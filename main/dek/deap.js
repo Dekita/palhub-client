@@ -163,6 +163,7 @@ class DEAP {
                 case "minimize":
                     return this._windows[id].minimize();
                 case "exit":
+                    if (!id) return app.quit();
                     return this._windows[id].close();
             }
         });

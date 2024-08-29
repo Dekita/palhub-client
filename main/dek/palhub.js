@@ -495,19 +495,22 @@ export class Client {
 
     // todo: update this so that only one read/write for json is done
     static async uninstallAllMods(game_path) {
-        console.log("uninstalling all mods from:", game_path);
-        const config = await this.readJSON(game_path);
-        const result = {}
-        const mod_keys = Object.keys(config.mods);
-        for (const mod_id of mod_keys) {
-            console.log("uninstalling mod:", mod_id);
-            // const mod = config.mods[mod_id];
-            result[mod_id] = await this.uninstallMod(game_path, {mod_id}, config);
-            console.log("uninstalled mod:", mod_id, result[mod_id]);
+        try {
+            console.log("uninstalling all mods from:", game_path);
+            const config = await this.readJSON(game_path);
+            const result = {}
+            const mod_keys = Object.keys(config.mods);
+            for (const mod_id of mod_keys) {
+                console.log("uninstalling mod:", mod_id);
+                // const mod = config.mods[mod_id];
+                result[mod_id] = await this.uninstallMod(game_path, {mod_id}, config);
+                console.log("uninstalled mod:", mod_id, result[mod_id]);
+            }
+            await this.writeJSON(game_path, config);
+            return result;
+        } catch (error) {
+            console.error("uninstallAllMods error", error);
         }
-
-        await this.writeJSON(game_path, config);
-        return result;
     }
 
     static async checkModFileIsDownloaded(cache_path, file) {
