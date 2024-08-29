@@ -18,20 +18,17 @@ export default function useTimer(initial, interval = SECOND) {
         s: 0, // secs
         ms: 0, // millisec
     });
-    const updater = useCallback(
-        () =>
-            setTime((_time) => {
-                const diff = Math.abs(Date.now() - initial);
-                return {
-                    d: Math.floor(diff / DAY),
-                    h: Math.floor((diff / HOUR) % 24),
-                    m: Math.floor((diff / MINUTE) % 60),
-                    s: Math.floor((diff / SECOND) % 60),
-                    ms: diff % 1000,
-                };
-            }),
-        [initial]
-    );
+    
+    const updater = useCallback(() => setTime((_time) => {
+        const diff = Math.abs(Date.now() - initial);
+        return {
+            d: Math.floor(diff / DAY),
+            h: Math.floor((diff / HOUR) % 24),
+            m: Math.floor((diff / MINUTE) % 60),
+            s: Math.floor((diff / SECOND) % 60),
+            ms: diff % 1000,
+        };
+    }),[initial]);
 
     useEffect(() => {
         const handle = setInterval(updater, interval);
