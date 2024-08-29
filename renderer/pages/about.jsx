@@ -27,13 +27,11 @@ export default function AboutPage() {
                         </strong>
                     </Link>
 
-
                     <div className='alert alert-warning text-center mt-3'>
                         <strong>
                         This application is not affiliated with, or endorsed by the developers of Palworld.
                         </strong>
                     </div>
-
 
                     <div className='row'>
                         <div className='col-12 col-xl-6'>
@@ -88,13 +86,7 @@ export default function AboutPage() {
                             </Link>
                         </div>
                     </div>
-
-
-
-
-
-
-
+                    
                 </div>
             </div>
         </div>

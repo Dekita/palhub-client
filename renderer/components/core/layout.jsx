@@ -61,7 +61,7 @@ export default function Layout({ children }) {
         }
     }, [theme_id, bg_id]);
 
-    const can_show_navbar = !['help'].includes(windowName);
+    const can_show_navbar = windowName && !['help'].includes(windowName);
     const nonav_page = can_show_navbar ? '' : 'game-bg-full';
     // console.log({theme_id, bg_id, windowName});
 

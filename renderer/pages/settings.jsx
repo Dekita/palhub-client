@@ -270,7 +270,9 @@ export default function SettingsPage({modals, ThemeController}) {
                                 </div>
                             </>}
 
-                            <div className='btn btn-dark px-3' onClick={onClickHelp} />
+                            <div className='btn btn-dark ms-2 px-3' onClick={onClickHelp}>
+                                <strong>FAQ</strong>
+                            </div>
                         </div>
                     </div>
 
