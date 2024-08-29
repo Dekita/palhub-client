@@ -3,7 +3,7 @@
 # PalHUB::Client by dekitarpg@gmail.com
 ########################################
 */
-import { contextBridge, ipcRenderer } from 'electron';
+import { contextBridge, ipcRenderer} from 'electron';
 
 // expose the user data (electron-store) API to the renderer process
 contextBridge.exposeInMainWorld('uStore', {

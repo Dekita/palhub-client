@@ -79,12 +79,12 @@ export const createWindow = (windowName, options) => {
     
     Menu.setApplicationMenu(null);
 
-    win.on('ready-to-show', () => {
-        console.log('\n--- showing the window ---\n');
-        win.show();
-        win.focus();
-        win.webContents.send('deap-window-setup', windowName);
-    });
+    // win.on('ready-to-show', () => {
+    //     console.log('\n--- showing the window ---\n');
+    //     win.show();
+    //     win.focus();
+    //     win.webContents.send('deap-window-setup', windowName);
+    // });
 
     win.webContents.on('new-window', (event, url) => {
         event.preventDefault();
@@ -97,6 +97,8 @@ export const createWindow = (windowName, options) => {
     });
 
     win.on('close', saveState);
+
+    win.deap_id = windowName;
 
     return win;
 }

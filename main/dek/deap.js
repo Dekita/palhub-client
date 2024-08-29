@@ -167,6 +167,9 @@ class DEAP {
                     return this._windows[id].close();
             }
         });
+        ipcMain.handle("get-window-id", async (event) => {
+            return BrowserWindow.fromWebContents(event.sender)?.deap_id;
+        });
         ipcMain.handle('check-image-path', async (event, pathtocheck = this._config.app_icon.ico) => {
             const thepath = path.join(__dirname, pathtocheck)
             return {
@@ -247,12 +250,17 @@ class DEAP {
             else this._windows[id].minimize();
             reloading = false;
         });
+        this._windows[id].on("show", () => {
+            // this._windows[id].webContents.send('deap-window-setup', id);
+            this._windows[id].focus();
+        });
         this._windows[id].webContents.on("before-input-event", (event, input) => {
             if (input.control && input.key.toUpperCase() === "R") {
                 this.loadFileToWindow(id, windoe_config);
                 event.preventDefault();
             }
         });
+
         this.loadFileToWindow(id, windoe_config);
     }
     // creates a system tray icon and defines its options
