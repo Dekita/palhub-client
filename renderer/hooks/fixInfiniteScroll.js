@@ -1,6 +1,6 @@
 'use client';/*
 ########################################
-# PalHUB::Server by dekitarpg@gmail.com
+# PalHUB::Client by dekitarpg@gmail.com
 ########################################
 */
 

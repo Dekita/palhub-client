@@ -1,8 +1,11 @@
-
+/*
+########################################
+# PalHUB::Client by dekitarpg@gmail.com
+########################################
+*/
 import React from 'react';
 import DOMPurify from 'dompurify';
 import BBCode, {Tag} from 'bbcode-to-react';
-
 
 class SizeTag extends Tag {
     // 1=small, 6=large
@@ -18,18 +21,14 @@ class SizeTag extends Tag {
         const size = size_map[this.params.size];
         return `<span style="font-size: ${size};">${this.getContent()}</span>`;
     }
-    toReact() {
-
-    }
+    // toReact() {}
 }
 
 class ImageTag extends Tag {
     toHTML() {
         return `<img class="img-fluid" src="${this.getContent()}" />`;
     }
-    toReact() {
-
-    }
+    // toReact() {}
 }
 
 class LinkTag extends Tag {
@@ -41,7 +40,6 @@ class LinkTag extends Tag {
 BBCode.registerTag('size', SizeTag); // add custom size tag
 BBCode.registerTag('img', ImageTag); // add custom image tag
 BBCode.registerTag('url', LinkTag); // add custom link tag
-
 
 function decodeHTMLEntities(text) {
     const textarea = document.createElement('textarea');
@@ -62,15 +60,9 @@ function sanitizeBB(bbcodeText) {
     return bbcodeText;
 }
 
-
 export default function BBCodeRenderer({ bbcodeText }) {
-    return (
-        <div className='bbcode-div mb-3' dangerouslySetInnerHTML={{
-            __html: BBCode.toReact(sanitizeBB(bbcodeText))
-        }}></div>
-        // <div className="bbcode-container">
-        //     <BBCode>{bbcodeText}</BBCode>
-        // </div>
-    );
+    return <div className='bbcode-div mb-3' dangerouslySetInnerHTML={{
+        __html: BBCode.toReact(sanitizeBB(bbcodeText))
+    }}/>;
 }
 

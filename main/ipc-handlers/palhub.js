@@ -1,4 +1,8 @@
-
+/*
+########################################
+# PalHUB::Client by dekitarpg@gmail.com
+########################################
+*/
 import { Client } from '../dek/palhub';
 
 // export default 

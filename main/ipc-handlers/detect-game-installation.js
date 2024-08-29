@@ -1,3 +1,8 @@
+/*
+########################################
+# PalHUB::Client by dekitarpg@gmail.com
+########################################
+*/
 import detectSteamGameInstallation from "../dek/detectSteamGame";
 // import detectXboxGameInstallation from ".../dek/detectXboxGame";
 

@@ -1,4 +1,8 @@
-
+/*
+########################################
+# PalHUB::Client by dekitarpg@gmail.com
+########################################
+*/
 import Store from "electron-store";
 
 // Create a new instance of electron-store for handling

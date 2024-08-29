@@ -1,7 +1,14 @@
-import fs from 'fs/promises';
+/*
+########################################
+# PalHUB::Client by dekitarpg@gmail.com
+########################################
+* Handles zip/rar archives
+*/
+
 import path from 'path';
-import AdmZip from 'adm-zip';
-import { createExtractorFromData } from 'node-unrar-js';
+import fs from 'fs/promises';
+import AdmZip from 'adm-zip'; // for de-zip
+import { createExtractorFromData } from 'node-unrar-js'; // for de-rar
 import EventEmitter from "events";
 
 class ArchiveHandler extends EventEmitter {
@@ -40,18 +47,12 @@ class ArchiveHandler extends EventEmitter {
     async _loadRarEntries() {
         const filedata = await fs.readFile(this.filePath);
         const buffer = Uint8Array.from(filedata).buffer;
-        // convnert bffer to array buffer
-        // const arraybuffer = new Uint8Array(filedataBuffer).buffer;
-
         const extractor = await createExtractorFromData({data: buffer});
-        const list = extractor.getFileList();
-        const listArcHeader = list.arcHeader; // archive header
-        const fileHeaders = [...list.fileHeaders]; // load the file headers        
-        // console.log({list, listArcHeader, fileHeaders});
+        // const list = extractor.getFileList();
+        // const listArcHeader = list.arcHeader; // archive header
+        // const fileHeaders = [...list.fileHeaders]; // load the file headers        
         const extracted = extractor.extract();
-        // console.log({extracted});
         const files = [...extracted.files]; //load the files
-        // console.log({files});
 
         this.entries = files.map(entry => ({
             entryName: entry.fileHeader.name,
@@ -59,7 +60,6 @@ class ArchiveHandler extends EventEmitter {
             size: entry.fileHeader.unpSize,
             getData: () => entry.extraction,
         }));
-        // console.log('this.entries:', this.entries);
     }
 
     async getEntries() {
@@ -72,11 +72,8 @@ class ArchiveHandler extends EventEmitter {
     async extractEntry(entry, outputPath) {
         if (!!!entry.outputPath) return;
 
-        // const outputFilePath = path.join(outputPath, entry.entryName);
         const outputFilePath = path.join(outputPath, entry.outputPath ?? entry.entryName);
         console.log('extracting:', entry.entryName, 'to:', outputFilePath);
-
-
 
         this.emit('extracting', {
             entry: entry.entryName,
@@ -91,13 +88,8 @@ class ArchiveHandler extends EventEmitter {
         }
     }
 
-    async wait(ms=3000) {
-        return new Promise(resolve => setTimeout(resolve, ms));
-    }
-
     async extractAllTo(outputPath, overwrite = true, ignores = []) {
         console.log('extracting to:', outputPath);
-        // await this.wait();
         const entries = await this.getEntries();
         console.log('got entries:', entries);
         for (const entry of entries) {
@@ -105,14 +97,7 @@ class ArchiveHandler extends EventEmitter {
                 console.log('ignoring:', entry.entryName);
                 continue;
             }
-            // await this.wait();
             await this.extractEntry(entry, outputPath);
-            // await this.wait();
-            // const outputFilePath = path.join(outputPath, entry.entryName);
-            // const fileExists = await fs.access(outputFilePath).then(() => true).catch(() => false);
-            // if (overwrite || !fileExists) {
-            //     await this.extractEntry(entry, outputPath);
-            // }
         }
     }
 }

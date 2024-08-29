@@ -1,21 +1,23 @@
-/**
- * system: DEAP - Dekitas Electron App Project
- * author: dekitarpg@gmail.com
- *
- * This module handles creating an electron application
- * it uses various configuration options to determine
- * how windows behave, and the pages loaded.
- *
- */
+/*
+########################################
+# PalHUB::Client by dekitarpg@gmail.com
+########################################
+* system: DEAP - Dekitas Electron App Project
+* author: dekitarpg@gmail.com
+*
+* This module handles creating an electron application
+* it uses various configuration options to determine
+* how windows behave, and the pages loaded.
+*/
+
 import { app, dialog, ipcMain, BrowserWindow, Menu, Tray, nativeImage } from "electron";
 import { autoUpdater } from "electron-updater";
 import createLogger, { LoggyBoi } from "../../utils/dek/logger";
 import { createWindow } from './create-window';
-
 import Store from "electron-store";
 import serve from "electron-serve";
 import path from "path";
-import fs from 'fs';
+// import fs from 'fs';
 
 const IS_PRODUCTION = process.env.NODE_ENV === "production";
 
@@ -39,10 +41,6 @@ const APP_VERSION = (() => {
     if (app.isPackaged) return app.getVersion();
     return PACKAGE_JSON.version;
 })();
-
-function capitalize([char1, ...rest]) {
-    return char1.toUpperCase() + rest.join("");
-}
 
 class DEAP {
     // quick reference to electron.app;
@@ -291,9 +289,6 @@ class DEAP {
         // set user agent and show/reload
         const windoe = this._windows[id];
         windoe.webContents.setUserAgent(this._user_agent);
-
-        // if (windoe.isVisible()) windoe.reload();
-        // else windoe.loadFile(config.page);
 
         if (windoe.isVisible()) windoe.reload();
         else {

@@ -1,10 +1,9 @@
 /*
 ########################################
-# PalHUB::Server by dekitarpg@gmail.com
+# PalHUB::Client by dekitarpg@gmail.com
 ########################################
-*/
+use as: 
 
-/* use as: 
 import useSwrJSON, {fetcher, mutate} from '@hooks/useSwrJSON';
 
 export default function SomePageOrComponent(){

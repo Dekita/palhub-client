@@ -1,5 +1,10 @@
-import { screen, BrowserWindow, shell, Menu, Tray } from 'electron'
-import Store from 'electron-store'
+/*
+########################################
+# PalHUB::Client by dekitarpg@gmail.com
+########################################
+*/
+import { screen, BrowserWindow, shell, Menu } from 'electron';
+import Store from 'electron-store';
 
 export const createWindow = (windowName, options) => {
     const key = 'window-state'
@@ -78,6 +83,7 @@ export const createWindow = (windowName, options) => {
         console.log('\n--- showing the window ---\n');
         win.show();
         win.focus();
+        win.webContents.send('deap-window-setup', windowName);
     });
 
     win.webContents.on('new-window', (event, url) => {

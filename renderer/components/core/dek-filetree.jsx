@@ -1,4 +1,8 @@
-
+/*
+########################################
+# PalHUB::Client by dekitarpg@gmail.com
+########################################
+*/
 import React from 'react';
 import { SphereSpinner } from 'react-spinners-kit';
 

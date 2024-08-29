@@ -246,6 +246,11 @@ export default function SettingsPage({modals, ThemeController}) {
     if (settings.has_exe && !settings.has_ue4ss) current_setup_step = 5;
 
     // console.log({installed_type, settings})
+
+    const onClickHelp = React.useCallback(() => {
+        if (!window.ipc) return console.error('ipc not loaded');
+        window.ipc.invoke('open-child-window', 'help');
+    }, []);
     
     return <React.Fragment>
         <InstallUe4ssModal show={showUE4SSInstall} setShow={setShowUE4SSInstall} />
@@ -264,6 +269,8 @@ export default function SettingsPage({modals, ThemeController}) {
                                     <strong>Edit UE4SS Settings</strong>
                                 </div>
                             </>}
+
+                            <div className='btn btn-dark px-3' onClick={onClickHelp} />
                         </div>
                     </div>
 

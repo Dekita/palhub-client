@@ -1,34 +1,12 @@
 /*
 ########################################
-# PalHUB::Server by dekitarpg@gmail.com
+# PalHUB::Client by dekitarpg@gmail.com
 ########################################
 */
-
 // import styles from '../styles/Home.module.css'
-import { motion } from 'framer-motion';
+// import { motion } from 'framer-motion';
 import { useRouter } from 'next/router';
-import { useEffect, useRef, useState } from 'react';
-
-import Link from 'next/link';
-import Container from 'react-bootstrap/Container';
-import Dropdown from 'react-bootstrap/Dropdown';
-import Nav from 'react-bootstrap/Nav';
-import Navbar from 'react-bootstrap/Navbar';
-import Table from 'react-bootstrap/Table';
-
-import DekSelect from '@components/core/dek-select';
-import Dektionary from '@config/dektionary';
-import * as CommonIcons from '@config/common-icons';
-
-import DekCheckbox from '@components/core/dek-checkbox';
-import Image from 'next/image';
-
-import navbar_items from '@config/navbar-items';
-
-const NSFWIcons = {
-    enabled: CommonIcons.eye,
-    disabled: CommonIcons.eye_slash,
-};
+import { useEffect, useState } from 'react';
 
 export default function AutoUpdater({}) {
     const router = useRouter();
@@ -41,7 +19,6 @@ export default function AutoUpdater({}) {
         if (!window.ipc) return console.error('ipc not loaded');
         window.ipc.invoke('install-update');
     }
-
 
     useEffect(() => {
         if (!window.ipc) return console.error('ipc not loaded');
@@ -93,7 +70,7 @@ export default function AutoUpdater({}) {
         return () => remove_auto_update_handler();
     }, [active_route]); 
 
-    const showUpdateMessage = true;//updateMessage || canInstallUpdate;
+    const showUpdateMessage = updateMessage || canInstallUpdate;
 
     return <>
         {showUpdateMessage && <div className='container text-center'>

@@ -1,11 +1,11 @@
-/**
-* system: Discord RPC Tool
-* author: dekitarpg@gmail.com
-* 
+/*
+########################################
+# PalHUB::Client by dekitarpg@gmail.com
+########################################
 * API class handles interactions with my own api to keep 
 * track of user counts, and the version being used. 
-* 
 */
+
 import bent from 'bent';
 import Dekache from 'dekache';
 

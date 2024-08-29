@@ -3,8 +3,6 @@
 # PalHUB::Client by dekitarpg@gmail.com
 ########################################
 */
-
-
 import { contextBridge, ipcRenderer } from 'electron';
 
 // expose the user data (electron-store) API to the renderer process
@@ -24,13 +22,11 @@ contextBridge.exposeInMainWorld('serverCache', {
 
 // expose nexus functionality to renderer process
 contextBridge.exposeInMainWorld('nexus', async(...args) => {
-    // console.log('nexus exposeInMainWorld:', ...args);
     return await ipcRenderer.invoke('nexus', ...args);
 });
 
 // expose main palhub functionality to renderer process
 contextBridge.exposeInMainWorld('palhub', async(...args) => {
-    // console.log('palhub exposeInMainWorld:', ...args);
     return await ipcRenderer.invoke('palhub', ...args);
 });
 

@@ -1,3 +1,9 @@
+/*
+########################################
+# PalHUB::Client by dekitarpg@gmail.com
+########################################
+*/
+
 const DEFAULT_EXAMPLE_SERVER_LISTING = {
     "difficulty": "Normal",
     "dayTimeSpeedRate": 1,

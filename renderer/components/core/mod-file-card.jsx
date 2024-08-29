@@ -1,3 +1,8 @@
+/*
+########################################
+# PalHUB::Client by dekitarpg@gmail.com
+########################################
+*/
 import React from 'react';
 import DOMPurify from 'dompurify';
 import * as CommonIcons from 'config/common-icons';

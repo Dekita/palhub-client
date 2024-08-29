@@ -1,9 +1,9 @@
 /*
 ########################################
-# PalHUB::Server by dekitarpg@gmail.com
+# PalHUB::Client by dekitarpg@gmail.com
 ########################################
 */
-import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 
 const SECOND = 1_000;
 const MINUTE = SECOND * 60;

@@ -1,3 +1,9 @@
+/*
+########################################
+# PalHUB::Client by dekitarpg@gmail.com
+########################################
+*/
+
 //! This code is only for Windows OS (used to detect if an Xbox game is installed on the system)
 //! NON FUNCTIONAL DUE TO REQUIRE POWERSHELL ADMIN
 //! ALSO RETURNS VIRTUALIZLED PATH DIRECTORY, NOT 

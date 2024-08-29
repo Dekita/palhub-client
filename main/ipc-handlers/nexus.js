@@ -1,3 +1,8 @@
+/*
+########################################
+# PalHUB::Client by dekitarpg@gmail.com
+########################################
+*/
 import Dekache from "dekache";
 import Store from "electron-store";
 import { Client } from '../dek/palhub';

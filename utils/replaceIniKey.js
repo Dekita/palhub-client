@@ -1,3 +1,8 @@
+/*
+########################################
+# PalHUB::Client by dekitarpg@gmail.com
+########################################
+*/
 // 
 // example usage: 
 // replaceIniKey(iniContentString, 'section', 'key', 'newValue');

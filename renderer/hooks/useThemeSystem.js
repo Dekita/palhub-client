@@ -1,6 +1,6 @@
 /*
 ########################################
-# PalHUB::Server by dekitarpg@gmail.com
+# PalHUB::Client by dekitarpg@gmail.com
 ########################################
 */
 import { parse } from 'dotenv';

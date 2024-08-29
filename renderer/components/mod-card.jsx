@@ -1,4 +1,9 @@
 
+/*
+########################################
+# PalHUB::Client by dekitarpg@gmail.com
+########################################
+*/
 const DEFAULT_EXAMPLE_MOD_LISTING = {
     "name": "Quivern Rainbowdragon",
     "summary": "New look with colorful feathers for the Quivern :D",

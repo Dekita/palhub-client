@@ -1,4 +1,8 @@
-
+/*
+########################################
+# PalHUB::Client by dekitarpg@gmail.com
+########################################
+*/
 import useScreenSize from '@hooks/useScreenSize';
 
 export default function ModTable({show,setShow, mods, showStatus=false}) {

@@ -8,15 +8,7 @@
 * 
 */
 
-
-/**
-* system: PalHUB Client
-* author: dekitarpg@gmail.com
-* 
-*/
-
 // load modules used for generating config:
-
 import {randomUUID} from 'crypto';
 import {join} from 'path';
 

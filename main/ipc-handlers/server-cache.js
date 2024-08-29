@@ -1,4 +1,9 @@
-import DEAP from "../dek/deap";
+/*
+########################################
+# PalHUB::Client by dekitarpg@gmail.com
+########################################
+*/
+// import DEAP from "../dek/deap";
 import Store from "electron-store";
 
 // Create a new instance of electron-store for handling

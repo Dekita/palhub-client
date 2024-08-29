@@ -1,13 +1,10 @@
 /*
 ########################################
-# PalHUB::Server by dekitarpg@gmail.com
+# PalHUB::Client by dekitarpg@gmail.com
 ########################################
+modal is displayed when mobile (small viewpoert) user
+clicks on "hamburger menu" in navbar :)
 */
-
-//
-// modal is displayed when mobile (small viewpoert) user
-// clicks on "hamburger menu" in navbar :)
-//
 
 import { motion } from 'framer-motion';
 import Button from 'react-bootstrap/Button';

@@ -1,3 +1,8 @@
+/*
+########################################
+# PalHUB::Client by dekitarpg@gmail.com
+########################################
+*/
 const fs = require('fs');
 const path = require('path');
 const vdf = require('vdf');

@@ -1,14 +1,11 @@
 /*
 ########################################
-# PalHUB::Server by dekitarpg@gmail.com
+# PalHUB::Client by dekitarpg@gmail.com
 ########################################
 */
 
 import Head from 'next/head';
 import { useRouter } from 'next/router';
-
-
-
 
 export default function MetaHead({ title, desc, url = null }) {
     const router = useRouter();
@@ -23,7 +20,6 @@ export default function MetaHead({ title, desc, url = null }) {
             ? window.location.hostname
             : '';
     // const origin = typeof window !== 'undefined' && window.location.origin ? window.location.origin : '';
-
     // const origin = window?.location.origin ?? '';
 
     const host_url = `${protocol}//${hostname}`;

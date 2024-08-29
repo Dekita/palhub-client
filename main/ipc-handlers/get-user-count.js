@@ -1,3 +1,8 @@
+/*
+########################################
+# PalHUB::Client by dekitarpg@gmail.com
+########################################
+*/
 import DEAP from "../dek/deap";
 import DAPI from "../dek/api";
 

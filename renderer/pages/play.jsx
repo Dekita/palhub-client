@@ -1,16 +1,7 @@
 import React from 'react'
-import Head from 'next/head'
-import Link from 'next/link'
+// import Link from 'next/link'
 // import Image from 'next/image'
 import { Image } from 'react-bootstrap'
-
-import Input from '@components/input';
-import Button from '@components/button';
-import Navbar from '@components/navbar';
-import Modal from '@components/modal';
-
-import ModCardComponent from '@components/mod-card';
-import AppHeadComponent from '@components/app-head';
 import { useRouter } from 'next/router';
 
 import CheckModsModal from '@components/modals/mod-check';

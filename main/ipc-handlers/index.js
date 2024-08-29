@@ -1,4 +1,8 @@
-
+/*
+########################################
+# PalHUB::Client by dekitarpg@gmail.com
+########################################
+*/
 import nexus from './nexus';
 import palhub from './palhub';
 import ustore from './ustore';

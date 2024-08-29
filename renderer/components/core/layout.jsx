@@ -1,13 +1,14 @@
 /*
 ########################################
-# PalHUB::Server by dekitarpg@gmail.com
+# PalHUB::Client by dekitarpg@gmail.com
 ########################################
 */
 
 import Head from 'next/head';
-import { useState, cloneElement, Children, useMemo } from 'react';
+import { useState, cloneElement, Children, useMemo, useEffect } from 'react';
 import { useRouter } from 'next/router';
 import useThemeSystem, { THEMES } from '@hooks/useThemeSystem';
+import useWindowNameFromDEAP from '@hooks/useWindowNameFromDEAP';
 import SettingsModal from '@components/modals/settings';
 import NavbarModal from '@components/modals/navbar';
 import MetaHead from '@components/core/metahead';
@@ -15,7 +16,6 @@ import Appbar from '@components/core/appbar';
 import Navbar from '@components/core/navbar';
 import Footer from '@components/core/footer';
 import Dektionary from 'config/dektionary';
-
 
 function GoogleTagManager() {
     const enabled = process.env.GOOGLE_TAG_ENABLED;
@@ -32,6 +32,7 @@ function GoogleTagManager() {
         </Script>
     </>
 }
+
 
 export default function Layout({ children }) {
     // const [showSettingsModal, setShowSettingsModal] = useState(false);
@@ -59,7 +60,9 @@ export default function Layout({ children }) {
         }
     }, [theme_id, bg_id]);
 
-    console.log({theme_id, bg_id});
+    const windowName = useWindowNameFromDEAP();
+
+    console.log({theme_id, bg_id, windowName});
 
     return (
         <>
