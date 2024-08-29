@@ -38,6 +38,7 @@ export default function Layout({ children }) {
     // const [showSettingsModal, setShowSettingsModal] = useState(false);
     const [theme_id, setThemeID, bg_id, setBgID] = useThemeSystem();
     const [showNavbarModal, setShowNavbarModal] = useState(false);
+    const windowName = useWindowNameFromDEAP();
     const theme = `/themes/${THEMES[theme_id]}.css`;
     const active_route = useRouter().pathname;
     const bg = `game-bg-palworld${bg_id+1}`;
@@ -60,9 +61,9 @@ export default function Layout({ children }) {
         }
     }, [theme_id, bg_id]);
 
-    const windowName = useWindowNameFromDEAP();
-
-    console.log({theme_id, bg_id, windowName});
+    const can_show_navbar = !['help'].includes(windowName);
+    const nonav_page = can_show_navbar ? '' : 'game-bg-full';
+    // console.log({theme_id, bg_id, windowName});
 
     return (
         <>
@@ -80,8 +81,10 @@ export default function Layout({ children }) {
 
             <div className='vh-100 theme-bg selection-secondary app-border'>
                 <Appbar />
-                <Navbar modals={modals} />
-                <div id='main-body' className={`main-body h-full ${bg}`} style={bodystyle}>
+                
+                {can_show_navbar && <Navbar modals={modals} />}
+                
+                <div id='main-body' className={`main-body h-full ${nonav_page} ${bg}`} style={bodystyle}>
                     {/* Add modals data to children to allow settings and store modal control */}
                     {Children.map(children, (child) => cloneElement(child, { modals, ThemeController }))}
                 </div>
@@ -95,8 +98,8 @@ export default function Layout({ children }) {
                 <NavbarModal
                     show={showNavbarModal}
                     setShow={setShowNavbarModal}
-                />                 
-                <Footer />
+                />
+                {can_show_navbar && <Footer />}
             </div>
         </>
     );

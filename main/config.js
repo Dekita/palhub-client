@@ -101,7 +101,7 @@ export default {
             },
         },
         help: {
-            page: 'help',
+            page: 'faq',
             size: {w: 640, h: 420},
             load: join(__dirname, './preload.js'),
             opts: {

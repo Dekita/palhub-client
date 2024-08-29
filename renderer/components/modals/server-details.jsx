@@ -16,7 +16,7 @@ import Modal from 'react-bootstrap/Modal';
 // import useMediaQuery from '@hooks/useMediaQuery';
 import useScreenSize from '@hooks/useScreenSize';
 
-import MarkdownRenderer from '@components/core/markdown';
+import MarkdownRenderer from '@components/markdown/renderer';
 import BBCodeRenderer from "@components/core/bbcode";
 
 import { ENVEntry, ENVEntry_Input, ensureEntryValueType } from '@components/modals/common';

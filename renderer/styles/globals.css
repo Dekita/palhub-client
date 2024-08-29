@@ -222,7 +222,7 @@ small {
 
 .main-body {
     position: relative;
-    height: calc(100% - 72px - 80px);
+    height: calc(100% - 72px - 40px);
     overflow-y: auto;
     overflow-x: auto;
     z-index: 0;
@@ -239,7 +239,7 @@ small {
     background-size: cover;
     position: fixed; /* Make the background fixed */
     top: 112px;
-    bottom: 66px;
+    bottom: 2px;
     right: 2px;
     left: 2px;
     opacity: 0.025; /* Adjust the opacity to the desired transparency level */
@@ -258,6 +258,17 @@ small {
 .game-bg-palworld3::before {
     background: url('/img/Lamball.png') no-repeat center center fixed;
     background-size: cover;
+}
+
+.game-bg-full {
+    height: calc(100% - 40px) !important;
+}
+.game-bg-full::before {
+    position: fixed; /* Make the background fixed */
+    top: 40px !important;
+    bottom: 2px !important;
+    right: 2px !important;
+    left: 2px !important;
 }
 
 
@@ -283,6 +294,9 @@ small {
     .main-body::before {
         top: 112px;
         bottom: 66px;
+    }
+    .game-bg-full {
+        height: calc(100% - 38px) !important;
     }
 }
 

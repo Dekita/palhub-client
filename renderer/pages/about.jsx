@@ -44,7 +44,7 @@ export default function AboutPage() {
                                 <li className=''>Manage your mod library with minimal clicks</li>
                                 <li className=''>Effortlessly join custom modified servers</li>
                             </ul>
-                            <Link href="https://www.patreon.com/dekitarpg" target='_blank' className='w-100 btn btn-info py-3 px-4'>
+                            <Link href="https://www.patreon.com/dekitarpg" target='_blank' className='w-100 btn btn-info py-3 px-4 mb-2 mb-xl-0'>
                                 <CommonIcons.patreon
                                     height='2rem'
                                     fill='currentColor'

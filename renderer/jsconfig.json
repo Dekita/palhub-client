@@ -8,7 +8,7 @@
             "@config/*": ["config/*"],
             "@styles/*": ["styles/*"],
             "@svgs/*": ["public/svgs/*"],
-            "@workflows/*": ["workflows/*"],
+            "@markdown/*": ["markdown/*"],
             "@components/*": ["components/*"]
         }
     }
