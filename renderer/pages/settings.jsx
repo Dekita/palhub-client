@@ -11,6 +11,9 @@ import InstallUe4ssModal from '@components/modals/ue4ss-install';
 import Ue4ssSettingsModal from '@components/modals/ue4ss-settings';
 
 import wait from '@utils/wait';
+import BrandHeader from '@components/core/brand-header';
+import Carousel from 'react-bootstrap/Carousel';
+
 
 const SetupStep = ({step, handleUE4SSInstall}) => {
     switch (step) {
@@ -86,6 +89,8 @@ export default function SettingsPage({modals, ThemeController}) {
 
         has_ue4ss: false,
         has_exe: false, 
+
+        settings_page: 0,
 
         // app options implemented by DEAP <3
         // ! todo: convert other options to be handled by DEAP for v1 rlease..
@@ -252,60 +257,52 @@ export default function SettingsPage({modals, ThemeController}) {
         window.ipc.invoke('open-child-window', 'help');
     }, []);
     
+    const words = [
+        "The ULTIMATE mod manager for Palworld",
+        "Join modified community servers with ease",
+        "Download mods directly from Nexus Mods",
+        "Manage your mod library with minimal clicks",
+        "Configure the settings below to get started;",
+    ]
     return <React.Fragment>
         <InstallUe4ssModal show={showUE4SSInstall} setShow={setShowUE4SSInstall} />
         <Ue4ssSettingsModal show={showUE4SSSettings} setShow={setShowUE4SSSettings} />
+        <BrandHeader type='altsmall' tagline="PalHUB Client" words={words} />
+
         <div className="container">
             <div className="col-12 col-md-10 offset-0 offset-md-1 col-lg-8 offset-lg-2">
-                <div className="mx-auto px-3 pt-5 pb-4">
+                <div className="mx-auto px-3">
 
-                    <div className='row mb-3'>
-                        <div className='col-4'>
-                            <h1 className="font-bold">Settings</h1>
-                        </div>
-                        <div className='col-8 text-end'>
-                            {settings?.has_ue4ss && <>
-                                <div className='btn btn-dark px-3' onClick={() => setShowUE4SSSettings(true)}>
-                                    <strong>Edit UE4SS Settings</strong>
-                                </div>
-                            </>}
-
-                            <div className='btn btn-dark ms-2 px-3' onClick={onClickHelp}>
-                                <strong>FAQ</strong>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div className='mb-4'>
-                        <p className="mb-0">
-                            Welcome to PalHUB Client, the ultimate Palworld mod manager and modified server listing service.
-                        </p>
-                        <p className="">
-                            To get started, please configure the settings below.
-                        </p>
-                    </div>
-
-                    {/* <div className='' onClick={onClickPathInput}>
-                    </div> */}
-
-                    <ENVEntry 
-                        name="Local Palworld Game Installation Path"
-                        value={settings.game_path}
-                        updateSetting={handleGamePathChange}
-                        tooltip="The path to your Palworld game installation."
-                    />
+                    <SetupStep step={current_setup_step} handleUE4SSInstall={handleUE4SSInstall} />
 
                     <DekChoice 
                         className='pb-3'
-                        disabled={true}
-                        choices={install_types}
-                        active={installed_type}
+                        disabled={false}
+                        choices={['App Setup', 'Game Settings']}
+                        active={settings.settings_page}
                         onClick={(i,value)=>{
                             console.log(`Setting Page: ${value}`)
-                            // updateJobData('seamless', value === 'Yes')
+                            updateSetting('settings_page', i);
                         }}
                     />
 
+                </div>
+            </div>
+        </div>
+
+
+
+        <Carousel interval={null} className='container' indicators={false} controls={false} activeIndex={settings.settings_page}>
+            <Carousel.Item className=''>
+                <div className="col-12 col-md-10 offset-0 offset-md-1 col-lg-8 offset-lg-2">
+                    <div className="mx-auto px-3">
+
+                    <ENVEntry 
+                        value={settings.cache_dir}
+                        name="PalHUB Cache Directory"
+                        updateSetting={handleCachePathChange}
+                        tooltip="The path to the PalHUB cache directory. This is where mods will be downloaded and stored."
+                    />
                     <ENVEntry 
                         name="Nexus Mods API Key"
                         value={settings.api_key}
@@ -313,7 +310,6 @@ export default function SettingsPage({modals, ThemeController}) {
                         updateSetting={handlePasswordChange}
                         tooltip="Your Nexus Mods API Key is required to download mods."
                     />
-
                     <div className='row mb-2'>
                         <div className='col px-3'>
                             <DekCheckbox
@@ -338,24 +334,6 @@ export default function SettingsPage({modals, ThemeController}) {
                             </a>                            
                         </div>
                     </div>
-
-                    {/* <ENVEntry 
-                        value={settings.server_url}
-                        name="Local Game Server Installation Path"
-                        updateSetting={handleServerPathChange}
-                        tooltip="The path to your Palworld game server installation."
-                    /> */}
-                    
-                    <ENVEntry 
-                        value={settings.cache_dir}
-                        name="PalHUB Cache Directory"
-                        updateSetting={handleCachePathChange}
-                        tooltip="The path to the PalHUB cache directory. This is where mods will be downloaded and stored."
-                    />
-
-                    <SetupStep step={current_setup_step} handleUE4SSInstall={handleUE4SSInstall} />
-
-                    <h1 className="font-bold mb-3">App Options</h1>
                     <div className='row mb-2'>
                         <div className='col-12 col-lg-4'>
                             <ENVEntry 
@@ -416,7 +394,53 @@ export default function SettingsPage({modals, ThemeController}) {
                             style={{ width: 256 }}>
                             <strong>Get PalHUB Server</strong>
                         </button>
-                    </div> */}                    
+                    </div> */}   
+
+                    </div>
+                </div>
+
+            </Carousel.Item>
+
+            <Carousel.Item className=''>
+                <div className="col-12 col-md-10 offset-0 offset-md-1 col-lg-8 offset-lg-2">
+                    <div className="mx-auto px-3">
+
+                        <ENVEntry 
+                            name="Local Palworld Game Installation Path"
+                            value={settings.game_path}
+                            updateSetting={handleGamePathChange}
+                            tooltip="The path to your Palworld game installation."
+                        />
+
+                        {/* <ENVEntry 
+                            value={settings.server_url}
+                            name="Local Game Server Installation Path"
+                            updateSetting={handleServerPathChange}
+                            tooltip="The path to your Palworld game server installation."
+                        /> */}
+
+                        <DekChoice 
+                            className='pb-3'
+                            disabled={true}
+                            choices={install_types}
+                            active={installed_type}
+                            onClick={(i,value)=>{
+                                console.log(`Setting Page: ${value}`)
+                                // updateJobData('seamless', value === 'Yes')
+                            }}
+                        />
+                    </div>
+                </div>
+
+            </Carousel.Item>
+        </Carousel>
+
+
+
+        <div className="container">
+            <div className="col-12 col-md-10 offset-0 offset-md-1 col-lg-8 offset-lg-2">
+                <div className="mx-auto px-3 pt-5 pb-4">
+
                 </div>
             </div>
         </div>
