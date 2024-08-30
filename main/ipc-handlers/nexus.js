@@ -53,9 +53,9 @@ export default async (event, api_key, functionName, ...functionArgs) => {
     if (functionName === 'getModInfo') forced = functionArgs[1] === true;
 
     if (nexusFunctionsToCache[functionName]) {
-        const cached = nexusApiModDataStore.get(cache_key);
+        const cached = nexusApiModDataStore.get(cache_key, null);
         // if the cache is not forced and the cache duration is not expired, return the cached value
-        if (!forced && cached) {
+        if (!forced && cached?.cache_time) {
             const cache_time = cached.cache_time;
             const cache_duration = Date.now() - cache_time;
             const cache_limit = nexusFunctionsToCache[functionName];
