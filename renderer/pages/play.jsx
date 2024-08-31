@@ -1,87 +1,44 @@
 import React from 'react'
-// import Link from 'next/link'
-// import Image from 'next/image'
 import { Image } from 'react-bootstrap'
-import { useRouter } from 'next/router';
-
 import CheckModsModal from '@components/modals/mod-check';
 import LoadListModal from '@components/modals/load-list';
 import PlayVanillaModal from '@components/modals/play-vanilla';
-
+import useCommonChecks from '@hooks/useCommonChecks';
+import useAppLogger from '@hooks/useAppLogger';
 
 export default function PlayPage() {
-    const router = useRouter();
-
+    const applog = useAppLogger("PlayPage");
+    const [commonData, onRunCommonChecks] = useCommonChecks();
     const [showLoadListModal, setShowLoadListModal] = React.useState(false);
     const [showCheckModsModal, setShowCheckModsModal] = React.useState(false);
     const [showPlayVanillaModal, setShowPlayVanillaModal] = React.useState(false);
 
-    const onRunCommonChecks = () => {
-        return window && window.uStore && window.palhub;
+    const onClickCheckMods = async () => {
+        if (!onRunCommonChecks()) return applog('error','modules not loaded');
+        setShowCheckModsModal(true);
     }
-
-    React.useEffect(() => {
-        if (!onRunCommonChecks()) return console.error('modules not loaded');
-        (async () => {
-            const api_key = await window.uStore.get('api_key');
-            if (!api_key) return router.push('/settings');
-            
-            const game_path = await window.uStore.get('game_path');
-            if (!game_path) return router.push('/settings');
-            
-            const game_data = await window.palhub('validateGamePath', game_path);
-            if (!game_data.has_exe) return router.push('/settings');
-            if (!game_data.has_ue4ss) return router.push('/settings');
-        })();
-    }, []);
-    
-
-    // xs={12} md={6} lg={4} xl={3}
-    // () => window.open('https://palhub.com', '_blank')
-
-    const onRunGameExe = async () => {
-        if (!onRunCommonChecks()) return console.error('modules not loaded');
-        const game_path = await window.uStore.get('game_path');
-        if (!game_path) return console.error('game_path not found');
-        const game_data = await window.palhub('validateGamePath', game_path);
-        if (!game_data.has_exe) return console.error('game exe not found');
-        await window.palhub('launchExe', game_data.exe_path);
+    const onClickLoadNewModlist = async () => {
+        if (!onRunCommonChecks()) return applog('error','modules not loaded');
+        setShowLoadListModal(true);
     }
-
-
-
-
+    const onClickPlayVanillaPalworld = async () => {
+        if (!onRunCommonChecks()) return applog('error','modules not loaded');
+        setShowPlayVanillaModal(true);
+    }
     const onClickLaunchGame = async () => {
         await onRunGameExe();
     }
-
-    const onClickCheckMods = async () => {
-        if (!onRunCommonChecks()) return console.error('modules not loaded');
-        setShowCheckModsModal(true);
-    }
-
-    const onClickLoadNewModlist = async () => {
-        if (!onRunCommonChecks()) return console.error('modules not loaded');
-        setShowLoadListModal(true);
-    }
-
-    const onClickPlayVanillaPalworld = async () => {
-        if (!onRunCommonChecks()) return console.error('modules not loaded');
-        setShowPlayVanillaModal(true);
-
-        // const game_path = await window.uStore.get('game_path');
-        // if (!game_path) return console.error('game_path not found');
-
-        // const rando = await window.palhub('someRandoFunk');
-        // const result = await window.palhub('uninstallAllMods', game_path);
-        // console.log({game_path, result, rando});
-
-        // // todo: uninstall all mods first
-        // // await onRunGameExe();
+    const onRunGameExe = async () => {
+        if (!onRunCommonChecks()) return applog('error','modules not loaded');
+        const game_path = await window.uStore.get('game_path');
+        if (!game_path) return applog('error','game_path not found');
+        const game_data = await window.palhub('validateGamePath', game_path);
+        if (!game_data.has_exe) return applog('error','game exe not found');
+        await window.palhub('launchExe', game_data.exe_path);
+        applog('info', `Launching Game: ${game_data.exe_path}`);
     }
 
     return <React.Fragment>
-
         <CheckModsModal show={showCheckModsModal} setShow={setShowCheckModsModal} />
         <LoadListModal show={showLoadListModal} setShow={setShowLoadListModal} />
         <PlayVanillaModal show={showPlayVanillaModal} setShow={setShowPlayVanillaModal} onRunGameExe={onRunGameExe} />
@@ -144,8 +101,8 @@ export default function PlayPage() {
                         </button>
                     </div>
                 </div>
-{/* 
-                <h1 className="font-bold mb-4">Suggested Servers</h1>
+
+                {/* <h1 className="font-bold mb-4">Suggested Servers</h1>
                 <div className="row">
                     <ModCardComponent />
                     <ModCardComponent />
@@ -160,8 +117,6 @@ export default function PlayPage() {
                     <ModCardComponent />
                     <ModCardComponent />
                 </div> */}
-
-
 
             </div>
         </div>

@@ -27,8 +27,6 @@ if (IS_PRODUCTION) {
     app.setPath("userData", `${app.getPath("userData")} (development)`);
 }
 
-const logger = console;//createLogger(__filename);
-
 const PACKAGE_JSON = (() => {
     if (app.isPackaged) return {};
     return require("../../package.json");
@@ -81,15 +79,16 @@ class DEAP {
         LoggyBoi.setGlobalOptions({
             ...config.logger,
             file_options: {
-                filename: path.join(app.getAppPath(), "/errors.log"),
-                options: { flags: "a", encoding: "utf8" },
+                filename: path.join(app.getAppPath(), "/app.log"),
+                options: { flags: "w", encoding: "utf8" },
             },
             // http_options: {
             //     port: 9699,
             //     host: '127.0.0.1',
             // }
         });
-        logger.info(app.getAppPath());
+        this.logger = createLogger(__filename);
+        this.logger.info(app.getAppPath());
         if (callback) callback(this);
     }
     static setInstanceLock(single) {
@@ -310,8 +309,8 @@ class DEAP {
             }
         }
 
-        logger.log(`loading window: ${id}`);
-        logger.log(config);
+        this.logger.log(`loading window: ${id}`);
+        this.logger.log(config);
     }
     // updates the 'auto-start at system boot' feature
     static updateAutoBootMode() {
@@ -320,10 +319,10 @@ class DEAP {
     }
     static launch() {
         if (this._config.handle_rejections) {
-            process.on('unhandledRejection', logger.error);
+            process.on('unhandledRejection', this.logger.error);
         }
         if (this._config.handle_exceptions) {
-            process.on('uncaughtException', logger.error);
+            process.on('uncaughtException', this.logger.error);
         }
         app.on("ready", () => this.onAppReady());
         app.on("activate", () => this.onAppActivate());

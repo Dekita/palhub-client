@@ -384,7 +384,7 @@ export class Client {
                 await this.addModDataToJSON(game_path, mod, file, entries, ignored_files);
 
 
-                return resolve({ success: true });
+                return resolve(true);
             } catch (error) {
                 reject(error);
             }
@@ -458,7 +458,7 @@ export class Client {
                     await fs.rmdir(fileordir, { recursive: true });
                 }
 
-                resolve({ success: true });
+                resolve(true);
             } catch (error) {
                 reject({ error });
             }

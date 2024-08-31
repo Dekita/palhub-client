@@ -57,7 +57,7 @@ export default {
     * options sent to the logger module
     */
     logger: {
-        replacer: __dirname,      
+        replacer: __dirname, 
     },
 
     /**

@@ -43,6 +43,27 @@ log.info('my awesome log');
 class KustoomLoog extends LoggyBoi {}
 */
 
+/*
+* File System Flags in Node.js:
+* 
+* 'r'   - Open file for reading. Throws an error if the file does not exist.
+* 'r+'  - Open file for reading and writing. Throws an error if the file does not exist.
+* 'rs+' - Open file for reading and writing in synchronous mode. Skips local file system cache.
+* 
+* 'w'   - Open file for writing. Creates the file if it does not exist, or truncates it if it exists.
+* 'wx'  - Like 'w', but fails if the file already exists.
+* 'w+'  - Open file for reading and writing. Creates the file if it does not exist, or truncates it if it exists.
+* 'wx+' - Like 'w+', but fails if the file already exists.
+* 
+* 'a'   - Open file for appending. Creates the file if it does not exist.
+* 'ax'  - Like 'a', but fails if the file already exists.
+* 'a+'  - Open file for reading and appending. Creates the file if it does not exist.
+* 'ax+' - Like 'a+', but fails if the file already exists.
+*/
+
+
+
+
 import { createWriteStream } from 'fs';
 import { DateTime } from 'luxon';
 import { Socket } from 'net';
@@ -84,9 +105,9 @@ const colors = {
 const LOG_RECORD = {
     fatal: true,
     error: true,
-    warn: false,
-    http: false,
-    info: false,
+    warn: true,
+    http: true,
+    info: true,
 };
 
 const LOG_SEND = {
@@ -176,8 +197,10 @@ class LoggyBoi {
             ...log_colors,
         };
         this._gformatter = log_format || LOG_FORMATTER;
+        console.log('global options set:', file_options);
         if (this.validFileOptions(file_options)) {
             this._gfilestream = new FileTransport(file_options);
+            console.log('filestream set:', this._gfilestream);
         }
         if (this.validHTTPOptions(http_options)) {
             this._ghttpstream = new HTTPTransport(http_options);

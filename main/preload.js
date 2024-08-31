@@ -30,6 +30,14 @@ contextBridge.exposeInMainWorld('palhub', async(...args) => {
     return await ipcRenderer.invoke('palhub', ...args);
 });
 
+// expose the logger to the renderer process
+const LOG_TYPES = ['log', 'info', 'http', 'warn', 'error', 'fatal'];
+contextBridge.exposeInMainWorld('logger', LOG_TYPES.reduce((acc, logtype) => {
+    return {...acc, [logtype]: async(...args) => {
+        return await ipcRenderer.invoke('logger', logtype, ...args);
+    }};
+}, {}));
+
 // Expose protected methods that allow the renderer process to use
 contextBridge.exposeInMainWorld('ipc', {
     send(channel, value) {
