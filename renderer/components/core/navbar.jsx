@@ -7,7 +7,7 @@
 // import styles from '../styles/Home.module.css'
 import { motion } from 'framer-motion';
 import { useRouter } from 'next/router';
-import { useEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 
 import Link from 'next/link';
 import Container from 'react-bootstrap/Container';
@@ -35,13 +35,16 @@ export default function MainNavbar({
     modals: {
         onClickHamburger,
         onClickGemStore,
-        showNSFW = false,
-        setShowNSFW = () => {},
     },
 }) {
     const router = useRouter();
     const active_route = router.pathname;
 
+    // Scroll to top when route changes
+    useEffect(() => {
+        const main_body = document.getElementById('main-body');
+        if (main_body) main_body.scrollTo(0, 0); // bottom: main_body.scrollHeight
+    }, [active_route]);
 
     return (
         <Navbar className='navbar theme-text'>
