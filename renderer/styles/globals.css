@@ -92,6 +92,15 @@ hr.nav-hr {
 .opacity img {
     opacity: 0;
 }
+.opacity0 {
+    opacity: 0;
+}
+.opacity1 {
+    opacity: 1;
+}
+.opacity-half {
+    opacity: 0.5;
+}
 
 .btn-grey {
     background-color: #4f545c;
