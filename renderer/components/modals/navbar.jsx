@@ -21,7 +21,6 @@ export default function NavbarModal({ show, setShow }) {
     // handles modal closing when click close button
     const handleCancel = () => setShow(false);
     const router = useRouter();
-
     return (
         <Modal
             show={show}

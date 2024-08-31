@@ -5,10 +5,10 @@
 */
 import DEAP from "../dek/deap";
 
+const logger_cache = {};
+
 // export default 
 export default async (event, id, action, ...args) => {
-    const {idtag} = DEAP.logger; // get the current idtag
-    DEAP.logger.idtag = id; // set the idtag to the id
-    await DEAP.logger[action](...args); // log the action to the console
-    DEAP.logger.idtag = idtag; // reset the idtag to previous value
+    if (!logger_cache[id]) logger_cache[id] = DEAP.useLogger(id);
+    if (logger_cache[id][action]) logger_cache[id][action](...args);
 }

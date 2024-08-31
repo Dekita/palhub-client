@@ -198,10 +198,10 @@ export default function LoadListModal({show,setShow}) {
             // check if mod is already downloaded 
             try {
                 if (!mod.downloaded) {
-                    addLogMessage(`Getting Download Link: ${mod.name}`, 'info');
+                    addLogMessage(`Getting Download URL: (${mod.mod_id}-${mod.file_id}) ${mod.name}`, 'info');
                     const file_links = await window.nexus(api_key, 'getDownloadURLs', mod.mod_id, mod.file_id);
                     const download_url = file_links.find(link => !!link.URI)?.URI;
-                    addLogMessage(`Downloading Mod From: ${download_url}`, 'info');
+                    addLogMessage(`Mod Download URL: ${download_url}`, 'info');
                     const downloaded = await window.palhub('downloadMod', cache_dir, download_url, mod, mod);
                     addLogMessage(`Downloaded Mod... ${mod.name} - ${downloaded}`, 'info');
                     if (downloaded) counters.downloaded++;

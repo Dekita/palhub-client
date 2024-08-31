@@ -3,10 +3,10 @@
 # PalHUB::Client by dekitarpg@gmail.com
 ########################################
 */
+import DEAP from "../dek/deap";
 import Dekache from "dekache";
 import Store from "electron-store";
 import { Client } from '../dek/palhub';
-
 
 // a basic cache for the nexus API to prevent unnecessary requests
 const nexusApiCache = new Dekache({ name: "need some cache bruh?", mins: 5 });
@@ -29,13 +29,15 @@ const nexusFunctionsToCache = {
 }
 
 export default async (event, api_key, functionName, ...functionArgs) => {
+    const applog = DEAP.useLogger('nexus');
+
     const getUncachedValue = async () => {
         const nexus = await Client.ensureNexusLink(api_key);
-        if (!nexus[functionName]) return console.error(`Nexus function ${functionName} not found`);
+        if (!nexus[functionName]) return applog.error(`Nexus function ${functionName} not found`);
         try {
             return await nexus[functionName](...functionArgs);
         } catch (error) {
-            console.error(`Nexus function ${functionName} failed`, error);
+            applog.error(`Nexus function ${functionName} failed`, error);
         }
         return null;
     }
@@ -63,10 +65,13 @@ export default async (event, api_key, functionName, ...functionArgs) => {
         }
         // else, get the uncached value and set
         result = await nexusApiCache.get(cache_key, getUncachedValue);
-        result.cache_time = Date.now(); // add cache time to the result
+        if (result) result.cache_time = Date.now(); // add cache time to the result
+        applog.info(`Caching ${functionName} with key ${cache_key}`);
+        applog.info(result);
         nexusApiModDataStore.set(cache_key, result);
     } else {
         // get the cached value or get the uncached value then set the cache and return the result
+        applog.info(`Getting ${functionName} result from cache with key ${cache_key}`);
         result = await nexusApiCache.get(cache_key, getUncachedValue);
     }
 

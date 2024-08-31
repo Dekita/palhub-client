@@ -429,16 +429,15 @@ export default function SettingsPage({modals, ThemeController}) {
                                 // updateJobData('seamless', value === 'Yes')
                             }}
                         />
+                        {settings?.has_ue4ss && <>
+                            <div className='btn btn-dark px-3' onClick={() => setShowUE4SSSettings(true)}>
+                                <strong>Edit UE4SS Settings</strong>
+                            </div>
+                        </>}
+                        <div className='btn btn-dark ms-2 px-3' onClick={onClickHelp}>
+                            <strong>FAQ</strong>
+                        </div>
                     </div>
-                </div>
-                {settings?.has_ue4ss && <>
-                    <div className='btn btn-dark px-3' onClick={() => setShowUE4SSSettings(true)}>
-                        <strong>Edit UE4SS Settings</strong>
-                    </div>
-                </>}
-
-                <div className='btn btn-dark ms-2 px-3' onClick={onClickHelp}>
-                    <strong>FAQ</strong>
                 </div>
             </Carousel.Item>
         </Carousel>

@@ -76,10 +76,11 @@ class DEAP {
         });
         this.setUserAgent("dekitarpg.com");
         // setup global logfile
+        LoggyBoi.logpath = path.join(app.getAppPath(), "app.log");
         LoggyBoi.setGlobalOptions({
             ...config.logger,
             file_options: {
-                filename: path.join(app.getAppPath(), "/app.log"),
+                filename: LoggyBoi.logpath,
                 options: { flags: "w", encoding: "utf8" },
             },
             // http_options: {
@@ -87,9 +88,21 @@ class DEAP {
             //     host: '127.0.0.1',
             // }
         });
-        this.logger = createLogger(__filename);
+        this.logger = createLogger('deap');
         this.logger.info(app.getAppPath());
         if (callback) callback(this);
+    }
+    static useLogger(id) {
+        const logger = (action, ...args) => {
+            const {idtag} = this.logger; // get the current idtag
+            this.logger.idtag = id; // set the idtag to the id
+            DEAP.logger[action](...args); // log the action to the console
+            DEAP.logger.idtag = idtag; // reset the idtag to previous value
+        }
+        const logkeys = ['log', 'info', 'warn', 'error', 'fatal'];
+        return logkeys.reduce((acc, key) => {
+            return {...acc, [key]: (...args) => logger(key, ...args)};
+        }, {});
     }
     static setInstanceLock(single) {
         if (single && !app.requestSingleInstanceLock({})) app.quit();
@@ -108,6 +121,7 @@ class DEAP {
         ipcMain.handle("get-name", (e) => APP_NAME);
         ipcMain.handle("get-version", (e) => APP_VERSION);
         ipcMain.handle("get-path", (event, key) => {
+            if (key === "log") return LoggyBoi.logpath;
             if (key === "app") return app.getAppPath();
             return app.getPath(key);
         });
