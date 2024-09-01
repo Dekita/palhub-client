@@ -1,12 +1,12 @@
 {
     "private": false,
+    "version": "0.3.6",
     "name": "dekita-palhub-client",
     "productName": "PalHUB Client",
     "description": "PalHUB Client written by DekitaRPG",
     "repository": "git@github.com:dekita/palhub-client",
     "author": "DekitaRPG <dekitarpg@gmail.com>",
     "license": "SEE LICENSE IN LICENSE",
-    "version": "0.3.6",
     "main": "app/background.js",
     "scripts": {
         "dev": "nextron --run-only",
