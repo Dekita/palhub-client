@@ -6,8 +6,8 @@
 import { useCallback, useEffect, useState } from 'react';
 import Container from 'react-bootstrap/Container';
 import * as CommonIcons from '@config/common-icons';
-import useLocalization from '@hooks/useLocalization';
 import useWindowNameFromDEAP from '@hooks/useWindowNameFromDEAP';
+import useLocalization from '@hooks/useLocalization';
 import useAppLogger from '@hooks/useAppLogger';
 
 export default function MainAppbar() {
