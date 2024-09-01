@@ -1,0 +1,43 @@
+{
+    "welcome": "Welcome to Palworld",
+    "play": "Play Palworld",
+    "description": "Palworld is a game where you can catch your own creature based party, and have them build your base while you explore the world with your friends. But you knew that already!!",
+    "check_mods": "Check Mods",
+    "load_mods": "Load Mod List",
+    "play_vanilla": "Play Vanilla Palworld",
+    "launch_game": "Launch Game",
+
+    "settings": {
+        "welcome": "Welcome to settings"
+    },
+
+    "app-name": "PalHUB Client",
+
+
+    "app": {
+        "brandname": "PalHUB Client",
+        "version": "v{{version}}"
+    },
+
+    "hello": "Hello, {{key1}}!",
+    "key1": "World",
+    
+    "navbar": {
+        "play": "Play",
+        "mods": "Mods",
+        "servers": "Servers",
+        "about": "About",
+        "logs": "Logs",
+        "settings": "Settings"
+    },
+    "footer": {
+        "hover-nexus-api": "Nexus Mods API Rate Limits: Hourly / Daily",
+        "hover-users-api": "Active Users Today"
+    },
+    "/play": {
+        "ting": "gnit"
+    }
+
+
+}
+

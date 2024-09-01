@@ -86,7 +86,7 @@ export default function Footer() {
                             height='1.6rem'
                             fill='currentColor'
                             style={{ opacity: 0.5 }}
-                            />
+                        />
                     </a>
                     </OverlayTrigger>
             </div>

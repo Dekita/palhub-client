@@ -109,7 +109,7 @@ export default function LogsPage(props) {
             tagline={title.replace(':', '')}
         /> */}
         {showScrollHelpers && <div className='position-fixed top-50 end-0 translate-middle'>
-            <div className={`d-grid transition-all opacity1`}>
+            <div className={`d-grid transition-all ${showScrollHelpers ? 'opacity1' : 'opacity0'}`}>
                 <button className='btn btn-info' onClick={scrollToTop}>
                     <CommonIcons.arrow_up fill='currentColor' height="2rem" />
                 </button>

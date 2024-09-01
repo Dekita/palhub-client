@@ -12,7 +12,6 @@ export default function PlayPage() {
     const [showLoadListModal, setShowLoadListModal] = React.useState(false);
     const [showCheckModsModal, setShowCheckModsModal] = React.useState(false);
     const [showPlayVanillaModal, setShowPlayVanillaModal] = React.useState(false);
-
     const onClickCheckMods = async () => {
         if (!onRunCommonChecks()) return applog('error','modules not loaded');
         setShowCheckModsModal(true);
@@ -46,7 +45,6 @@ export default function PlayPage() {
         <div className="container">
             <div className="mx-auto px-3 pt-5 pb-4">
                 <div className='row'>
-
                     <div className='col-12 card px-1'>
                         <div className='card-body py-2 px-1'>
                             <div className='row'>

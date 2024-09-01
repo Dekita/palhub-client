@@ -5,15 +5,14 @@
 */
 import { useCallback, useEffect, useState } from 'react';
 import Container from 'react-bootstrap/Container';
-import useWindowNameFromDEAP from '@hooks/useWindowNameFromDEAP';
 import * as CommonIcons from '@config/common-icons';
-import Dektionary from '@config/dektionary';
-// import Link from 'next/link';
+import useLocalization from '@hooks/useLocalization';
+import useWindowNameFromDEAP from '@hooks/useWindowNameFromDEAP';
 
 export default function MainAppbar() {
+    const { t } = useLocalization();
     const windowName = useWindowNameFromDEAP();
     const [appVersion, setAppVersion] = useState('0.0.0');
-    const sharedStyle = {paddingTop: 6};
 
     const onClickMinimizeApp = useCallback(() => {
         if (window.ipc) window.ipc.invoke('app-action', windowName, 'minimize');
@@ -37,16 +36,8 @@ export default function MainAppbar() {
 
     return <Container className='theme-text p-0 appbar' fluid>
         <div className='d-flex p-0'>
-            {/* <Link 
-                href='https://dekitarpg.com' target="_blank" 
-                className='px-3 hover-dark hover-warning'
-                style={sharedStyle}>
-                <small><strong>{Dektionary.brandname}</strong></small>
-            </Link> */}
-            <div 
-                className='px-3 text-dark'
-                style={sharedStyle}>
-                <small><strong>{Dektionary.brandname}</strong> v{appVersion}</small>
+            <div className='px-3 text-dark' style={{paddingTop: 6}}>
+                <small><strong>{t('app.brandname')}</strong> {t('app.version', {version: appVersion})}</small>
             </div>
             <div className='col deap-dragbar px-2'>
                 {/* is the main draggable region to move de vindoe */}

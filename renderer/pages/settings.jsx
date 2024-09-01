@@ -14,6 +14,8 @@ import wait from '@utils/wait';
 import BrandHeader from '@components/core/brand-header';
 import Carousel from 'react-bootstrap/Carousel';
 
+import useLocalization from '@hooks/useLocalization';
+
 
 const SetupStep = ({step, handleUE4SSInstall}) => {
     switch (step) {
@@ -76,7 +78,8 @@ const SetupStep = ({step, handleUE4SSInstall}) => {
 }
 
 export default function SettingsPage({modals, ThemeController}) {
-
+    const { t, i18n } = useLocalization();
+    
     // initial settings data for the application
     const [settings, setSettings] = React.useState({
         server_url: 'D:/SteamLibrary/steamapps/common/Palworld',
@@ -263,7 +266,10 @@ export default function SettingsPage({modals, ThemeController}) {
         "Download mods directly from Nexus Mods",
         "Manage your mod library with minimal clicks",
         "Configure the settings below to get started;",
-    ]
+    ];
+
+    const valid_languages = ['en', 'es', 'fr', 'de', 'it', 'ja', 'ko', 'pt', 'ru', 'zh'];
+
     return <React.Fragment>
         <InstallUe4ssModal show={showUE4SSInstall} setShow={setShowUE4SSInstall} />
         <Ue4ssSettingsModal show={showUE4SSSettings} setShow={setShowUE4SSSettings} />
@@ -447,6 +453,17 @@ export default function SettingsPage({modals, ThemeController}) {
         <div className="container">
             <div className="col-12 col-md-10 offset-0 offset-md-1 col-lg-8 offset-lg-2">
                 <div className="mx-auto px-3 pt-5 pb-4">
+
+                    <strong>{t('settings.welcome')}</strong>
+
+                    <DekChoice
+                        className='pb-3'
+                        choices={valid_languages}
+                        active={valid_languages.indexOf(i18n.language)}
+                        onClick={(i,value)=>{
+                            i18n.changeLanguage(value);
+                        }}
+                    />
 
                 </div>
             </div>
