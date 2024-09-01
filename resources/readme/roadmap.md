@@ -11,3 +11,6 @@
   - update 'backend' code to handle alternative games from nexus
 
 ??- create new 'home' page that allows for quickly selecting game to mod, or to load recently joined game servers??
+
+- consolodate cache files
+- store cache files in 'cache' directory (where mods are stored)??
