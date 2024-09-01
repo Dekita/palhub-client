@@ -331,46 +331,54 @@ class DEAP {
         const openAtLogin = this._datastore.get("auto-boot");
         app.setLoginItemSettings({ openAtLogin });
     }
-    static launch() {
+    static launch(callbacks={}) {
         if (this._config.handle_rejections) {
             process.on('unhandledRejection', this.logger.error);
         }
         if (this._config.handle_exceptions) {
             process.on('uncaughtException', this.logger.error);
         }
-        app.on("ready", () => this.onAppReady());
-        app.on("activate", () => this.onAppActivate());
-        app.on("before-quit", () => this.onBeforeQuitApp());
-        app.on("window-all-closed", () => this.onAppWindowsClosed());
-        app.on("second-instance", () => this.onSecondInstanceLaunched());
+        app.on("ready", () => this.onAppReady(callbacks));
+        app.on("activate", () => this.onAppActivate(callbacks));
+        app.on("before-quit", () => this.onBeforeQuitApp(callbacks));
+        app.on("window-all-closed", () => this.onAppWindowsClosed(callbacks));
+        app.on("second-instance", () => this.onSecondInstanceLaunched(callbacks));
     }
-    static onAppReady() {
+    static onAppReady(callbacks) {
         // create window when electron has initialized.
         this.createWindow("main");
 
         setTimeout(()=>{
             this.initializeAutoUpdater();
         }, 3000);
+
+        if (callbacks.onAppReady) callbacks.onAppReady(this);
     }
-    static onAppActivate() {
+    static onAppActivate(callbacks) {
         // On OS X it's common to re-create a window in the app when the
         // dock icon is clicked and there are no other windows open.
         if (!BrowserWindow.getAllWindows().length) this.createWindow("main");
+        if (callbacks.onAppActivate) callbacks.onAppActivate(this);
     }
-    static onAppWindowsClosed() {
+    static onAppWindowsClosed(callbacks) {
         if (process.platform !== "darwin") app.quit();
+        if (callbacks.onAppWindowsClosed) callbacks.onAppWindowsClosed(this);
     }
-    static onBeforeQuitApp() {
-        // for completeness
+    // cleanup any resources before quitting
+    static onBeforeQuitApp(callbacks) {
+        this.destroyTray();
+        this.logger.info("Application is quitting...");
+        if (callbacks.onBeforeQuitApp) callbacks.onBeforeQuitApp(this);
     }
     // someone tried to run a second instance of app
-    static onSecondInstanceLaunched() {
+    static onSecondInstanceLaunched(callbacks) {
         if (!this._config.single_instance) return;
         if (!this.main_window) return;
         if (this.main_window.isMinimized()) {
             this.main_window.restore();
         }
         this.main_window.focus();
+        if (callbacks.onSecondInstanceLaunched) callbacks.onSecondInstanceLaunched(this);
     }
     static initializeAutoUpdater() {
         console.log('initializing auto-updater:', app.isPackaged);

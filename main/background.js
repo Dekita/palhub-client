@@ -38,4 +38,10 @@ for (const event of ['download-mod-file', 'install-mod-file', 'extract-mod-file'
 }
 
 // launch the electron app via DEAP wrapper
-DEAP.launch();
+DEAP.launch({
+    // onAppReady: () => {},
+    // onAppActivate: () => {},
+    // onAppWindowsClosed:() => {},
+    // onSecondInstanceLaunched: () => {},
+    // onBeforeQuitApp: () => {},
+});
