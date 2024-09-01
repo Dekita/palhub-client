@@ -8,30 +8,29 @@ import Container from 'react-bootstrap/Container';
 import * as CommonIcons from '@config/common-icons';
 import useLocalization from '@hooks/useLocalization';
 import useWindowNameFromDEAP from '@hooks/useWindowNameFromDEAP';
+import useAppLogger from '@hooks/useAppLogger';
 
 export default function MainAppbar() {
     const { t } = useLocalization();
     const windowName = useWindowNameFromDEAP();
     const [appVersion, setAppVersion] = useState('0.0.0');
+    const logger = useAppLogger('MainAppbar');
 
     const onClickMinimizeApp = useCallback(() => {
-        if (window.ipc) window.ipc.invoke('app-action', windowName, 'minimize');
-        else console.log('window.ipc not found');
+        window?.ipc?.invoke('app-action', windowName, 'minimize');
+        logger('info', 'onClickMinimizeApp');
     }, [windowName]);
     const onClickMaximizeApp = useCallback(() => {
-        if (window.ipc) window.ipc.invoke('app-action', windowName, 'maximize');
-        else console.log('window.ipc not found');
+        window?.ipc?.invoke('app-action', windowName, 'maximize');
+        logger('info', 'onClickMaximizeApp');
     }, [windowName]);
     const onClickCloseApp = useCallback(() => {
-        if (window.ipc) window.ipc.invoke('app-action', windowName, 'exit');
-        else console.log('window.ipc not found');
+        window?.ipc?.invoke('app-action', windowName, 'exit');
+        logger('info', 'onClickCloseApp');
     }, [windowName]);
 
     useEffect(() => {
-        if (!window.ipc) return;
-        window.ipc.invoke('get-version').then((version) => {
-            setAppVersion(version);
-        });
+        window?.ipc?.invoke('get-version').then(setAppVersion);
     }, []);
 
     return <Container className='theme-text p-0 appbar' fluid>
