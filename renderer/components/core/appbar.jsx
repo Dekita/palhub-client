@@ -14,7 +14,7 @@ export default function MainAppbar() {
     const { t } = useLocalization();
     const windowName = useWindowNameFromDEAP();
     const [appVersion, setAppVersion] = useState('0.0.0');
-    const logger = useAppLogger('MainAppbar');
+    const logger = useAppLogger('components/core/appbar');
 
     const onClickMinimizeApp = useCallback(() => {
         window?.ipc?.invoke('app-action', windowName, 'minimize');
