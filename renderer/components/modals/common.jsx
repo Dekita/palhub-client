@@ -10,6 +10,7 @@ import Tooltip from 'react-bootstrap/Tooltip';
 import Popover from 'react-bootstrap/Popover';
 
 import DekSwitch from '@components/core/dek-switch'
+import useLocalization from "@hooks/useLocalization";
 // import DekSelect from '@components/core/dek-select';
 // import DekChoice from "@components/core/dek-choice";
 
@@ -133,14 +134,14 @@ export function ENVEntry_Input({name, value, updateSetting, defaults, envdatas, 
 
 
 
-export function ENVEntry_Bool({name, value, updateSetting, defaults, envdatas, tooltip}) {
+export function ENVEntry_Bool({name, value, updateSetting, defaults, envdatas, tooltip, labels}) {
     // const [knownValue, setKnownValue] = useState(value);
     // updateSetting(name)
     return <div className="py-2">
         <ENVEntryLabel {...{name,envdatas,tooltip}} />
         <DekSwitch
             maxIconWidth={64}
-            labels={['Enabled','Disabled']}
+            labels={labels}
             // icons={NSFWIcons}
             checked={value}
             onClick={newval=>updateSetting(name, newval)}
@@ -150,12 +151,16 @@ export function ENVEntry_Bool({name, value, updateSetting, defaults, envdatas, t
     </div>
 }
 
-export function ENVEntry({name=null, value=null, updateSetting=()=>{}, defaults={}, envdatas={}, tooltip='', type=''}) {
+export function ENVEntry({name=null, value=null, updateSetting=()=>{}, defaults={}, envdatas={}, tooltip='', type='', labels=null}) {
     // value = ensureEntryValueType(value);
     // console.log(`entry for ${name}:`, typeof value, {name, value})
+    const { t, tA } = useLocalization();
+
+    if (!labels) labels = tA('common.toggle');
+    if (labels && labels.length === 1) labels.push(labels[0]);
 
     if (type === 'numbool') value = value === '1';
-    const passthrough = {name, value, updateSetting, defaults, envdatas, tooltip, type};
+    const passthrough = {name, value, updateSetting, defaults, envdatas, tooltip, type, labels};
     if (type === 'numbool') return <ENVEntry_Bool {...passthrough} />
 
     switch (typeof value) {

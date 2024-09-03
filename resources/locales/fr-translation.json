@@ -1,9 +1,10 @@
 {
-    "welcome": "Bienvenue à Palworld",
-    "play": "Jouer Palworld",
-    "description": "Palworld est un jeu où vous pouvez attraper votre propre fête basée sur des créatures, et les faire construire votre base pendant que vous explorez le monde avec vos amis. Mais vous le saviez déjà !!",
-    "check_mods": "Vérifier les Mods",
-    "load_mods": "Charger la liste des mods",
-    "play_vanilla": "Jouer à Vanilla Palworld",
-    "launch_game": "Lancer le jeu"
+    "app": {
+        "brandname": "PalHUB Client",
+        "version": "v{{version}}"
+    },
+    "common": {
+        "toggle": ["Activé", "Désactivé"]
+    }
 }
+

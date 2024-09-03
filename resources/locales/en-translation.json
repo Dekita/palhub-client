@@ -4,22 +4,26 @@
         "version": "v{{version}}"
     },
 
+    "common": {
+        "toggle": ["Enabled", "Disabled"]
+    },
+
     "games": {
         "generic": {
             "name": "Game",
-            "info": {
-                "line1": "This is a game where you can do stuff and things.",
-                "line2": "You can play this game with mods to enhance your experience, and even play with friends on modified servers.",
-                "line3": "Or.. You could choose to play plain old vanilla without any mods at all, but that's super boring."
-            }
+            "info": [
+                "This is a game where you can do stuff and things.",
+                "You can play this game with mods to enhance your experience, and even play with friends on modified servers.",
+                "Or.. You could choose to play plain old vanilla without any mods at all, but that's super boring."
+            ]
         },
         "palworld": {
             "name": "Palworld",
-            "info": {
-                "line1": "Palworld is a game where you can catch your own party based creatures, and have them build your base while you explore the world with your friends. But you already knew that!!",
-                "line2": "{{games.generic.info.line2}}",
-                "line3": "{{games.generic.info.line3}}"
-            }
+            "info": [
+                "Palworld is a game where you catch your own party based creatures, and have them build your base while you explore the world with your friends. But you already knew that!!",
+                "{{games.generic.info.line.1}}",
+                "{{games.generic.info.line.2}}"
+            ]
         }
     },
 
@@ -33,14 +37,14 @@
         "name": "Play",
         "desc": "Play like a boss, with mods!",
         "header": "{{/play.name}} {{game.name}}",
-        "launch_main": "Launch {{game.name}}",
-        "launch_info": "With Installed Mods!",
-        "vanilla_main": "Play Vanilla {{game.name}}",
-        "vanilla_info": "Uninstalls ALL Mods!",
-        "check_mods_main": "Check Mods",
-        "check_mods_info": "Update & Validate Files!",
-        "load_mods_main": "Load New Modlist",
-        "load_mods_info": "Change your active mods!"
+        "launch-main": "Launch {{game.name}}",
+        "launch-info": "With Installed Mods!",
+        "vanilla-main": "Play Vanilla {{game.name}}",
+        "vanilla-info": "Uninstalls ALL Mods!",
+        "check-mods-main": "Check Mods",
+        "check-mods-info": "Update & Validate Files!",
+        "load-mods-main": "Load New Modlist",
+        "load-mods-info": "Change your active mods!"
     },
 
     "/mods": {
@@ -55,16 +59,19 @@
     
     "/about": {
         "name": "About",
-        "desc": "Learn more about us!",
+        "desc": "{{app.brandname}} is an application that allows you to download and easily manage mods from the nexus mods website. This application is built using modern technologies and is designed to be as simple and easy to use as possible. If you encounter any bugs or issues, please let us know!",
         "header": "{{/about.name}} {{app.brandname}}",
         "main": "{{app.brandname}} is an application that allows you to download and easily manage mods for {{game.name}} from the nexus mods website. This application is built using modern technologies and is designed to be as simple and easy to use as possible. If you encounter any bugs or issues, please let us know!",
-        "feat1": "Source code hosted on github for the world to see",
-        "feat2": "Download, and install mods from Nexus Mods",
-        "feat3": "Manage your mod library with minimal clicks",
-        "feat4": "Effortlessly join custom modified servers",
         "notice": "This application is not affiliated with, or endorsed by the developers of Palworld.",
         "discord": "Join Support Server",
-        "patreon": "Support Development"
+        "patreon": "Support Development",
+        "feature-header": "Features",
+        "feature-list": [
+            "Source code hosted on github for the world to see",
+            "Download, and install mods from Nexus Mods",
+            "Manage your mod library with minimal clicks",
+            "Effortlessly join custom modified servers"
+        ]
     },
 
     "/privacy": {
@@ -89,7 +96,70 @@
     
     "/settings": {
         "name": "Settings",
-        "desc": "Customize your experience!"
+        "desc": "Customize your experience!",
+        "words": [
+            "The ULTIMATE mod manager for {{game.name}}",
+            "Join modified community servers with ease",
+            "Download mods directly from Nexus Mods",
+            "Manage your mod library with minimal clicks",
+            "Configure the settings below to get started;"
+        ],
+
+        "choices": {
+            "page": ["App Options", "Game Settings"],
+            "install-type": ["steam", "epic", "xbox"]
+        },
+
+        "inputs": {
+            "app-cache-dir": {
+                "name": "Application Cache Directory",
+                "desc": "The path to {{app.brandname}} cache directory. This is where mods will be downloaded and stored."
+            },
+            "nexus-api-key": {
+                "name": "Nexus Mods API Key",
+                "desc": "The API key used to authenticate with Nexus Mods. This is required to download mods."
+            },
+            "game-path": {
+                "name": "Local {{game.name}} Game Installation Path",
+                "desc": "The path to your local {{game.name}} installation."
+            }
+        },
+
+        "buttons": {
+            "get-api-key": "Get Nexus Mods API Key",
+            "edit-ue4ss-settings": "Edit UE4SS Settings"
+        },
+
+        "options": {
+            "show-api-key": {
+                "name": "Show API Key",
+                "desc": "Show the Nexus Mods API key in plain text."
+            },
+            "auto-boot": {
+                "name": "Launch At Startup",
+                "desc": "Launch {{app.brandname}} when your computer starts."
+            },
+            "auto-tiny": {
+                "name": "Auto Minimize",
+                "desc": "Launch {{app.brandname}} in a minimized state when started."
+            },
+            "tiny-tray": {
+                "name": "Minimize To Tray",
+                "desc": "Send {{app.brandname}} to the system tray when minimized."
+            },
+            "theme-color": {
+                "name": "Change Color Theme [beta]",
+                "desc": "Alter the UI by selecting from a range of spicy color themes.."
+            },
+            "theme-image": {
+                "name": "Change Background Image [beta]",
+                "desc": "Alter the UI by selecting from a range of spicy background images.."
+            },
+            "language": {
+                "name": "Change Language [alpha]",
+                "desc": "Select from a range of supported languages"
+            }
+        }
     }
 }
 

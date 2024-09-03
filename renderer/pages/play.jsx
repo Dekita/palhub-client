@@ -10,10 +10,12 @@ import LoadListModal from '@components/modals/load-list';
 import PlayVanillaModal from '@components/modals/play-vanilla';
 import useCommonChecks from '@hooks/useCommonChecks';
 import useLocalization from '@hooks/useLocalization';
+import useSelectedGame from '@hooks/useSelectedGame';
 import useAppLogger from '@hooks/useAppLogger';
 
 export default function PlayPage() {
-    const { t } = useLocalization();
+    const game = useSelectedGame();
+    const { t, tA } = useLocalization();
     const applog = useAppLogger("pages/play");
     const [commonData, onRunCommonChecks] = useCommonChecks();
     const [showLoadListModal, setShowLoadListModal] = React.useState(false);
@@ -44,8 +46,6 @@ export default function PlayPage() {
         applog('info', `Launching Game: ${game_data.exe_path}`);
     }
 
-    const game = { name: "Palworld" }; 
-
     return <React.Fragment>
         <CheckModsModal show={showCheckModsModal} setShow={setShowCheckModsModal} />
         <LoadListModal show={showLoadListModal} setShow={setShowLoadListModal} />
@@ -58,23 +58,21 @@ export default function PlayPage() {
                         <div className='card-body py-2 px-1'>
                             <div className='row'>
                                 <div className='d-lg-none col-lg-7'>
-                                    <Image src="/img/3Pals.png" alt="Palworld" className='px-0' rounded fluid />
+                                    <Image src="/img/3Pals.png" alt="Game Image 1" className='px-0' rounded fluid />
                                 </div>
                                 <div className='col-12 col-lg-5 pt-4 px-5 pe-lg-2'>
                                     <h1 className="font-bold mb-4">{t('/play.header', {game})}</h1>
-                                    <p className="mb-4">{t('games.palworld.info.line1')}</p>
-                                    <p className="mb-4">{t('games.palworld.info.line2')}</p>
-                                    <p className="mb-4">{t('games.palworld.info.line3')}</p>
+                                    {tA(`games.${game.id}.info`).map((line, idx) => <p key={idx} className="mb-4">{line}</p>)}
                                 </div>
                                 <div className='d-none d-lg-block col-lg-7'>
-                                    <Image src="/img/Lamball.png" alt="Palworld" rounded fluid />
+                                    <Image src="/img/Lamball.png" alt="Game Image 2" rounded fluid />
                                 </div>
                             </div>
 
                             <div className='px-0'>
                                 <button className='btn btn-success p-3 w-100 mt-3' onClick={onClickLaunchGame}>
-                                    <strong>{t('/play.launch_main', {game})}</strong>
-                                    <small className="d-block">{t('/play.launch_info')}</small>
+                                    <strong>{t('/play.launch-main', {game})}</strong>
+                                    <small className="d-block">{t('/play.launch-info')}</small>
                                 </button>
                             </div>
 
@@ -85,20 +83,20 @@ export default function PlayPage() {
                 <div className='row mt-4'>
                    <div className='col-12 col-md-4 mb-3'>
                         <button className='btn btn-dark hover-primary p-3 w-100' onClick={onClickCheckMods}>
-                            <strong>{t('/play.check_mods_main')}</strong>
-                            <small className="d-block">{t('/play.check_mods_info')}</small>
+                            <strong>{t('/play.check-mods-main')}</strong>
+                            <small className="d-block">{t('/play.check-mods-info')}</small>
                         </button>
                     </div>
                    <div className='col-12 col-md-4 mb-3'>
                         <button className='btn btn-dark hover-warning p-3 w-100' onClick={onClickLoadNewModlist}>
-                            <strong>{t('/play.load_mods_main')}</strong>
-                            <small className="d-block">{t('/play.load_mods_info')}</small>
+                            <strong>{t('/play.load-mods-main')}</strong>
+                            <small className="d-block">{t('/play.load-mods-info')}</small>
                         </button>
                     </div>
                    <div className='col-12 col-md-4 mb-3'>
                         <button className='btn btn-dark hover-danger p-3 w-100' onClick={onClickPlayVanillaPalworld}>
-                            <strong>{t('/play.vanilla_main', {game})}</strong>
-                            <small className="d-block">{t('/play.vanilla_info')}</small>
+                            <strong>{t('/play.vanilla-main', {game})}</strong>
+                            <small className="d-block">{t('/play.vanilla-info')}</small>
                         </button>
                     </div>
                 </div>

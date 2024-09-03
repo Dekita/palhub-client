@@ -16,6 +16,7 @@ import InstallUe4ssModal from '@components/modals/ue4ss-install';
 import Ue4ssSettingsModal from '@components/modals/ue4ss-settings';
 
 import useLocalization from '@hooks/useLocalization';
+import useSelectedGame from '@hooks/useSelectedGame';
 import useAppLogger from '@hooks/useAppLogger';
 import wait from '@utils/wait';
 
@@ -80,7 +81,8 @@ const SetupStep = ({step, handleUE4SSInstall}) => {
 }
 
 export default function SettingsPage({modals, ThemeController}) {
-    const { t, i18n, VALID_LANGUAGES } = useLocalization();
+    const { t, tA, i18n, VALID_LANGUAGES } = useLocalization();
+    const game = useSelectedGame();
     
     // initial settings data for the application
     const [settings, setSettings] = React.useState({
@@ -261,21 +263,13 @@ export default function SettingsPage({modals, ThemeController}) {
         if (!window.ipc) return console.error('ipc not loaded');
         window.ipc.invoke('open-child-window', 'help');
     }, []);
+
+    const words = tA('/settings.words', {game});
     
-    const words = [
-        "The ULTIMATE mod manager for Palworld",
-        "Join modified community servers with ease",
-        "Download mods directly from Nexus Mods",
-        "Manage your mod library with minimal clicks",
-        "Configure the settings below to get started;",
-    ];
-
-    const valid_languages = ['en', 'es', 'fr', 'de', 'it', 'ja', 'ko', 'pt', 'ru', 'zh'];
-
     return <React.Fragment>
         <InstallUe4ssModal show={showUE4SSInstall} setShow={setShowUE4SSInstall} />
         <Ue4ssSettingsModal show={showUE4SSSettings} setShow={setShowUE4SSSettings} />
-        <BrandHeader type='altsmall' tagline="PalHUB Client" words={words} />
+        <BrandHeader type='altsmall' tagline={t('app.brandname')} words={words} />
 
         <div className="container">
             <div className="col-12 col-md-10 offset-0 offset-md-1 col-lg-8 offset-lg-2">
@@ -286,12 +280,9 @@ export default function SettingsPage({modals, ThemeController}) {
                     <DekChoice 
                         className='pb-3'
                         disabled={false}
-                        choices={['App Setup', 'Game Settings']}
                         active={settings.settings_page}
-                        onClick={(i,value)=>{
-                            console.log(`Setting Page: ${value}`)
-                            updateSetting('settings_page', i);
-                        }}
+                        choices={tA('/settings.choices.page')}
+                        onClick={(i,value)=>updateSetting('settings_page', i)}
                     />
 
                 </div>
@@ -307,69 +298,69 @@ export default function SettingsPage({modals, ThemeController}) {
 
                     <ENVEntry 
                         value={settings.cache_dir}
-                        name="PalHUB Cache Directory"
                         updateSetting={handleCachePathChange}
-                        tooltip="The path to the PalHUB cache directory. This is where mods will be downloaded and stored."
+                        name={t('/settings.inputs.app-cache-dir.name')}
+                        tooltip={t('/settings.inputs.app-cache-dir.desc')}
                     />
                     <ENVEntry 
-                        name="Nexus Mods API Key"
                         value={settings.api_key}
-                        type={settings.show_key ? 'text' : 'password'}
                         updateSetting={handlePasswordChange}
-                        tooltip="Your Nexus Mods API Key is required to download mods."
+                        type={settings.show_key ? 'text' : 'password'}
+                        name={t('/settings.inputs.nexus-api-key.name')}  
+                        tooltip={t('/settings.inputs.nexus-api-key.desc')}
                     />
                     <div className='row mb-2'>
                         <div className='col px-3'>
                             <DekCheckbox
                                 inline={true}
-                                text="Show API Key"
                                 // iconPos='left'
+                                text={t('/settings.options.show-api-key.name')}
                                 checked={settings.show_key}
-                                onClick={(newval) => {
-                                    console.log(newval);
-                                    updateSetting('show_key', newval);
-                                }}
+                                onClick={(newval) => updateSetting('show_key', newval)}
                             />
                         </div>
                         <div className='col text-end px-3'>
-                            <a
+                            <Link 
                                 target="_blank"
                                 href="https://next.nexusmods.com/settings/api-keys"
                                 className='hover-dark text-warning'
                                 // onClick={() => window.open('https://next.nexusmods.com/settings/api-keys', '_blank')}
                                 style={{ width: 256 }}>
-                                <strong>Get Nexus Mods API Key</strong>
-                            </a>                            
+                                <strong>{t('/settings.buttons.get-api-key.name')}</strong>
+                            </Link>                            
                         </div>
                     </div>
                     <div className='row mb-2'>
                         <div className='col-12 col-lg-4'>
                             <ENVEntry 
-                                name="Launch At Startup"
                                 value={settings['auto-boot']}
                                 updateSetting={(n,v)=>updateConfig('auto-boot', v)}
-                                tooltip="Automatically start the PalHUB Client with your computer."
+                                name={t('/settings.options.auto-boot.name')}
+                                tooltip={t('/settings.options.auto-boot.desc')}
                             />
                         </div>
                         <div className='col-12 col-lg-4'>
                             <ENVEntry
-                                name="Auto Minimize"
                                 value={settings['auto-tiny']}
                                 updateSetting={(n,v)=>updateConfig('auto-tiny', v)}
-                                tooltip="Launch PalHUB Client in a minimized state when started."
+                                name={t('/settings.options.auto-tiny.name')}
+                                tooltip={t('/settings.options.auto-tiny.desc')}
                             />
                         </div>
                         <div className='col-12 col-lg-4'>
                             <ENVEntry
-                                name="Minimize To Tray"
                                 value={settings['tiny-tray']}
                                 updateSetting={(n,v)=>updateConfig('tiny-tray', v)}
-                                tooltip="Send PalHUB Client to the system tray when minized."
+                                name={t('/settings.options.tiny-tray.name')}
+                                tooltip={t('/settings.options.tiny-tray.desc')}
                             />
                         </div>
                     </div>
-
-                    <ENVEntryLabel name="Change Color Theme [beta]" tooltip="Alter the UI by selecting from a range of spicy color themes.." />
+                    
+                    <ENVEntryLabel 
+                        name={t('/settings.options.theme-color.name')} 
+                        tooltip={t('/settings.options.theme-color.desc')} 
+                    />
                     <DekChoice 
                         className='pb-3 mt-1'
                         choices={ThemeController.themes}
@@ -378,6 +369,11 @@ export default function SettingsPage({modals, ThemeController}) {
                             // updateSetting('theme-id', value, true);
                             ThemeController.setThemeID(value);
                         }}
+                    />
+
+                    <ENVEntryLabel 
+                        name={t('/settings.options.theme-image.name')} 
+                        tooltip={t('/settings.options.theme-image.desc')} 
                     />
                     <DekChoice 
                         className='pb-3'
@@ -404,6 +400,20 @@ export default function SettingsPage({modals, ThemeController}) {
                         </button>
                     </div> */}   
 
+                    <ENVEntryLabel 
+                        name={t('/settings.options.language.name')} 
+                        tooltip={t('/settings.options.language.desc')} 
+                    />
+                    <DekChoice
+                        className='pb-3'
+                        choices={VALID_LANGUAGES}
+                        active={VALID_LANGUAGES.indexOf(i18n.language)}
+                        onClick={(i,value)=>{
+                            i18n.changeLanguage(value);
+                        }}
+                    />
+
+
                     </div>
                 </div>
 
@@ -414,10 +424,10 @@ export default function SettingsPage({modals, ThemeController}) {
                     <div className="mx-auto px-3">
 
                         <ENVEntry 
-                            name="Local Palworld Game Installation Path"
                             value={settings.game_path}
                             updateSetting={handleGamePathChange}
-                            tooltip="The path to your Palworld game installation."
+                            name={t('/settings.inputs.game-path.name', {game})}
+                            tooltip={t('/settings.inputs.game-path.desc', {game})}
                         />
 
                         {/* <ENVEntry 
@@ -430,7 +440,7 @@ export default function SettingsPage({modals, ThemeController}) {
                         <DekChoice 
                             className='pb-3'
                             disabled={true}
-                            choices={install_types}
+                            choices={tA('/settings.choices.install-type')}
                             active={installed_type}
                             onClick={(i,value)=>{
                                 console.log(`Setting Page: ${value}`)
@@ -439,11 +449,11 @@ export default function SettingsPage({modals, ThemeController}) {
                         />
                         {settings?.has_ue4ss && <>
                             <div className='btn btn-dark px-3' onClick={() => setShowUE4SSSettings(true)}>
-                                <strong>Edit UE4SS Settings</strong>
+                                <strong>{t('/settings.buttons.edit-ue4ss-settings')}</strong>
                             </div>
                         </>}
                         <div className='btn btn-dark ms-2 px-3' onClick={onClickHelp}>
-                            <strong>FAQ</strong>
+                            <strong>{t('/faq.name')}</strong>
                         </div>
                     </div>
                 </div>
@@ -455,17 +465,6 @@ export default function SettingsPage({modals, ThemeController}) {
         <div className="container">
             <div className="col-12 col-md-10 offset-0 offset-md-1 col-lg-8 offset-lg-2">
                 <div className="mx-auto px-3 pt-5 pb-4">
-
-                    <strong>{t('settings.welcome')}</strong>
-
-                    <DekChoice
-                        className='pb-3'
-                        choices={VALID_LANGUAGES}
-                        active={VALID_LANGUAGES.indexOf(i18n.language)}
-                        onClick={(i,value)=>{
-                            i18n.changeLanguage(value);
-                        }}
-                    />
 
                 </div>
             </div>
