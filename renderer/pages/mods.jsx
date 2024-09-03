@@ -1,4 +1,9 @@
-import React from 'react'
+/*
+########################################
+# PalHUB::Client by dekitarpg@gmail.com
+########################################
+*/
+import React from 'react';
 // import Head from 'next/head'
 import Link from 'next/link'
 // import Image from 'next/image'

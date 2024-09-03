@@ -4,18 +4,23 @@
 ########################################
 */
 import React from 'react';
+import Link from 'next/link';
 
 import OverlayTrigger from 'react-bootstrap/OverlayTrigger';
 import Tooltip from 'react-bootstrap/Tooltip';
+import Image from 'react-bootstrap/Image';
 
 import * as CommonIcons from '@config/common-icons';
-import { Image } from 'react-bootstrap';
+import useLocalization from '@hooks/useLocalization';
+// import useAppLogger from '@hooks/useAppLogger';
+
 
 
 export default function Footer() {
-
+    const { t, ready } = useLocalization();
     const [userCount, setUserCount] = React.useState('??');
     const [rateLimits, setRateLimits] = React.useState('??');
+    const delay = { show: 100, hide: 250 };
 
     React.useEffect(() => {
         if (!window.ipc) return console.error('ipc not loaded');
@@ -46,50 +51,32 @@ export default function Footer() {
         return () => clearInterval(handle);
     }, []);
 
+    // if (!ready) return <></>;
 
-
-    console.log({ userCount, rateLimits });
-
-    // const {data, error, loading, mutate } = useSwrJSON(`https://dekitarpg.com/ping`);
-    // if (loading) return (<h1>Loading...</h1>);
-    // if (error) return (<h1>{error}</h1>);
-    // return (<pre>{data}</pre>);
-
-    const tooltip_text = 'Nexus Mods API Rate Limits: Hourly / Daily';
-    const overlay = <Tooltip className="text-end">{tooltip_text}</Tooltip>;
-    const overlayD = <Tooltip className="text-end">
-        <Image src='https://img.shields.io/discord/1132980259596271657?logo=discord&style=for-the-badge&logoColor=e4e4e4&label=Support%20Server' fluid />
-        {/* <iframe src="https://discord.com/widget?id=1132980259596271657&theme=dark" width="350" height="500" allowtransparency="true" frameborder="0" sandbox="allow-popups allow-popups-to-escape-sandbox allow-same-origin allow-scripts"></iframe> */}
-    </Tooltip>;
-    const delay = { show: 100, hide: 250 };
-
-    return (
-        <footer className='footer darker-bg3 text-center p-3'>
-            <div className='row position-absolute w-100 text-dark'>
-                <div className='col text-start'>
-                    <OverlayTrigger placement='top' delay={delay} overlay={overlay}>
-                        <small className='px-5'>{rateLimits.toString()}</small>
-                    </OverlayTrigger>
-                </div>
-                <div className='col text-end'>
-                    <CommonIcons.account
-                        height='1rem'
-                        fill='currentColor'
-                    />
-                    <small className='ps-2 pe-5'>{userCount} users today!</small>
-                </div>
+    return <footer className='footer darker-bg3 text-center p-3'>
+        <div className='row position-absolute w-100 text-dark'>
+            <div className='col text-start'>
+                <OverlayTrigger placement='top' delay={delay} overlay={<Tooltip className="text-end">{t('#footer.hover-nexus-api')}</Tooltip>}>
+                    <small className='px-5'>{rateLimits}</small>
+                </OverlayTrigger>
             </div>
-            <div>
-                <OverlayTrigger placement='left' delay={delay} overlay={overlayD}>
-                    <a href='https://discord.gg/WyTdramBkm' target='_blank' className='btn hover-secondary'>
-                        <CommonIcons.discord
-                            height='1.6rem'
-                            fill='currentColor'
-                            style={{ opacity: 0.5 }}
-                        />
-                    </a>
-                    </OverlayTrigger>
+            <div className='col text-end'>
+                <OverlayTrigger placement='top' delay={delay} overlay={<Tooltip className="text-end">{t('#footer.hover-users-api')}</Tooltip>}>
+                    <span className=''>
+                        <CommonIcons.account height='1rem' fill='currentColor' />
+                        <small className='ps-2 pe-5'>{t('#footer.users-today', {amount: userCount})}</small>
+                    </span>
+                </OverlayTrigger>
             </div>
-        </footer>
-    );
+        </div>
+        <div className='to-contain-the-overlay-properly'>
+            <OverlayTrigger placement='left' delay={delay} overlay={<Tooltip className="text-end">
+                <Image src='https://img.shields.io/discord/1132980259596271657?logo=discord&style=for-the-badge&logoColor=e4e4e4&label=Support%20Server' fluid />
+                </Tooltip>}>
+                <Link href='https://discord.gg/WyTdramBkm' target='_blank' className='btn hover-secondary'>
+                    <CommonIcons.discord height='1.6rem' fill='currentColor' style={{ opacity: 0.5 }}/>
+                </Link>
+            </OverlayTrigger>
+        </div>
+    </footer>;
 }

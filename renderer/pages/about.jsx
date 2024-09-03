@@ -1,6 +1,11 @@
-import React from 'react'
-import Link from 'next/link'
-// import Image from 'next/image'
+/*
+########################################
+# PalHUB::Client by dekitarpg@gmail.com
+########################################
+*/
+import React from 'react';
+import Link from 'next/link';
+// import Image from 'next/image';
 
 import * as CommonIcons from '@config/common-icons';
 

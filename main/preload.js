@@ -4,6 +4,7 @@
 ########################################
 */
 import { contextBridge, ipcRenderer} from 'electron';
+// import backend from 'i18next-electron-fs-backend';
 
 // expose the user data (electron-store) API to the renderer process
 contextBridge.exposeInMainWorld('uStore', {
@@ -37,6 +38,15 @@ contextBridge.exposeInMainWorld('logger', LOG_TYPES.reduce((acc, logtype) => {
         return await ipcRenderer.invoke('logger', logtype, ...args);
     }};
 }, {}));
+
+// expose the i18next functionality to the renderer process
+contextBridge.exposeInMainWorld('deki18next', {
+    t(...args) { return ipcRenderer.invoke('deki18next', 't', ...args) },
+    autoT(...args) { return ipcRenderer.invoke('deki18next', 'autoT', ...args) },
+    changeLanguage(...args) { return ipcRenderer.invoke('deki18next', 'changeLanguage', ...args) },
+    getLanguage() { return ipcRenderer.invoke('deki18next', 'getLanguage') },
+    getBundle(...args) { return ipcRenderer.invoke('deki18next', 'getBundle', ...args) },
+});
 
 // Expose protected methods that allow the renderer process to use
 contextBridge.exposeInMainWorld('ipc', {

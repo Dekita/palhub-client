@@ -3,40 +3,27 @@
 # PalHUB::Client by dekitarpg@gmail.com
 ########################################
 */
-
-// import styles from '../styles/Home.module.css'
 import { motion } from 'framer-motion';
+import { useEffect } from 'react';
 import { useRouter } from 'next/router';
-import { useCallback, useEffect, useRef, useState } from 'react';
-
 import Link from 'next/link';
-import Container from 'react-bootstrap/Container';
-import Dropdown from 'react-bootstrap/Dropdown';
+
 import Nav from 'react-bootstrap/Nav';
 import Navbar from 'react-bootstrap/Navbar';
-import Table from 'react-bootstrap/Table';
+import Container from 'react-bootstrap/Container';
 
-import DekSelect from '@components/core/dek-select';
-import Dektionary from '@config/dektionary';
-import * as CommonIcons from '@config/common-icons';
-
-import DekCheckbox from '@components/core/dek-checkbox';
-import Image from 'next/image';
-
-import navbar_items from '@config/navbar-items';
 import AutoUpdater from '@components/core/autoupdater';
+import useLocalization from '@hooks/useLocalization';
 
-const NSFWIcons = {
-    enabled: CommonIcons.eye,
-    disabled: CommonIcons.eye_slash,
-};
+import * as CommonIcons from '@config/common-icons';
+import navbar_items from '@config/navbar-items';
+// import useAppLogger from '@hooks/useAppLogger';
 
-export default function MainNavbar({
-    modals: {
-        onClickHamburger,
-        onClickGemStore,
-    },
-}) {
+
+
+export default function MainNavbar({modals: {onClickHamburger,onClickGemStore}}) {
+    // const logger = useAppLogger('components/core/navbar');
+    const { t } = useLocalization();
     const router = useRouter();
     const active_route = router.pathname;
 
@@ -46,70 +33,39 @@ export default function MainNavbar({
         if (main_body) main_body.scrollTo(0, 0); // bottom: main_body.scrollHeight
     }, [active_route]);
 
-    return (
-        <Navbar className='navbar theme-text'>
-            <Container className='theme-text' fluid>
-                {/* <Navbar.Brand>
-                    <Link href='/' className='d-flex flex-row justify-content-center'>
-                        <Image
-                            className='p-0'
-                            alt="PalHUB Logo"
-                            src='/favicon-32x32.png'
-                            width={32}
-                            height={32}
-                            unoptimized
-                            loading='lazy'
-                        />
-                        <small style={{ marginTop: 6, marginLeft: 4 }} className='text-white hover-dark hover-secondary'>
-                            <strong>{Dektionary.brandname}</strong>
-                        </small>
-                    </Link>
-                </Navbar.Brand> */}
+    const is_settings = active_route === '/settings';
+    const settings_color = is_settings ? 'text-warning' : 'hover-dark hover-secondary';
+    const settings_classes = `col btn no-shadow p-2 pe-4 my-auto ${settings_color}`;
 
-                <Nav className='d-flex d-md-none me-auto'>
-                    <div
-                        className={`btn p-2 no-shadow hover-dark hover-secondary`}
-                        onClick={onClickHamburger}>
-                        <CommonIcons.navtoggle
-                            height='1.75rem'
-                            fill='currentColor'
-                        />
+    // if (!ready) return <></>;
+
+    return <Navbar className='navbar theme-text'>
+        <Container className='theme-text' fluid>
+            {/* Area shown when on a small viewport (shows hamburger menu) */}
+            <Nav className='d-flex d-md-none me-auto'>
+                <div className={`btn p-2 no-shadow hover-dark hover-secondary`} onClick={onClickHamburger}>
+                    <CommonIcons.navtoggle height='1.75rem' fill='currentColor' />
+                </div>
+            </Nav>
+            {/* Area to display all of the regular navigation links */}
+            <Nav className='d-none d-md-flex me-auto' activeKey={active_route}>
+                {navbar_items.map((element) => {
+                    const is_this_route = element.href === active_route;
+                    const route_color = is_this_route ? 'text-warning' : 'hover-dark hover-secondary ';
+                    return <Link href={element.href} key={element.href} className={`btn px-3 no-shadow ${route_color}`}>
+                        <strong>{t(element.text)}</strong>
+                    </Link>;
+                })}
+            </Nav>
+            {/* Area to display the update progress & settings cog */}
+            <Nav className='text-end'>
+                <div className='row'>
+                    <div className='col-auto'><AutoUpdater/></div>
+                    <div className={settings_classes} onClick={() => router.push('/settings')}>
+                        <CommonIcons.cog height='1.75rem' fill='currentColor' />
                     </div>
-                </Nav>
-                
-                <Nav
-                    className='d-none d-md-flex me-auto'
-                    activeKey={active_route}>
-                    {navbar_items.map((element) => {
-                        const is_this_route = element.href === active_route;
-                        const route_color = is_this_route ? 'text-warning' : 'hover-dark hover-secondary ';
-                        return (
-                            <Link
-                                href={element.href}
-                                key={element.href}
-                                className={`btn px-3 no-shadow ${route_color}`}>
-                                <strong>{element.text}</strong>
-                            </Link>
-                        );
-                    })}
-                </Nav>
-
-                <Nav className='text-end'>
-                    <div className='row'>
-                        <div className='col-auto'>
-                            <AutoUpdater />
-                        </div>
-
-                        <div className={`col btn p-2 pe-4 no-shadow ${active_route === '/settings' ? 'text-warning' : 'hover-dark hover-secondary'} my-auto`}
-                            onClick={() => router.push('/settings')}>
-                            <CommonIcons.cog
-                                height='1.75rem'
-                                fill='currentColor'
-                            />
-                        </div>
-                    </div>
-                </Nav>
-            </Container>
-        </Navbar>
-    );
+                </div>
+            </Nav>
+        </Container>
+    </Navbar>;
 }

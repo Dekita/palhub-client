@@ -16,6 +16,8 @@ files:
 extraFiles:
   - from: resources/vbs
     to: resources/vbs
+  - from: resources/locales
+    to: resources/locales
 
 publish:
   provider: github

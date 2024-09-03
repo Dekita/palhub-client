@@ -76,7 +76,9 @@ class DEAP {
         });
         this.setUserAgent("dekitarpg.com");
         // setup global logfile
-        LoggyBoi.logpath = path.join(app.getAppPath(), "app.log");
+        if (app.isPackaged) LoggyBoi.logpath = path.join(process.resourcesPath, '..', 'app.log'); // Packaged 
+        else LoggyBoi.logpath = path.join(app.getAppPath(), 'app.log'); // Development mode
+        
         LoggyBoi.setGlobalOptions({
             ...config.logger,
             file_options: {

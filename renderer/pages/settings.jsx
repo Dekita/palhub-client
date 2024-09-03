@@ -1,21 +1,23 @@
-import React from 'react'
-import Link from 'next/link'
+/*
+########################################
+# PalHUB::Client by dekitarpg@gmail.com
+########################################
+*/
+import React from 'react';
+import Link from 'next/link';
+import Carousel from 'react-bootstrap/Carousel';
+import DekChoice from "@components/core/dek-choice";
+// import DekSelect from '@components/core/dek-select';
+import DekCheckbox from '@components/core/dek-checkbox';
+import BrandHeader from '@components/core/brand-header';
 
 import { ENVEntry, ENVEntryLabel } from '@components/modals/common';
-// import DekSelect from '@components/core/dek-select';
-import DekChoice from "@components/core/dek-choice";
-import DekSelect from '@components/core/dek-select';
-import DekCheckbox from '@components/core/dek-checkbox';
-
 import InstallUe4ssModal from '@components/modals/ue4ss-install';
 import Ue4ssSettingsModal from '@components/modals/ue4ss-settings';
 
-import wait from '@utils/wait';
-import BrandHeader from '@components/core/brand-header';
-import Carousel from 'react-bootstrap/Carousel';
-
 import useLocalization from '@hooks/useLocalization';
-
+import useAppLogger from '@hooks/useAppLogger';
+import wait from '@utils/wait';
 
 const SetupStep = ({step, handleUE4SSInstall}) => {
     switch (step) {
@@ -78,7 +80,7 @@ const SetupStep = ({step, handleUE4SSInstall}) => {
 }
 
 export default function SettingsPage({modals, ThemeController}) {
-    const { t, i18n } = useLocalization();
+    const { t, i18n, VALID_LANGUAGES } = useLocalization();
     
     // initial settings data for the application
     const [settings, setSettings] = React.useState({
@@ -458,8 +460,8 @@ export default function SettingsPage({modals, ThemeController}) {
 
                     <DekChoice
                         className='pb-3'
-                        choices={valid_languages}
-                        active={valid_languages.indexOf(i18n.language)}
+                        choices={VALID_LANGUAGES}
+                        active={VALID_LANGUAGES.indexOf(i18n.language)}
                         onClick={(i,value)=>{
                             i18n.changeLanguage(value);
                         }}

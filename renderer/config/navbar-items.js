@@ -4,64 +4,42 @@
 ########################################
 */
 
-import dektionary from '@config/dektionary';
-
 const navbar_items = [];
 
+// text & desc use localization keys
 navbar_items.push({
     href: '/play',
-    text: "Play",
-    desc: 'Play Palworld!',
+    text: "/play.name",
+    desc: '/play.desc',
     image: '/img/heap1.png',
 });
 
 navbar_items.push({
     href: '/mods',
-    text: "Mods",
-    desc: 'Check out the mods available for Palworld!',
+    text: "/mods.name",
+    desc: '/mods.desc',
     image: '/img/heap2.png',
 });
 
 navbar_items.push({
     href: '/servers',
-    text: "Servers",
-    desc: 'Find PalHUB Servers!',
+    text: "/servers.name",
+    desc: '/servers.desc',
     image: '/img/heap2.png',
 });
 
 navbar_items.push({
     href: '/about',
-    text: "About",
-    desc: 'About PalHUB!',
+    text: "/about.name",
+    desc: '/about.desc',
     image: '/img/heap2.png',
 });
 
 navbar_items.push({
     href: '/logs',
-    text: "Logs",
-    desc: 'View UE4SS Log File!',
+    text: "/logs.name",
+    desc: '/logs.desc',
     image: '/img/heap2.png',
 });
-
-// navbar_items.push({
-//     href: '/faq',
-//     text: dektionary.navlinks.faq,
-//     desc: "Got a query? Check our commonly asked questions to see if it's already been answered!",
-//     image: '/img/heap3.png',
-// });
-
-// navbar_items.push({
-//     href: '/privacy',
-//     text: dektionary.navlinks.privacy,
-//     desc: 'Find out what data we store and how we use it!',
-//     image: '/img/heap2.png',
-// });
-
-// navbar_items.push({
-//     href: '/terms',
-//     text: dektionary.navlinks.tandc,
-//     desc: 'The terms and conditions when using our service!',
-//     image: '/img/heap2.png',
-// });
 
 export default navbar_items;

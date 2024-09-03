@@ -10,12 +10,13 @@ import useWindowNameFromDEAP from '@hooks/useWindowNameFromDEAP';
 import useLocalization from '@hooks/useLocalization';
 import useAppLogger from '@hooks/useAppLogger';
 
+
 export default function MainAppbar() {
-    const { t } = useLocalization();
+    const { t, ready } = useLocalization();
     const windowName = useWindowNameFromDEAP();
     const [appVersion, setAppVersion] = useState('0.0.0');
     const logger = useAppLogger('components/core/appbar');
-
+    
     const onClickMinimizeApp = useCallback(() => {
         window?.ipc?.invoke('app-action', windowName, 'minimize');
         logger('info', 'onClickMinimizeApp');
@@ -28,11 +29,13 @@ export default function MainAppbar() {
         window?.ipc?.invoke('app-action', windowName, 'exit');
         logger('info', 'onClickCloseApp');
     }, [windowName]);
-
+    
     useEffect(() => {
         window?.ipc?.invoke('get-version').then(setAppVersion);
     }, []);
-
+    
+    // if (!ready) return <></>;
+    
     return <Container className='theme-text p-0 appbar' fluid>
         <div className='d-flex p-0'>
             <div className='px-3 text-dark' style={{paddingTop: 6}}>

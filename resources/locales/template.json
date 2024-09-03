@@ -1,0 +1,11 @@
+{
+    "variablename": {
+        "innervariable": "value"
+    },
+    "#componentname": {
+        "innervariable": "value"
+    },
+    "/pagename": {
+        "innervariable": "value"
+    }
+}

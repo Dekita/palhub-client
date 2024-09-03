@@ -1,13 +1,20 @@
-import React from 'react'
-import { Image } from 'react-bootstrap'
+/*
+########################################
+# PalHUB::Client by dekitarpg@gmail.com
+########################################
+*/
+import React from 'react';
+import Image from 'react-bootstrap/Image';
 import CheckModsModal from '@components/modals/mod-check';
 import LoadListModal from '@components/modals/load-list';
 import PlayVanillaModal from '@components/modals/play-vanilla';
 import useCommonChecks from '@hooks/useCommonChecks';
+import useLocalization from '@hooks/useLocalization';
 import useAppLogger from '@hooks/useAppLogger';
 
 export default function PlayPage() {
-    const applog = useAppLogger("PlayPage");
+    const { t } = useLocalization();
+    const applog = useAppLogger("pages/play");
     const [commonData, onRunCommonChecks] = useCommonChecks();
     const [showLoadListModal, setShowLoadListModal] = React.useState(false);
     const [showCheckModsModal, setShowCheckModsModal] = React.useState(false);
@@ -37,6 +44,8 @@ export default function PlayPage() {
         applog('info', `Launching Game: ${game_data.exe_path}`);
     }
 
+    const game = { name: "Palworld" }; 
+
     return <React.Fragment>
         <CheckModsModal show={showCheckModsModal} setShow={setShowCheckModsModal} />
         <LoadListModal show={showLoadListModal} setShow={setShowLoadListModal} />
@@ -52,16 +61,10 @@ export default function PlayPage() {
                                     <Image src="/img/3Pals.png" alt="Palworld" className='px-0' rounded fluid />
                                 </div>
                                 <div className='col-12 col-lg-5 pt-4 px-5 pe-lg-2'>
-                                    <h1 className="font-bold mb-4">Play Palworld</h1>
-                                    <p className="mb-4">
-                                        Palworld is a game where you can catch your own creature based party, and have them build your base while you explore the world with your friends. But you knew that already!!
-                                    </p>
-                                    <p className="mb-4">
-                                        You can play Palworld with mods to enhance your experience, and even play with friends on modified servers.
-                                    </p>
-                                    <p className="mb-4">
-                                        Or.. You could choose to play plain old vanilla Palworld without any mods at all, but that's super boring.
-                                    </p>
+                                    <h1 className="font-bold mb-4">{t('/play.header', {game})}</h1>
+                                    <p className="mb-4">{t('games.palworld.info.line1')}</p>
+                                    <p className="mb-4">{t('games.palworld.info.line2')}</p>
+                                    <p className="mb-4">{t('games.palworld.info.line3')}</p>
                                 </div>
                                 <div className='d-none d-lg-block col-lg-7'>
                                     <Image src="/img/Lamball.png" alt="Palworld" rounded fluid />
@@ -70,8 +73,8 @@ export default function PlayPage() {
 
                             <div className='px-0'>
                                 <button className='btn btn-success p-3 w-100 mt-3' onClick={onClickLaunchGame}>
-                                    <strong>Launch Game</strong>
-                                    <small className="d-block">With Installed Mods!</small>
+                                    <strong>{t('/play.launch_main', {game})}</strong>
+                                    <small className="d-block">{t('/play.launch_info')}</small>
                                 </button>
                             </div>
 
@@ -82,20 +85,20 @@ export default function PlayPage() {
                 <div className='row mt-4'>
                    <div className='col-12 col-md-4 mb-3'>
                         <button className='btn btn-dark hover-primary p-3 w-100' onClick={onClickCheckMods}>
-                            <strong>Check Installed Mods</strong>
-                            <small className="d-block">Update & Validate Files!</small>
+                            <strong>{t('/play.check_mods_main')}</strong>
+                            <small className="d-block">{t('/play.check_mods_info')}</small>
                         </button>
                     </div>
                    <div className='col-12 col-md-4 mb-3'>
                         <button className='btn btn-dark hover-warning p-3 w-100' onClick={onClickLoadNewModlist}>
-                            <strong>Load New Modlist</strong>
-                            <small className="d-block">Change Your Active Mods!</small>
+                            <strong>{t('/play.load_mods_main')}</strong>
+                            <small className="d-block">{t('/play.load_mods_info')}</small>
                         </button>
                     </div>
                    <div className='col-12 col-md-4 mb-3'>
                         <button className='btn btn-dark hover-danger p-3 w-100' onClick={onClickPlayVanillaPalworld}>
-                            <strong>Play Vanilla Palworld</strong>
-                            <small className="d-block">Uninstalls ALL Mods!</small>
+                            <strong>{t('/play.vanilla_main', {game})}</strong>
+                            <small className="d-block">{t('/play.vanilla_info')}</small>
                         </button>
                     </div>
                 </div>

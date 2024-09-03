@@ -1,7 +1,12 @@
+/*
+########################################
+# PalHUB::Client by dekitarpg@gmail.com
+########################################
+*/
+import React from 'react';
 import BrandHeader from '@components/core/brand-header';
 import Container from 'react-bootstrap/Container';
 import Dektionary from 'config/dektionary';
-import React from 'react';
 import DekChoice from '@components/core/dek-choice';
 
 import * as CommonIcons from '@config/common-icons';

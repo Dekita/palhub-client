@@ -1,0 +1,95 @@
+{
+    "app": {
+        "brandname": "PalHUB Client",
+        "version": "v{{version}}"
+    },
+
+    "games": {
+        "generic": {
+            "name": "Game",
+            "info": {
+                "line1": "This is a game where you can do stuff and things.",
+                "line2": "You can play this game with mods to enhance your experience, and even play with friends on modified servers.",
+                "line3": "Or.. You could choose to play plain old vanilla without any mods at all, but that's super boring."
+            }
+        },
+        "palworld": {
+            "name": "Palworld",
+            "info": {
+                "line1": "Palworld is a game where you can catch your own party based creatures, and have them build your base while you explore the world with your friends. But you already knew that!!",
+                "line2": "{{games.generic.info.line2}}",
+                "line3": "{{games.generic.info.line3}}"
+            }
+        }
+    },
+
+    "#footer": {
+        "hover-nexus-api": "Nexus Mods API Rate Limits: Hourly / Daily",
+        "hover-users-api": "The number of people using {{app.brandname}} today!",
+        "users-today": "{{amount}} Users Today!"
+    },
+
+    "/play": {
+        "name": "Play",
+        "desc": "Play like a boss, with mods!",
+        "header": "{{/play.name}} {{game.name}}",
+        "launch_main": "Launch {{game.name}}",
+        "launch_info": "With Installed Mods!",
+        "vanilla_main": "Play Vanilla {{game.name}}",
+        "vanilla_info": "Uninstalls ALL Mods!",
+        "check_mods_main": "Check Mods",
+        "check_mods_info": "Update & Validate Files!",
+        "load_mods_main": "Load New Modlist",
+        "load_mods_info": "Change your active mods!"
+    },
+
+    "/mods": {
+        "name": "Mods",
+        "desc": "Manage your mods with ease!"
+    },
+    
+    "/servers": {
+        "name": "Servers",
+        "desc": "Join custom servers with ease!"
+    },
+    
+    "/about": {
+        "name": "About",
+        "desc": "Learn more about us!",
+        "header": "{{/about.name}} {{app.brandname}}",
+        "main": "{{app.brandname}} is an application that allows you to download and easily manage mods for {{game.name}} from the nexus mods website. This application is built using modern technologies and is designed to be as simple and easy to use as possible. If you encounter any bugs or issues, please let us know!",
+        "feat1": "Source code hosted on github for the world to see",
+        "feat2": "Download, and install mods from Nexus Mods",
+        "feat3": "Manage your mod library with minimal clicks",
+        "feat4": "Effortlessly join custom modified servers",
+        "notice": "This application is not affiliated with, or endorsed by the developers of Palworld.",
+        "discord": "Join Support Server",
+        "patreon": "Support Development"
+    },
+
+    "/privacy": {
+        "name": "Privacy",
+        "desc": "Learn how we handle your data!"
+    },
+    
+    "/terms": {
+        "name": "Terms",
+        "desc": "Learn about our terms of service!"
+    },
+    
+    "/faq": {
+        "name": "FAQs",
+        "desc": "Frequently Asked Questions"
+    },
+    
+    "/logs": {
+        "name": "Logs",
+        "desc": "View the logs of the application and your games!"
+    },
+    
+    "/settings": {
+        "name": "Settings",
+        "desc": "Customize your experience!"
+    }
+}
+

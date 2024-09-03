@@ -200,7 +200,6 @@ class LoggyBoi {
         console.log('global options set:', file_options);
         if (this.validFileOptions(file_options)) {
             this._gfilestream = new FileTransport(file_options);
-            console.log('filestream set:', this._gfilestream);
         }
         if (this.validHTTPOptions(http_options)) {
             this._ghttpstream = new HTTPTransport(http_options);
