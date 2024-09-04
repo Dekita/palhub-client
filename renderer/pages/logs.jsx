@@ -13,6 +13,10 @@ import * as CommonIcons from '@config/common-icons';
 
 import useCommonChecks from '@hooks/useCommonChecks';
 import useAppLogger from '@hooks/useAppLogger';
+
+import useLocalization from '@hooks/useLocalization';
+import useSelectedGame from '@hooks/useSelectedGame';
+
 // export const getServerSideProps = async () => {
 //     return { props: {} };
 // };
@@ -22,6 +26,8 @@ export default function LogsPage(props) {
     const words = ['Printing game logs since 2024...'];
     const title = `${Dektionary.brandname}: Logs`;
 
+    const game = useSelectedGame();
+    const { t, tA } = useLocalization();
     const applog = useAppLogger("LogsPage");
     const [commonData, onRunCommonChecks] = useCommonChecks();
     const [appLogs, setAppLogs] = React.useState("");
@@ -110,8 +116,8 @@ export default function LogsPage(props) {
     return <React.Fragment>
         {/* <BrandHeader
             type='altsmall'
-            words={words}
-            tagline={title.replace(':', '')}
+            words={tA('/logs.words)}
+            tagline={t('/logs.head')}
         /> */}
         {showScrollHelpers && <div className='position-fixed top-50 end-0 translate-middle'>
             <div className={`d-grid transition-all ${showScrollHelpers ? 'opacity1' : 'opacity0'}`}>
@@ -129,16 +135,16 @@ export default function LogsPage(props) {
                     <DekChoice 
                         className='pb-3'
                         disabled={false}
-                        choices={['App', 'Game']}
+                        choices={tA('/logs.tabs', 2)}
                         active={logPageID}
                         onClick={(i,value)=>{
                             setLogPageID(i);
                         }}
                     />
                 </div>
-                <div className='col-4 col-md-3 col-lg-2'>
+                <div className='col-3 col-md-2 col-lg-1'>
                     <button className='btn btn-info w-100' onClick={scrollToBottom}>
-                        <CommonIcons.arrow_down fill='currentColor' height="1.25rem" /> Bottom
+                        <CommonIcons.arrow_down fill='currentColor' height="1.3rem" />
                     </button>
                 </div>
             </div>

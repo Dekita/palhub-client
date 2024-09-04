@@ -15,6 +15,11 @@ import useCommonChecks from "@hooks/useCommonChecks";
 import useModalResizer from "@hooks/useModalResizer";
 import wait from "@utils/wait";
 
+
+import useLocalization from '@hooks/useLocalization';
+import useSelectedGame from '@hooks/useSelectedGame';
+
+
 /**
 * Validate pasted JSON
 Expected structure: 
@@ -47,6 +52,8 @@ Expected structure:
 */
     
 export default function LoadListModal({show,setShow}) {
+    const game = useSelectedGame();
+    const { t, tA } = useLocalization();
     const applog = useAppLogger("LoadListModal");
     const [commonData, onRunCommonChecks] = useCommonChecks();
     const {fullscreen, height} = useModalResizer();
@@ -260,7 +267,7 @@ export default function LoadListModal({show,setShow}) {
         centered>
         <Modal.Header className='p-4 theme-border '>
             <Modal.Title className='col'>
-                <strong>Load New Mod List</strong>
+                <strong>{t('modals.load-mods.head')}</strong>
             </Modal.Title>
             {!isProcessing && <Button
                 variant='none'
@@ -280,7 +287,7 @@ export default function LoadListModal({show,setShow}) {
             {!shouldShowLogs && !mods && <div className='p-2'>
                 <textarea
                     className='form-control form-secondary overflow-y-auto m-0' 
-                    placeholder='Paste PalHUB Mod List JSON here...'
+                    placeholder={t('modals.load-mods.help')}
                     style={{resize: 'none', height}}
                     onChange={onTextAreaChange}
                 />
@@ -291,19 +298,19 @@ export default function LoadListModal({show,setShow}) {
                 variant='danger'
                 className='col p-2 px-3'
                 onClick={()=> setMods(null)}>
-                <strong>Cancel</strong>
+                <strong>{t('common.cancel')}</strong>
             </Button>}
             {mods && <Button
                 variant='success'
                 className='col p-2 px-3'
                 onClick={onClickedDownloadAndInstall}>
-                <strong>Download & Install</strong><strong className="d-none d-sm-inline"> Mod List</strong>
+                <strong>{t('modals.load-mods.load')}</strong>
             </Button>}
             {!mods && <Button
                 variant='secondary'
                 className='col p-2 px-3'
                 onClick={onClickedLoadFromFile}>
-                <strong>Load From File</strong>
+                <strong>{t('modals.check-mods.load-json')}</strong>
             </Button>}
         </Modal.Footer>}
     </Modal>;

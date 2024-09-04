@@ -4,17 +4,11 @@
 ########################################
 */
 import React from 'react';
-// import Head from 'next/head'
-import Link from 'next/link'
+import Link from 'next/link';
 // import Image from 'next/image'
 
-// import Input from '../components/input';
-// import Button from '../components/button';
-// import Navbar from '../components/navbar';
-// import Modal from '../components/modal';
 
 import ModCardComponent from '../components/mod-card';
-// import AppHeadComponent from '../components/app-head';
 
 import { ENVEntry, ENVEntryLabel } from '@components/modals/common';
 // import DekSelect from '@components/core/dek-select';
@@ -27,6 +21,11 @@ import Image from 'react-bootstrap/Image';
 import Carousel from 'react-bootstrap/Carousel';
 import BBCodeRenderer from "@components/core/bbcode";
 import { useRouter } from 'next/router';
+
+import * as CommonIcons from '@config/common-icons';
+import useLocalization from '@hooks/useLocalization';
+import useSelectedGame from '@hooks/useSelectedGame';
+
 
 /**
 {
@@ -67,24 +66,17 @@ const BANNED_MODS = [];
 
 export default function ModsPage() {
     const router = useRouter();
-
+    const game = useSelectedGame();
+    const { t, tA } = useLocalization();
     const [showModDetails, setShowModDetails] = React.useState(false);
     const [showModList, setShowModList] = React.useState(false);
-
-
     const [activeMod, setActiveMod] = React.useState(null);
-
     const [modlistID, setModlistID] = React.useState(0);
-    const modlistTypes = ['Installed', 'Downloaded', 'Latest', 'Trending', 'Updated'];//, 'Tracked'];
     const [mods, setMods] = React.useState([]);
     const [ads, setAds] = React.useState([]);
-
-
-    const [modSearch, setModSearch] = React.useState('');
+    const modlistTypes = tA('/mods.tabs') ?? [];
     const modSearchRef = React.useRef(null);
-
-
-    const show_ads = modlistID > 1;
+    
     const showSaveModList = modlistID === 0;
     // https://www.nexusmods.com/palworld/mods/1204
     const advertised_mods = [577, 1204, 146, 489];//1650, 487, 577, 489]//, 1204];//, 1314, 1650, 1640];
@@ -126,7 +118,6 @@ export default function ModsPage() {
         }));
     }
 
-
     // load initial settings from store
     React.useEffect(() => {
         (async () => {
@@ -146,22 +137,19 @@ export default function ModsPage() {
 
             let new_mods = null;
 
-            switch (modlistTypes[modlistID]) { 
-                case 'Installed': new_mods = await getInstalledMods(api_key, game_path); break;
-                case 'Downloaded': new_mods = await getDownloadedMods(api_key, cache_dir); break;
-                case 'Latest': new_mods = await window.nexus(api_key, 'getLatestAdded'); break;
-                case 'Updated': new_mods = await window.nexus(api_key, 'getLatestUpdated'); break;
-                case 'Trending': new_mods = await window.nexus(api_key, 'getTrending'); break;
-                case 'Tracked': new_mods = await window.nexus(api_key, 'getTrackedMods'); break;
+            switch (modlistID) { 
+                case 0: new_mods = await getInstalledMods(api_key, game_path); break;
+                case 1: new_mods = await getDownloadedMods(api_key, cache_dir); break;
+                case 2: new_mods = await window.nexus(api_key, 'getLatestAdded'); break;
+                case 3: new_mods = await window.nexus(api_key, 'getLatestUpdated'); break;
+                case 4: new_mods = await window.nexus(api_key, 'getTrending'); break;
+                case 5: new_mods = await window.nexus(api_key, 'getTrackedMods'); break;
             }
             if (new_mods) {
 
-                let new_ads = [];
-                // if (show_ads) {
-                    new_ads = await Promise.all(advertised_mods.map(async mod_id => {
-                        return await window.nexus(api_key, 'getModInfo', mod_id);
-                    }));
-                // }
+                let new_ads = await Promise.all(advertised_mods.map(async mod_id => {
+                    return await window.nexus(api_key, 'getModInfo', mod_id);
+                }));
 
                 const validation_filter = (mod) => {
                     if (!mod || !mod.status) return false;
@@ -174,29 +162,16 @@ export default function ModsPage() {
                 });
 
                 new_mods = new_mods.filter(validation_filter)
-                // .filter(mod =>{
-                //     return !new_ads.some(m => m.mod_id === mod.mod_id);
-                // }).map(mod => {
-                //     mod.ad = false;
-                //     return mod;
-                // });
 
-                if (!['Installed', 'Downloaded'].includes(modlistTypes[modlistID])) {
+                if (![0, 1].includes(modlistID)) {
                     if (new_mods.length > 8) new_mods = new_mods.slice(0, 8);
                     else if (new_mods.length > 4) new_mods = new_mods.slice(0, 4);
                 }
-
-
                 setAds(new_ads);
                 setMods(new_mods);
-                // setMods([].concat(new_ads, new_mods));
             }
         })();
     }, [modlistID]);
-
-    console.log({mods, ads})
-
-
 
     const onClickModCard = (mod) => {
         console.log('clicked mod:', mod);
@@ -206,20 +181,15 @@ export default function ModsPage() {
 
     const onFindSpecificMod = async () => {
         const value = modSearchRef.current.value;
-        // setModSearch(value);
         let mod_id = null;
-
         // if value is valid number then it is considered as mod id:
         if (parseInt(value)) mod_id = parseInt(value);
-        
         // if value is https://www.nexusmods.com/palworld/mods/MOD_ID then get the mod_id using regex
         if (value.includes('nexusmods.com')) {
             const match = value.match(/mods\/(\d+)/);
             if (match) mod_id = match[1];
         }
-
-        console.log('finding specific mod:', mod_id);
-
+        // console.log('finding specific mod:', mod_id);
         if (!mod_id) return console.error('Invalid mod id or url');
         if (!window.uStore) return console.error('uStore not loaded');
         if (!window.nexus) return console.error('nexus not loaded');
@@ -228,29 +198,24 @@ export default function ModsPage() {
         onClickModCard(mod);
     }
 
-    const banner_height = 256;
-
+    
     const gold_mod = false;
-
+    const banner_height = 256;
     const color_a = gold_mod ? 'danger' : 'info';
     const color_b = gold_mod ? 'warning' : 'primary';
-
     const gradient_a = `bg-gradient-${color_a}-to-${color_b} border-${color_a}`;
     const gradient_b = `bg-${color_b} border-${color_a}`;
     const gradient_c = `bg-gradient-${color_b}-to-${color_a} border-${color_a}`;
 
-
     return <React.Fragment>
         <ModDetailsModal mod={activeMod} show={showModDetails} setShow={setShowModDetails} />
         <ModListModal show={showModList} setShow={setShowModList} mods={mods} />
-        
-
         <div className="container">
             <div className="mx-auto px-3 py-5">
                 <div className='position-relative'>
                     {/* main gradient background elements */}
                     <div className='row mb-4'  style={{height: banner_height}}>
-                        <div className={`col transition-all border border-4 border-end-0 borderp-5 radius9 no-radius-end ${gradient_a}`}></div>
+                        <div className={`col transition-all border border-4 border-end-0 p-5 radius9 no-radius-end ${gradient_a}`}></div>
                         <div className={`col transition-all border border-4 border-start-0 border-end-0 p-5 ${gradient_b}`}></div>
                         <div className={`col transition-all border border-4 border-start-0 p-5 radius9 no-radius-start ${gradient_c}`}></div>
                     </div>
@@ -278,8 +243,6 @@ export default function ModsPage() {
                                                     <BBCodeRenderer bbcodeText={mod.summary} />
                                                 </div>
                                             </div>
-
-
                                         </div>
                                     </Carousel.Item>
                                 })}
@@ -287,49 +250,41 @@ export default function ModsPage() {
                         </div>
                         <div className='row'>
                             <div className='col text-end d-flex flex-column p-3'>
-                                <small className=''>
-                                    mod listing powered by <Link href="https://nexusmods.com" target='_blank' className='hover-dark text-warning'>Nexus Mods</Link>
+                                <small>
+                                    {t('/mods.powered')} <Link href="https://nexusmods.com" target='_blank' className='hover-dark text-warning'>{t('common.nexus')}</Link>
                                 </small>
                             </div>
                         </div>
                     </div>
                 </div>
 
-
-
-
-
                 <div className='row pt-2'>
                     {showSaveModList && <div className='col-4'>
                         <button 
                             className='btn btn-primary w-100'
-                            onClick={() => {
-                                setShowModList(true);
-                            }}>
-                            Save ModList
+                            onClick={() => setShowModList(true)}>
+                            {t('/mods.save-list')}
                         </button>
                     </div>}
 
                     <div className='col'>
                         {/* <ENVEntryLabel name="View mod by id or url" tooltip="Enter a nexus mods url or nexus mod id to view a specific mod." /> */}
-                        <div class="input-group">
+                        <div className="input-group">
                             <input 
                                 type='text'
-                                placeholder='Enter a nexus mods url or mod id to view a specific mod.' 
+                                placeholder={t('/mods.search-placeholder')}
                                 className='form-control form-primary no-radius-end' 
                                 autoComplete="off"
                                 ref={modSearchRef}
                             />
-                            <div class="input-group-append">
-                                <button class="btn btn-primary no-radius-start px-4" type="button" onClick={onFindSpecificMod}>
-                                    <strong>Find</strong>
+                            <div className="input-group-append">
+                                <button className="btn btn-primary no-radius-start px-4" type="button" onClick={onFindSpecificMod}>
+                                    <strong>{t('/mods.search-button')}</strong>
                                 </button>
                             </div>
                         </div>
                     </div>
                 </div>
-
-
 
                 <DekChoice 
                     className='py-3'

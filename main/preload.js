@@ -4,7 +4,6 @@
 ########################################
 */
 import { contextBridge, ipcRenderer} from 'electron';
-// import backend from 'i18next-electron-fs-backend';
 
 // expose the user data (electron-store) API to the renderer process
 contextBridge.exposeInMainWorld('uStore', {
@@ -39,35 +38,16 @@ contextBridge.exposeInMainWorld('logger', LOG_TYPES.reduce((acc, logtype) => {
     }};
 }, {}));
 
-// expose the i18next functionality to the renderer process
-contextBridge.exposeInMainWorld('deki18next', {
-    t(...args) { return ipcRenderer.invoke('deki18next', 't', ...args) },
-    autoT(...args) { return ipcRenderer.invoke('deki18next', 'autoT', ...args) },
-    changeLanguage(...args) { return ipcRenderer.invoke('deki18next', 'changeLanguage', ...args) },
-    getLanguage() { return ipcRenderer.invoke('deki18next', 'getLanguage') },
-    getBundle(...args) { return ipcRenderer.invoke('deki18next', 'getBundle', ...args) },
-});
-
 // Expose protected methods that allow the renderer process to use
 contextBridge.exposeInMainWorld('ipc', {
-    send(channel, value) {
-        ipcRenderer.send(...arguments);
-    },
+    send(channel, value) { ipcRenderer.send(...arguments) },
+    removeListener(channel, callback) { ipcRenderer.removeListener(channel, callback) },
+    removeAllListeners(channel) { ipcRenderer.removeAllListeners(...arguments) },
+    invoke(channel, value) { return ipcRenderer.invoke(...arguments) },
+    once(channel, callback) { ipcRenderer.once(channel, (_event, ...args) => callback(...args)) },
     on(channel, callback) {
         const subscription = (_event, ...args) => callback(...args);
         ipcRenderer.on(channel, subscription);
         return () => ipcRenderer.removeListener(channel, subscription);
     },
-    once(channel, callback) {
-        ipcRenderer.once(channel, (_event, ...args) => callback(...args));
-    },
-    removeListener(channel, callback) {
-        ipcRenderer.removeListener(channel, callback);
-    },
-    removeAllListeners(channel) {
-        ipcRenderer.removeAllListeners(...arguments);
-    },
-    invoke(channel, value) {
-        return ipcRenderer.invoke(...arguments);
-    }
 });

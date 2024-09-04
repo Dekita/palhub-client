@@ -8,8 +8,8 @@ import React from 'react';
 // import { useTranslation } from 'react-i18next';
 import wait from '@utils/wait';
 
-const VALID_LANGUAGES = ['en', 'es', 'fr', 'de', 'it', 'ja', 'ko', 'pt', 'ru', 'zh'];
-
+const VALID_LANGUAGES = ['dev', 'en'];//, 'es', 'fr', 'de', 'it', 'ja', 'ko', 'pt', 'ru', 'zh'];
+const ARTIFICIAL_LOAD_DELAY = 2500;
 // cache the bundle object
 let bundle = null;
 
@@ -23,47 +23,50 @@ export default function useLocalization() {
     const [ready, setReady] = React.useState(false);
     const [language, setLanguage] = React.useState(null);
 
+    // try to load the language bundle for the selected locale
+    const tryUpdateLanguage = async (locale) => {
+        try {return (await import(`../../resources/locales/${locale}-translation.json`)).default} 
+        catch (e) { console.error(e) }
+        return null;
+    }
+
+    // updates selected language bundle with fallback to english
+    const onUpdateLanguage = async (locale) => {
+        if (!hasWindow || !window.ipc) return;
+        let newbundle = await tryUpdateLanguage(locale);
+        if (!newbundle) newbundle = await tryUpdateLanguage('en');
+        await ipc.invoke("set-config", "locale", locale);
+        setLanguage(locale);
+        bundle = newbundle;
+    }
+
+    // setup the language bundle on mount
     React.useEffect(() => {
-        if (!hasWindow) return;
-        if (!window.deki18next) return;
-
-        const onUpdateLanguage = async (newlang) => {
-            let newbundle = await window.deki18next.getBundle(newlang);
-            if (!newbundle) newbundle = await window.deki18next.getBundle('en');
-            // setReady(Object.keys(newbundle).length > 0);
-            // setBundle(newbundle);
-            setLanguage(newlang);
-            bundle = newbundle;
-        }
-
-        const onSetup = async() => {
-            const newlang = await window.deki18next.getLanguage();
-            await wait(1000); // artificial delay to show load screen
-            await onUpdateLanguage(newlang);
-            setReady(Object.keys(bundle).length > 0);
-            // setReady(true);
-        };
-
-        if (!language) onSetup();
-
-        const removeOnUpdateHandler = window.ipc.on('language-change', onUpdateLanguage);
-        return () => removeOnUpdateHandler();
+        if (!hasWindow || !window.ipc) return;
+        if (!language) (async() => {
+            const locale = await ipc.invoke("get-config", "locale", "en");
+            await wait(ARTIFICIAL_LOAD_DELAY); // artificial delay to show load screen
+            await onUpdateLanguage(locale);
+            setReady(bundle && Object.keys(bundle).length > 0);
+        })();
     }, [hasWindow]);
 
-    // replicate the useTranslation hook data from react-i18next
-    const t = React.useCallback((keystring, replacers={}, expects_array=false) => {
-        if (!bundle) return keystring;
-
-        const innerT = (pointkey) => {
-            let bundle_point = bundle;
-            for (const key of pointkey.split('.')) {
-                if (!bundle_point[key]) continue;
-                bundle_point = bundle_point[key];
-            }
-            if (Array.isArray(bundle_point)) return bundle_point; 
-            if (typeof bundle_point !== 'string') return pointkey;
-            return bundle_point ?? pointkey;
+    // translate to string (inner function ~ not directly exposed)
+    const innerT = (pointkey) => {
+        let bundle_point = bundle;
+        for (const key of pointkey.split('.')) {
+            if (!bundle_point[key]) continue;
+            bundle_point = bundle_point[key];
         }
+        if (Array.isArray(bundle_point)) return bundle_point; 
+        if (typeof bundle_point !== 'string') return pointkey;
+        return bundle_point ?? pointkey;
+    }
+
+    // translate to string
+    // replicate the t function from react-i18next useTranslation hook
+    const t = React.useCallback((keystring, replacers={}, expectedArraySize=null) => {
+        if (!bundle) return keystring;
 
         const innerM = (bundle_point="") => {
             let matches = bundle_point.match(/{{(.*?)}}/g) ?? [];
@@ -99,47 +102,33 @@ export default function useLocalization() {
         }
 
         const finalized = innerM(bundle_point); // finalized string
-        if (expects_array) return [finalized]; 
+        // create array of expected size with finalized elements in each
+        if (expectedArraySize) return Array(expectedArraySize).fill(finalized);
         return finalized;
 
     }, [bundle]);
 
-    const tA = React.useCallback((keystring, replacers={}) => {
-        return t(keystring, replacers, true);
+    // translate to array
+    const tA = React.useCallback((keystring, replacersOrSize={}, expectedSize=1) => {
+        const replacers = typeof replacersOrSize === 'object' ? replacersOrSize : {};
+        if (typeof replacersOrSize === 'number') expectedSize = replacersOrSize;
+        return t(keystring, replacers, expectedSize);
+    }, [t]);
+
+    // translate to object
+    const tO = React.useCallback((keystring) => {
+        const result = innerT(keystring);
+        if (result === keystring) return null;
+        return result;
     }, [t]);
 
     const changeLanguage = React.useCallback((...args) => {
-        window?.deki18next?.changeLanguage(...args);
+        onUpdateLanguage(...args);
     }, []);
 
     const getResourceBundle = React.useCallback((...args) => {
-        return window?.deki18next?.getBundle(...args);
+        return bundle;
     }, []);
 
-    const i18n = { t, tA, language, changeLanguage, getResourceBundle };
-
-    // // Returns a translation string with formatted values based on the replacer_keys
-    // // eg: json: {main_key: 'Hello, {{key1}}!', key1: 'World'}
-    // // keyFormattedTranslation('main_key', ['key1'])
-    // const keyFormattedTranslation = React.useCallback((main_key, replacer_keys, extra_replacers={}) => {
-    //     if (!ready) return main_key;
-    //     const reducer = (acc, key) => ({...acc, [key]: t(key)});
-    //     return i18n.t(main_key, replacer_keys.reduce(reducer, extra_replacers));
-    // }, [i18n]);
-
-    // // Auto scan the main key for translations:
-    // // eg: json: {main_key: 'Hello, {{key1}}!', key1: 'World'}
-    // // autoT('main_key')
-    // // autoT('main_key', {key1: 'World'})
-    // const autoT = React.useCallback((main_key, extra_replacers={}) => {
-    //     if (!ready) return main_key;
-    //     const base_text = i18n.t(main_key);
-    //     if (!base_text.includes('{{')) return base_text;
-    //     const mapper = (key) => key.replace(/[{}]/g, '');
-    //     const filterer = (key) => !extra_replacers.hasOwnProperty(key);
-    //     const replacer_keys = base_text.match(/{{(.*?)}}/g).map(mapper).filter(filterer);
-    //     return keyFormattedTranslation(main_key, replacer_keys, extra_replacers);
-    // }, [ready, i18n, keyFormattedTranslation]);
-
-    return { t, tA, i18n, ready, VALID_LANGUAGES };
+    return { t, tA, tO, language, changeLanguage, ready, VALID_LANGUAGES };
 };

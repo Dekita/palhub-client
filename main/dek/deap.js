@@ -10,7 +10,7 @@
 * how windows behave, and the pages loaded.
 */
 
-import { app, dialog, ipcMain, BrowserWindow, Menu, Tray, nativeImage } from "electron";
+import { app, dialog, ipcMain, BrowserWindow, Menu, Tray, nativeImage, session } from "electron";
 import { autoUpdater } from "electron-updater";
 import createLogger, { LoggyBoi } from "../../utils/dek/logger";
 import { createWindow } from './create-window';
@@ -20,6 +20,13 @@ import path from "path";
 // import fs from 'fs';
 
 const IS_PRODUCTION = process.env.NODE_ENV === "production";
+
+// !see: https://www.electronjs.org/docs/latest/api/command-line-switches
+// app.commandLine.appendSwitch('remote-debugging-port', '8315')
+
+// !see: https://www.electronjs.org/docs/latest/api/session
+// !see: https://www.electronjs.org/docs/latest/api/extensions
+// session.defaultSession.loadExtension(path.join(__dirname, '../../extensions/react-devtools'));
 
 if (IS_PRODUCTION) {
     serve({ directory: "app" });
@@ -39,6 +46,7 @@ const APP_VERSION = (() => {
     if (app.isPackaged) return app.getVersion();
     return PACKAGE_JSON.version;
 })();
+
 
 class DEAP {
     // quick reference to electron.app;

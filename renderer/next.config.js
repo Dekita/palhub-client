@@ -13,9 +13,9 @@ module.exports = {
             issuer: /\.[jt]sx?$/,
             use: ['@svgr/webpack'],
         });
-        // Add support for importing Markdown files using raw-loader
+        // Add support for raw loading files with the following extensions: .md, .json
         config.module.rules.push({
-            test: /\.md$/,
+            test: /\.(?:[a-zA-Z0-9]+)?\.(md|json)$/, 
             use: 'raw-loader',
         });
         return config

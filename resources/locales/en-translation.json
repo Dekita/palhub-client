@@ -1,16 +1,30 @@
 {
     "app": {
         "brandname": "PalHUB Client",
-        "version": "v{{version}}"
+        "version": "v{{version}}",
+        "devname": "DekitaRPG"
     },
 
     "common": {
-        "toggle": ["Enabled", "Disabled"]
+        "toggle": ["Enabled", "Disabled"],
+        "loading": "Loading...",
+        "warning": "WARNING",
+        "error": "ERROR",
+        "nexus": "Nexus Mods",
+        "open-link": "opens in your default browser",
+        "no-info": "No Information Available",
+        "can-update": "Can Update",
+        "installed": "Installed",
+        "downloaded": "Downloaded",
+        "required": "Not On Disk",
+        "confirm": "Confirm",
+        "cancel": "Cancel",
+        "note": "NOTE:"
     },
-
+    
     "games": {
         "generic": {
-            "name": "Game",
+            "name": "Generic Game",
             "info": [
                 "This is a game where you can do stuff and things.",
                 "You can play this game with mods to enhance your experience, and even play with friends on modified servers.",
@@ -26,17 +40,59 @@
             ]
         }
     },
+    
+    "modals": {
+        "check-mods": {
+            "head": "Check Installed Mods",
+            "update": "Update Mods",
+            "install": "Install Mods",
+            "validate": "Validate Files",
+            "copy-json": "Copy JSON",
+            "save-json": "Save JSON",
+            "load-json": "Load From File"
+        },
+        "load-mods": {
+            "head": "Load New Modlist",
+            "help": "Paste {{app.brandname}} Mod List JSON here...",
+            "load": "Download & Install"
+        },
+        "play-vanilla": {
+            "head": "Play Vanilla {{game.name}}",
+            "info": "Clicking the {{common.confirm}} button below will remove all mods installed by the {{app.brandname}} and then attempt to launch the {{game.name}}. This action is irreversible once started.",
+            "warn": "Are you sure you want to continue?"
+        },
+        "mod-table": {
+            "name": "Mod Name",
+            "author": "Author",
+            "version": "Version",
+            "modids": "Mod/File ID",
+            "status": "Status"
+        },
+        "mod-details": {
+            "tabs": ["Details", "Download"],
+            "view-page": "View on {{common.nexus}}"
+        },
+        "server-details": {
+            "tabs": ["Details", "Settings", "Mods"],
+            "join": "Join Server",
+            "mods-required": "You must install the required mods to join this server.",
+            "pass-required": "A password is required to join this server.",
+            "join-discord": "Join {{server.serverName}} Discord",
+            "install-mods": "Install {{server.serverName}} Mod List",
+            "install-note": "Note: alters your active mod list"
+        }
+    },
 
     "#footer": {
-        "hover-nexus-api": "Nexus Mods API Rate Limits: Hourly / Daily",
-        "hover-users-api": "The number of people using {{app.brandname}} today!",
+        "hover-nexus-api": "{{common.nexus}} API Rate Limits: Hourly / Daily",
+        "hover-users-api": "The number of people using {{app.brandname}} within 24 hours!",
         "users-today": "{{amount}} Users Today!"
     },
 
     "/play": {
         "name": "Play",
         "desc": "Play like a boss, with mods!",
-        "header": "{{/play.name}} {{game.name}}",
+        "head": "{{/play.name}} {{game.name}}",
         "launch-main": "Launch {{game.name}}",
         "launch-info": "With Installed Mods!",
         "vanilla-main": "Play Vanilla {{game.name}}",
@@ -49,91 +105,129 @@
 
     "/mods": {
         "name": "Mods",
-        "desc": "Manage your mods with ease!"
+        "desc": "Manage your mods with ease!",
+        "head": "{{/mods.name}} {{game.name}}",
+        "tabs": ["Installed", "Downloaded", "Latest", "Trending", "Updated"],
+        "powered": "mod listing powered by",
+        "search-placeholder": "Enter a {{common.nexus}} url or mod id to view a specific mod",
+        "search-button": "Find",
+        "curr-list": "Current Mod List",
+        "save-list": "Save Mod List"
     },
     
     "/servers": {
         "name": "Servers",
-        "desc": "Join custom servers with ease!"
+        "desc": "Join custom servers with ease!",
+        "betawarn": "THE SERVER LISTING FEATURE IS CURRENTLY IN BETA",
+        "players": "Players: {{amount}} / {{max}}",
+        "powered": "server listing powered by",
+
+        "list-button": {
+            "head": "List Your Modified Server Here!!",
+            "info": "-- FEATURE COMING SOON",
+            "span": "Get access to the our API to list your server here, share it with the community, and get more players!"
+        }
     },
     
     "/about": {
         "name": "About",
-        "desc": "{{app.brandname}} is an application that allows you to download and easily manage mods from the nexus mods website. This application is built using modern technologies and is designed to be as simple and easy to use as possible. If you encounter any bugs or issues, please let us know!",
-        "header": "{{/about.name}} {{app.brandname}}",
-        "main": "{{app.brandname}} is an application that allows you to download and easily manage mods for {{game.name}} from the nexus mods website. This application is built using modern technologies and is designed to be as simple and easy to use as possible. If you encounter any bugs or issues, please let us know!",
+        "desc": "{{app.brandname}} is an application that allows you to download and easily manage mods from the {{common.nexus}} website. This application is built using modern technologies and is designed to be as simple and easy to use as possible. If you encounter any bugs or issues, please let us know!",
+        "head": "{{/about.name}} {{app.brandname}}",
+        "main": "{{app.brandname}} is an application that allows you to download and easily manage mods for {{game.name}} from the {{common.nexus}} website. This application is built using modern technologies and is designed to be as simple and easy to use as possible. If you encounter any bugs or issues, please let us know!",
         "notice": "This application is not affiliated with, or endorsed by the developers of Palworld.",
         "discord": "Join Support Server",
         "patreon": "Support Development",
-        "feature-header": "Features",
-        "feature-list": [
-            "Source code hosted on github for the world to see",
-            "Download, and install mods from Nexus Mods",
-            "Manage your mod library with minimal clicks",
-            "Effortlessly join custom modified servers"
-        ]
+        "features": {
+            "head": "Features",
+            "list": [
+                "Source code hosted on github for the world to see",
+                "Download, and install mods from {{common.nexus}}",
+                "Manage your mod library with minimal clicks",
+                "Effortlessly join custom modified servers"
+            ]
+        }
     },
 
     "/privacy": {
         "name": "Privacy",
-        "desc": "Learn how we handle your data!"
+        "desc": "Learn how we handle your data!",
+        "head": "Privacy Policy"
     },
     
     "/terms": {
         "name": "Terms",
-        "desc": "Learn about our terms of service!"
+        "desc": "Learn about our terms of service!",
+        "head": "Terms of Service"
     },
     
     "/faq": {
         "name": "FAQs",
-        "desc": "Frequently Asked Questions"
+        "desc": "Frequently Asked Questions",
+        "head": "{{app.brandname}} FAQ",
+        "faqs": [
+            {   "q": "What is {{app.brandname}}?",
+                "a": "{{app.brandname}} is a mod management application designed to make it easy for users to not only modify their game, but also list modified servers, and make downloading their required mods and joining them, considerably easier."
+            },
+            {   "q": "How to set Local Palworld Game Installation Path?",
+                "a": "To set the local Palworld game installation path, click on the settings icon in the top right corner of the application, and then click on the 'Game Installation Path' option. You can then enter the path to your Palworld game installation folder. For steam users this might look like `C:/Program Files (x86)/Steam/steamapps/common/Palworld`. For Xbox Gamepass users: `C:/XboxGames/Palworld/Content`"
+            },
+            {   "q": "",
+                "a": ""
+            },
+            {   "q": "",
+                "a": ""
+            }
+        ]
     },
     
     "/logs": {
         "name": "Logs",
-        "desc": "View the logs of the application and your games!"
+        "desc": "View the logs of the application and your games!",
+        "head": "{{app.brandname}} Logs",
+        "tabs": ["Application", "Game"],
+        "words": ["Printing game logs since 2024..."]
     },
     
     "/settings": {
         "name": "Settings",
         "desc": "Customize your experience!",
+        "head": "{{app.brandname}} {{/settings.name}}",
         "words": [
             "The ULTIMATE mod manager for {{game.name}}",
             "Join modified community servers with ease",
-            "Download mods directly from Nexus Mods",
+            "Download mods directly from {{common.nexus}}",
             "Manage your mod library with minimal clicks",
             "Configure the settings below to get started;"
         ],
-
         "choices": {
             "page": ["App Options", "Game Settings"],
             "install-type": ["steam", "epic", "xbox"]
         },
-
         "inputs": {
             "app-cache-dir": {
                 "name": "Application Cache Directory",
                 "desc": "The path to {{app.brandname}} cache directory. This is where mods will be downloaded and stored."
             },
             "nexus-api-key": {
-                "name": "Nexus Mods API Key",
-                "desc": "The API key used to authenticate with Nexus Mods. This is required to download mods."
+                "name": "{{common.nexus}} API Key",
+                "desc": "The API key used to authenticate with {{common.nexus}}. This is required to download mods."
             },
             "game-path": {
                 "name": "Local {{game.name}} Game Installation Path",
                 "desc": "The path to your local {{game.name}} installation."
             }
         },
-
         "buttons": {
-            "get-api-key": "Get Nexus Mods API Key",
-            "edit-ue4ss-settings": "Edit UE4SS Settings"
+            "get-api-key": "Get {{common.nexus}} API Key",
+            "edit-ue4ss-settings": "Edit UE4SS Settings",
+            "download-ue4ss": "Click here to download & install UE4SS",
+            "play-game": "Play Game",
+            "add-mods": "Add Mods"
         },
-
         "options": {
             "show-api-key": {
                 "name": "Show API Key",
-                "desc": "Show the Nexus Mods API key in plain text."
+                "desc": "Show the {{common.nexus}} API key in plain text."
             },
             "auto-boot": {
                 "name": "Launch At Startup",
@@ -158,6 +252,32 @@
             "language": {
                 "name": "Change Language [alpha]",
                 "desc": "Select from a range of supported languages"
+            }
+        },
+        "setup": {
+            "ready": {
+                "head": "Your Ready To Go!",
+                "body": ["Everything seems configured and ready to go. You can now use {{app.brandname}} to easily manage your {{game.name}} game mods using the buttons below!"]
+            },
+            "need-cache": {
+                "head": "{{common.warning}}",
+                "body": ["It appears you have not setup a valid directory for storing downloaded files and configuration.", "Please set the cache directory before continuing."]
+            },
+            "need-ue4ss": {
+                "head": "{{common.warning}}",
+                "body": ["It appears you do not have the Unreal Engine 4/5 Scripting System installed", "UE4SS is required for full mod functionality. It must be installed before continuing"]
+            },
+            "need-game": {
+                "head": "{{common.warning}}",
+                "body": ["It appears you have not set your Palworld game installation path.", "Please set the path to your Palworld game installation before continuing."]
+            },
+            "need-apik": {
+                "head": "{{common.warning}}",
+                "body": ["It appears you have not set your {{common.nexus}} API key.", "Please set the API key before continuing."]
+            },
+            "invalid-game": {
+                "head": "{{common.error}}",
+                "body": ["The path to your Palworld game installation is invalid.", "Please set a valid path to your Palworld game installation before continuing."]
             }
         }
     }

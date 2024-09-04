@@ -6,38 +6,19 @@
 
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import IconX from '@svgs/fa5/regular/window-close.svg';
-
-import Carousel from 'react-bootstrap/Carousel';
 import Button from 'react-bootstrap/Button';
 import Modal from 'react-bootstrap/Modal';
-// import Col from 'react-bootstrap/Col';
-// import Row from 'react-bootstrap/Row';
-
-// import useMediaQuery from '@hooks/useMediaQuery';
 import useScreenSize from '@hooks/useScreenSize';
-
-import MarkdownRenderer from '@components/markdown/renderer';
-import BBCodeRenderer from "@components/core/bbcode";
-
-import { ENVEntry } from '@components/modals/common';
-// import DekSelect from '@components/core/dek-select';
-import DekSwitch from '@components/core/dek-switch'
-import DekChoice from "@components/core/dek-choice";
-// import DekCheckbox from '@components/core/dek-checkbox';
-
-import ModFileCard from '@components/core/mod-file-card';
-import Link from "next/link";
-import { version } from "dompurify";
-
 import ModTable from '@components/core/mod-table';
 
+import useLocalization from '@hooks/useLocalization';
+import useSelectedGame from '@hooks/useSelectedGame';
+import wait from '@utils/wait';
 
-async function wait(milliseconds = 1000) {
-    return new Promise((r) => setTimeout(r, milliseconds));
-}
 
 export default function CheckModsModal({show,setShow}) {
-
+    const game = useSelectedGame();
+    const { t, tA } = useLocalization();
     const handleCancel = () => setShow(false);
     const {isDesktop} = useScreenSize();
     const fullscreen = !isDesktop;
@@ -267,99 +248,90 @@ export default function CheckModsModal({show,setShow}) {
     const height = fullscreen ? "calc(100vh - 182px)" : "calc(100vh / 4 * 2 + 26px)";
 
     // return the actual envmodal
-    return (
-        <Modal
-            show={show}
-            size="lg"
-            fullscreen={fullscreen}
-            onHide={handleCancel}
-            backdrop='static'
-            keyboard={false}
-            centered>
-            <Modal.Header className='p-4 theme-border '>
-                <Modal.Title className='col'>
-                    <strong>Check Installed Mods</strong>
-                </Modal.Title>
-                <Button
-                    variant='none'
-                    className='p-0 hover-danger no-shadow'
-                    onClick={handleCancel}>
-                    <IconX className='modalicon' fill='currentColor' />
-                </Button>
-            </Modal.Header>
-            <Modal.Body className="p-0">
+    return <Modal
+        show={show}
+        size="lg"
+        fullscreen={fullscreen}
+        onHide={handleCancel}
+        backdrop='static'
+        keyboard={false}
+        centered>
+        <Modal.Header className='p-4 theme-border '>
+            <Modal.Title className='col'>
+                <strong>{t('modals.check-mods.head')} ({mods.length})</strong>
+            </Modal.Title>
+            <Button
+                variant='none'
+                className='p-0 hover-danger no-shadow'
+                onClick={handleCancel}>
+                <IconX className='modalicon' fill='currentColor' />
+            </Button>
+        </Modal.Header>
+        <Modal.Body className="p-0">
+            {/* map mods into a table */}
+            {!shouldShowLogs && modConfig && <ModTable mods={mods.map(mod => {
+                const modConfigEntry = modConfig?.mods[mod.mod_id];
+                if (!modConfigEntry) return null;
+                const {file_id, file_name, version} = modConfigEntry;
+                return {
+                    ...mod,
+                    file_id,
+                    file_name,
+                    installed: true, 
+                    downloaded: true,
+                    latest: mod.version === version,
+                }
+            })} showStatus={true}/>}
+            {/* show the log messages while downloading/installing/validating */}
+            {shouldShowLogs && <div className='overflow-auto m-0 p-3' style={{height}} ref={logRef}>
+                <pre className='m-0 p-2'>{logMessages.join('\n')}</pre>
+            </div>}
+        </Modal.Body>
 
-                {/* map mods into a table */}
-                {!shouldShowLogs && modConfig && <ModTable mods={mods.map(mod => {
-                    const modConfigEntry = modConfig?.mods[mod.mod_id];
-                    if (!modConfigEntry) return null;
-                    const {file_id, file_name, version} = modConfigEntry;
-                    return {
-                        ...mod,
-                        file_id,
-                        file_name,
-                        installed: true, 
-                        downloaded: true,
-                        latest: mod.version === version,
-                    }
-                })} showStatus={true}/>}
-
-                {shouldShowLogs && <div className='overflow-auto m-0 p-3'
-                        style={{height}}
-                        ref={logRef}>
-
-                        <pre className='m-0 p-2'>
-                            {logMessages.join('\n')}
-                        </pre>
-                </div>}                
-
-            </Modal.Body>
-
-            <Modal.Footer className='d-block'>
-                <div className="row">
-                    {/* <div className='col-6 col-md-3 mb-2 mb-md-0 px-1'>
-                        <Button
-                            // size='sm'
-                            variant='primary'
-                            className='w-100'
-                            disabled={false}
-                            onClick={onCopyModList}>
-                            <strong>Copy JSON</strong>
-                        </Button>
-                    </div>
-                    <div className='col-6 col-md-3 mb-2 mb-md-0 px-1'>
-                        <Button
-                            // size='sm'
-                            variant='secondary'
-                            className='w-100'
-                            disabled={false}
-                            onClick={onSaveModList}>
-                            <strong>Save JSON</strong>
-                        </Button>
-                    </div> */}
-                    <div className='col-6 mb-2 mb-md-0 px-1'>
-                        <Button
-                            // size='sm'
-                            variant='warning'
-                            className='w-100'
-                            disabled={!updateButtonEnabled}
-                            onClick={onUpdateMods}>
-                            <strong>Update Mods</strong>
-                        </Button>
-                    </div>
-                    <div className='col-6 mb-0 mb-md-0 px-1'>
-                        <Button
-                            // size='sm'
-                            variant='success'
-                            className='w-100'
-                            disabled={false}
-                            onClick={onValidateFiles}>
-                            <strong>Validate Files</strong>
-                        </Button>
-                    </div>
+        <Modal.Footer className='d-block'>
+            <div className="row">
+                <div className='col-6 col-md-3 mb-2 mb-md-0 px-1'>
+                    <Button
+                        // size='sm'
+                        variant='primary'
+                        className='w-100'
+                        disabled={false}
+                        onClick={onCopyModList}>
+                        <strong>{t('modals.check-mods.copy-json')}</strong>
+                    </Button>
                 </div>
+                <div className='col-6 col-md-3 mb-2 mb-md-0 px-1'>
+                    <Button
+                        // size='sm'
+                        variant='secondary'
+                        className='w-100'
+                        disabled={false}
+                        onClick={onSaveModList}>
+                        <strong>{t('modals.check-mods.save-json')}</strong>
+                    </Button>
+                </div>
+                <div className='col-6 col-md-3 mb-2 mb-md-0 px-1'>
+                    <Button
+                        // size='sm'
+                        variant='warning'
+                        className='w-100'
+                        disabled={!updateButtonEnabled}
+                        onClick={onUpdateMods}>
+                        <strong>{t('modals.check-mods.update')}</strong>
+                    </Button>
+                </div>
+                <div className='col-6 col-md-3 mb-2 mb-md-0 px-1'>
+                    <Button
+                        // size='sm'
+                        variant='success'
+                        className='w-100'
+                        disabled={false}
+                        onClick={onValidateFiles}>
+                        <strong>{t('modals.check-mods.validate')}</strong>
+                    </Button>
+                </div>
+            </div>
 
-            </Modal.Footer>
-        </Modal>
-    );
+        </Modal.Footer>
+    </Modal>;
 }

@@ -5,5 +5,5 @@
 */
 import MarkdownPageWrapper from '@components/markdown/wrapper';
 export default function PrivacyPolicyPage({ modals }) {
-    return <MarkdownPageWrapper {...{ tagline: "Privacy Policy", filename: 'privacy' }} />;
+    return <MarkdownPageWrapper {...{ tagline: "/privacy.head", filename: 'privacy' }} />;
 }

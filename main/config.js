@@ -73,6 +73,8 @@ export default {
         // creates a random uuid on first boot,
         // that uuid is then used afterwords
         'uuid': randomUUID(),
+        // defines the default language to use for the app
+        'locale': 'en',
     },
 
     /**

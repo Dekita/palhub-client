@@ -21,59 +21,49 @@ import useAppLogger from '@hooks/useAppLogger';
 import wait from '@utils/wait';
 
 const SetupStep = ({step, handleUE4SSInstall}) => {
+    const { t, tA } = useLocalization();
+    const game = useSelectedGame();
+
+    // step = 5;
+
+    const pClasses = 'px-3 px-xl-5 mb-0';
+    const dangerCard = 'card bg-danger border-danger2 border my-4 p-3 text-center';
+    const successCard = 'card bg-success border-success2 border my-4 p-3 text-center';
+
     switch (step) {
-        case 0: return <div className='card bg-success border-success2 border my-4 p-3 text-center'>
-            <h4 className='mb-0'><strong>Your all set up!</strong></h4>
-            <p className='px-2 px-xl-5'>
-                Everything seems configured and ready to go. You can now use PalHUB client to easily manage your Palworld game mods using the buttons below!
-            </p>
-            <div className='row gap-2 px-3'>
+        case 0: return <div className={successCard}>
+            <h4 className='mb-0'><strong>{t('/settings.setup.ready.head', {game})}</strong></h4>
+            {tA('/settings.setup.ready.body', {game}).map((text, i) => <p key={i} className={pClasses}>{text}</p>)}
+            <div className='row gap-2 px-3 mt-3'>
                 <Link href='/play' className='col btn btn-dark p-3'>
-                    <strong>Play Game</strong>
+                    <strong>{t('/settings.buttons.play-game', {game})}</strong>
                 </Link>
                 <Link href='/mods' className='col btn btn-dark p-3'>
-                    <strong>Add Mods</strong>
+                    <strong>{t('/settings.buttons.add-mods', {game})}</strong>
                 </Link>
             </div>
         </div>;
-        case 1: return <div className='card bg-danger border-danger2 border mt-4 p-3 text-center'>
-            <h4 className='mb-0 text-warning'><strong>WARNING</strong></h4>
-            <p>
-                It appears you have not set your Palworld game installation path.<br />
-                Please set the path to your Palworld game installation before continuing.
-            </p>
+        case 1: return <div className={dangerCard}>
+            <h4 className='mb-0 text-warning'><strong>{t('/settings.setup.need-game.head', {game})}</strong></h4>
+            {tA('/settings.setup.need-game.body', {game}).map((text, i) => <p key={i} className={pClasses}>{text}</p>)}
         </div>;
-        case 2: return <div className='card bg-danger border-danger2 border mt-4 p-3 text-center'>
-            <h4 className='mb-0 text-warning'><strong>WARNING</strong></h4>
-            <p>
-                It appears you have not set your Nexus Mods API Key.<br />
-                Please set your API Key before continuing.
-            </p>
+        case 2: return <div className={dangerCard}>
+            <h4 className='mb-0 text-warning'><strong>{t('/settings.setup.need-apik.head', {game})}</strong></h4>
+            {tA('/settings.setup.need-apik.body', {game}).map((text, i) => <p key={i} className={pClasses}>{text}</p>)}
         </div>;
-        case 3: return <div className='card bg-danger border-danger2 border mt-4 p-3 text-center'>
-            <h4 className='mb-0 text-warning'><strong>WARNING</strong></h4>
-            <p>
-                It appears you have not set your PalHUB Cache Directory.<br />
-                Please set the path to your PalHUB cache directory before continuing.
-            </p>
+        case 3: return <div className={dangerCard}>
+            <h4 className='mb-0 text-warning'><strong>{t('/settings.setup.need-cache.head', {game})}</strong></h4>
+            {tA('/settings.setup.need-cache.body', {game}).map((text, i) => <p key={i} className={pClasses}>{text}</p>)}
         </div>;
-        case 4: return <div className='card bg-danger border-danger2 border mt-4 p-3 text-center'>
-            <h4 className='mb-0 text-warning'><strong>WARNING</strong></h4>
-            <p>
-                It appears you have not entered a <strong>valid</strong> Palworld game installation path.<br />
-                Please set the path to your Palworld game installation before continuing.
-            </p>
+        case 4: return <div className={dangerCard}>
+            <h4 className='mb-0 text-warning'><strong>{t('/settings.setup.invalid-game.head', {game})}</strong></h4>
+            {tA('/settings.setup.invalid-game.body', {game}).map((text, i) => <p key={i} className={pClasses}>{text}</p>)}
         </div>;
-        case 5: return <div className='card bg-danger border-danger2 border mt-4 p-3 text-center'>
-            <h4 className='mb-0 text-warning'><strong>WARNING</strong></h4>
-            <p>
-                It appears you do not have the Unreal Engine 4/5 Scripting System installed.<br />
-                UE4SS is required for full mod functionality. It must be installed before continuing.
-            </p>
-            <button
-                className='btn btn-warning p-3 w-100'
-                onClick={handleUE4SSInstall}>
-                <strong>Click here to download & install UE4SS</strong>
+        case 5: return <div className={dangerCard}>
+            <h4 className='mb-0 text-warning'><strong>{t('/settings.setup.need-ue4ss.head', {game})}</strong></h4>
+            {tA('/settings.setup.need-ue4ss.body', {game}).map((text, i) => <p key={i} className={pClasses}>{text}</p>)}
+            <button className='btn btn-warning p-3 w-100 mt-3' onClick={handleUE4SSInstall}>
+                <strong>{t('/settings.buttons.download-ue4ss', {game})}</strong>
             </button>
         </div>;
         default: return null;
@@ -81,7 +71,7 @@ const SetupStep = ({step, handleUE4SSInstall}) => {
 }
 
 export default function SettingsPage({modals, ThemeController}) {
-    const { t, tA, i18n, VALID_LANGUAGES } = useLocalization();
+    const { t, tA, changeLanguage, language, VALID_LANGUAGES } = useLocalization();
     const game = useSelectedGame();
     
     // initial settings data for the application
@@ -269,7 +259,7 @@ export default function SettingsPage({modals, ThemeController}) {
     return <React.Fragment>
         <InstallUe4ssModal show={showUE4SSInstall} setShow={setShowUE4SSInstall} />
         <Ue4ssSettingsModal show={showUE4SSSettings} setShow={setShowUE4SSSettings} />
-        <BrandHeader type='altsmall' tagline={t('app.brandname')} words={words} />
+        <BrandHeader type='altsmall' tagline={t('/settings.head')} words={words} />
 
         <div className="container">
             <div className="col-12 col-md-10 offset-0 offset-md-1 col-lg-8 offset-lg-2">
@@ -407,9 +397,9 @@ export default function SettingsPage({modals, ThemeController}) {
                     <DekChoice
                         className='pb-3'
                         choices={VALID_LANGUAGES}
-                        active={VALID_LANGUAGES.indexOf(i18n.language)}
+                        active={VALID_LANGUAGES.indexOf(language)}
                         onClick={(i,value)=>{
-                            i18n.changeLanguage(value);
+                            changeLanguage(value);
                         }}
                     />
 

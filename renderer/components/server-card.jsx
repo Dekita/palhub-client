@@ -92,14 +92,19 @@ import Col from 'react-bootstrap/Col';
 import Image from 'react-bootstrap/Image';
 import styles from '@styles/modcard.module.css';
 import Card from 'react-bootstrap/Card';
-import * as CommonIcons from 'config/common-icons';
 // import { SphereSpinner } from 'react-spinners-kit';
 import DOMPurify from 'dompurify';
-import Link from 'next/link';
+// import Link from 'next/link';
+
+import * as CommonIcons from '@config/common-icons';
+import useLocalization from '@hooks/useLocalization';
+import useSelectedGame from '@hooks/useSelectedGame';
 
 export default function ServerCardComponent({ server, onClick=()=>{}, ad=false }) {
     if (!server) server = DEFAULT_EXAMPLE_SERVER_LISTING;
     
+    const game = useSelectedGame();
+    const { t, tA } = useLocalization();    
     const IconComponent = CommonIcons.star;
     const realOnClick = () => onClick(server);
 

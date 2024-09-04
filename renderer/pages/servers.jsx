@@ -33,6 +33,8 @@ import { useRouter } from 'next/router';
 import useSwrJSON from '@hooks/useSwrJSON';
 
 import * as CommonIcons from '@config/common-icons';
+import useLocalization from '@hooks/useLocalization';
+import useSelectedGame from '@hooks/useSelectedGame';
 
 /**
 {
@@ -122,21 +124,10 @@ const BANNED_MODS = [];
 
 export default function ServersPage() {
     const router = useRouter();
-
+    const game = useSelectedGame();
+    const { t, tA } = useLocalization();
     const [showServerDetails, setShowServerDetails] = React.useState(false);
-    const [showModList, setShowModList] = React.useState(false);
-
-
     const [activeServer, setActiveServer] = React.useState(null);
-
-    const [modlistID, setModlistID] = React.useState(0);
-    const modlistTypes = ['Installed', 'Downloaded', 'Latest', 'Trending', 'Updated'];//, 'Tracked'];
-    const [mods, setMods] = React.useState([]);
-    const [ads, setAds] = React.useState([]);
-
-
-    const [modSearch, setModSearch] = React.useState('');
-    const modSearchRef = React.useRef(null);
 
     const {data, error, loading, mutate } = useSwrJSON(`https://palhub.dekitarpg.com/api/server-ping`);
     if (loading) return (<h1>Loading...</h1>);
@@ -145,11 +136,7 @@ export default function ServersPage() {
     console.log({data})
 
 
-    const show_ads = modlistID > 1;
-    const showSaveModList = modlistID === 0;
-    // https://www.nexusmods.com/palworld/mods/1204
-    const advertised_mods = [577, 1204, 146, 489];//1650, 487, 577, 489]//, 1204];//, 1314, 1650, 1640];
-
+    const show_ads = true;//
     const onRunCommonChecks = () => {
         return window && window.uStore && window.palhub;
     }
@@ -170,53 +157,21 @@ export default function ServersPage() {
     }, []);
 
 
-    // load initial settings from store
-    React.useEffect(() => {
-        (async () => {
-            if (!window.uStore) return console.error('uStore not loaded');
-            if (!window.palhub) return console.error('palhub not loaded');
-            if (!window.nexus) return console.error('nexus not loaded');
-
-            console.log({
-                uStore: window.uStore,
-                palhub: window.palhub,
-                nexus: window.nexus
-            })
-
-            const api_key = await window.uStore.get('api_key');
-            const game_path = await window.uStore.get('game_path');
-            const cache_dir = await window.uStore.get('cache_dir');
-
-            let new_mods = null;
-        })();
-    }, [modlistID]);
-
-    // console.log({mods, ads})
-    // console.log({server})
-
-
-
     const onClickServerCard = (mod) => {
         console.log('clicked server:', mod);
         setActiveServer(mod);
         setShowServerDetails(true);
     }
 
-
-    const banner_height = 256;
-
     const gold_mod = true;
-
+    const banner_height = 256;
     const color_a = gold_mod ? 'danger' : 'info';
     const color_b = gold_mod ? 'warning' : 'primary';
-
     const gradient_a = `bg-gradient-${color_a}-to-${color_b} border-${color_a}`;
     const gradient_b = `bg-${color_b} border-${color_a}`;
     const gradient_c = `bg-gradient-${color_b}-to-${color_a} border-${color_a}`;
 
-
     return <React.Fragment>
-
         <ServerDetailsModal show={showServerDetails} server={activeServer} setShow={setShowServerDetails} />
 
         <div className="container">
@@ -224,7 +179,7 @@ export default function ServersPage() {
                 <div className='position-relative'>
                     {/* main gradient background elements */}
                     <div className='row mb-4'  style={{height: banner_height}}>
-                        <div className={`col transition-all border border-4 border-end-0 borderp-5 radius9 no-radius-end ${gradient_a}`}></div>
+                        <div className={`col transition-all border border-4 border-end-0 p-5 radius9 no-radius-end ${gradient_a}`}></div>
                         <div className={`col transition-all border border-4 border-start-0 border-end-0 p-5 ${gradient_b}`}></div>
                         <div className={`col transition-all border border-4 border-start-0 p-5 radius9 no-radius-start ${gradient_c}`}></div>
                     </div>
@@ -233,51 +188,42 @@ export default function ServersPage() {
                         <div className='d-flex text-center'>
                             {/* create carousel with each ad as the items */}
                             <Carousel interval={6900} className='w-100' indicators={true} style={{height: 234}}>
-                                {data?.servers?.map((server, i) => {
-
-                                    // server.serverName = "DéKanto";
-                                    // server.serverDescription = "A server for the DéKanto modpack, featuring a variety of mods and custom content for Palworld.\nJoin us on Discord for more information and to get started!";
-                                    // server.splashURL = "https://staticdelivery.nexusmods.com/mods/6063/images/1313/1313-1712987634-744711640.png";
-
-                                    return <Carousel.Item key={i} className=''>
-                                        <div className='container-fluid'>
-                                            <div className='row mx-auto bg-dark cursor-pointer radius6' style={{maxWidth: 800}} onClick={()=>onClickServerCard(server)}>
-                                                <div className='col-12 col-lg-6 ps-lg-0 text-center'>
-                                                    <div className='position-relative'>
-                                                        <Image src={server.splashURL} alt={server.serverName} className='bg-transparent my-2' fluid style={{maxHeight: banner_height-56}}/>
-                                                        {/* <div className='d-lg-none py-3 text-center w-100 position-absolute top-0'>
-                                                            <h2 className='text-white bg-dark'>{mod.name}</h2>
-                                                        </div> */}
-                                                    </div>
-                                                </div>
-                                                <div className='d-none d-lg-block col-12 col-lg-6 ps-lg-0 h-100 py-3 text-start'>
-                                                    <h3 className='text-white mb-0'><strong>{server.serverName}</strong></h3>
-                                                    <small className='text-dark'><small>
-                                                        <div className='d-flex'>
-                                                            <div className='col-6'>
-                                                                {server.gameVersion}
-                                                            </div>
-                                                            <div className='col-6 text-end'>
-                                                                {/* <CommonIcons.account fill='currentColor' height="0.9rem" /> */}
-                                                                <span className='ps-1'>Players: {'??'} / {server.serverPlayerMaxNum}</span>
-                                                            </div>
-                                                        </div>
-                                                    </small></small>
-                                                    <hr className='my-3'/>
-                                                    <BBCodeRenderer bbcodeText={server.serverDescription || "No Description"} />
+                                {data?.servers?.map((server, i) => <Carousel.Item key={i} className=''>
+                                    <div className='container-fluid'>
+                                        <div className='row mx-auto bg-dark cursor-pointer radius6' style={{maxWidth: 800}} onClick={()=>onClickServerCard(server)}>
+                                            <div className='col-12 col-lg-6 ps-lg-0 text-center'>
+                                                <div className='position-relative'>
+                                                    <Image src={server.splashURL} alt={server.serverName} className='bg-transparent my-2' fluid style={{maxHeight: banner_height-56}}/>
+                                                    {/* <div className='d-lg-none py-3 text-center w-100 position-absolute top-0'>
+                                                        <h2 className='text-white bg-dark'>{mod.name}</h2>
+                                                    </div> */}
                                                 </div>
                                             </div>
-
-
+                                            <div className='d-none d-lg-block col-12 col-lg-6 ps-lg-0 h-100 py-3 text-start'>
+                                                <h3 className='text-white mb-0'><strong>{server.serverName}</strong></h3>
+                                                <small className='text-dark'><small>
+                                                    <div className='d-flex'>
+                                                        <div className='col-6'>
+                                                            {server.gameVersion}
+                                                        </div>
+                                                        <div className='col-6 text-end'>
+                                                            {/* <CommonIcons.account fill='currentColor' height="0.9rem" /> */}
+                                                            <span className='ps-1'>{t('/servers.players', {amount: server.playerCount, max: server.serverPlayerMaxNum})}</span>
+                                                        </div>
+                                                    </div>
+                                                </small></small>
+                                                <hr className='my-3'/>
+                                                <BBCodeRenderer bbcodeText={server.serverDescription || t('common.no-info')} />
+                                            </div>
                                         </div>
-                                    </Carousel.Item>
-                                })}
+                                    </div>
+                                </Carousel.Item>)}
                             </Carousel>
                         </div>
                         <div className='row'>
                             <div className='col text-end d-flex flex-column p-3'>
                                 <small className=''>
-                                    server listing powered by <Link href="https://dekitarpg.com" target='_blank' className='hover-dark text-warning'>DekitaRPG</Link>
+                                    {t('/servers.powered')} <Link href="https://dekitarpg.com" target='_blank' className='hover-dark text-warning'>{t('app.devname')}</Link>
                                 </small>
                             </div>
                         </div>
@@ -287,7 +233,7 @@ export default function ServersPage() {
 
                 <div className='row pt-2'>
                     <div className='col card bg-danger text-center p-3 border border-2 border-warning'>
-                        <strong>THE SERVER LISTING FEATURE IS CURRENTLY IN BETA</strong>
+                        <strong>{t('/servers.betawarn')}</strong>
                     </div>
                 </div>
 
@@ -306,9 +252,9 @@ export default function ServersPage() {
                                     </div>
                                 </div>
                                 <div className='anal-cavity px-2 mb-2 pt-2'>
-                                    <strong className='text-warning'>List Your Modified Server Here!!</strong>
-                                    <small className='text-dark'>-- FEATURE COMING SOON</small>
-                                    <span>Get access to the PalHUB API to list your server here, share it with the community, and get more players!</span>
+                                    <strong className='text-warning'>{t('/servers.list-button.head')}</strong>
+                                    <small className='text-dark'>{t('/servers.list-button.info')}</small>
+                                    <span>{t('/servers.list-button.span')}</span>
                                 </div>
                             </div>
                         </div>

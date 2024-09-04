@@ -14,7 +14,7 @@ import MetaHead from '@components/core/metahead';
 import Appbar from '@components/core/appbar';
 import Navbar from '@components/core/navbar';
 import Footer from '@components/core/footer';
-// import { SphereSpinner, PongSpinner } from 'react-spinners-kit';
+import { SphereSpinner, PongSpinner } from 'react-spinners-kit';
 
 function GoogleTagManager() {
     const enabled = process.env.GOOGLE_TAG_ENABLED;
@@ -102,7 +102,7 @@ export default function Layout({ children, ready }) {
             {!ready && <div className={`main-body h-full game-bg-full ${bg}`}>
                 <div className='h-100 d-flex justify-content-center align-items-center'>
                     <div className='d-grid text-center text-secondary'>
-                        {/* <PongSpinner color='currentColor' size={256} /> */}
+                        <PongSpinner color='currentColor' size={256} />
                         <strong className='mt-3'>Loading</strong>
                     </div>
                 </div>

@@ -4,9 +4,12 @@
 ########################################
 */
 import useScreenSize from '@hooks/useScreenSize';
+import useLocalization from '@hooks/useLocalization';
+import useSelectedGame from '@hooks/useSelectedGame';
 
 export default function ModTable({show,setShow, mods, showStatus=false}) {
-
+    const game = useSelectedGame();
+    const { t, tA } = useLocalization();
     const {isDesktop} = useScreenSize();
     const fullscreen = !isDesktop;
 
@@ -19,11 +22,11 @@ export default function ModTable({show,setShow, mods, showStatus=false}) {
     return <table className='table m-0'>
         <thead>
             <tr className="">
-                <th className={`bg-dark ${main_col_size}`}>Mod Name</th>
-                <th className="bg-dark text-center d-none d-md-table-cell">Author</th>
-                <th className="bg-dark text-center d-none d-sm-table-cell">Version</th>
-                <th className="bg-dark text-end">Mod/File ID</th>
-                {showStatus && <th className="bg-dark text-center">Status</th>}
+                <th className={`bg-dark ${main_col_size}`}>{t('modals.mod-table.name')}</th>
+                <th className="bg-dark text-center d-none d-md-table-cell">{t('modals.mod-table.author')}</th>
+                <th className="bg-dark text-center d-none d-sm-table-cell">{t('modals.mod-table.version')}</th>
+                <th className="bg-dark text-end">{t('modals.mod-table.modids')}</th>
+                {showStatus && <th className="bg-dark text-center">{t('modals.mod-table.status')}</th>}
             </tr>
         </thead>
         <tbody className='overflow-y-auto p-0 m-0' style={fullscreen?{height:"calc(100vh - 207px)"}:{height:"calc(100vh / 4 * 2)"}}>
@@ -36,22 +39,22 @@ export default function ModTable({show,setShow, mods, showStatus=false}) {
                     {showStatus && <td className="bg-dark col text-center py-1">
                         {mod.installed && !mod.latest && (
                             <span className='badge bg-warning border border-success2 w-100 py-2'>
-                                Can Update
+                                {t('common.can-update')}
                             </span>
                         )}
                         {mod.installed && mod.latest && (
                             <span className='badge bg-success border border-success2 w-100 py-2'>
-                                Installed
+                                {t('common.installed')}
                             </span>
                         )}
                         {mod.downloaded && !mod.installed && (
                             <span className='badge bg-primary border border-primary2 w-100 py-2'>
-                                Downloaded
+                                {t('common.downloaded')}
                             </span>
                         )}
                         {!mod.downloaded && !mod.installed && (
                             <span className='badge bg-danger border border-danger2 w-100 py-2'>
-                                Not On Disk
+                                {t('common.required')}
                             </span>
                         )}
                     </td>}
