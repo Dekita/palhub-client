@@ -10,10 +10,10 @@
 * how windows behave, and the pages loaded.
 */
 
-import { app, dialog, ipcMain, BrowserWindow, Menu, Tray, nativeImage, session } from "electron";
+import { app, dialog, ipcMain, BrowserWindow, Menu, Tray, nativeImage, shell, session } from "electron";
 import { autoUpdater } from "electron-updater";
 import createLogger, { LoggyBoi } from "../../utils/dek/logger";
-import { createWindow } from './create-window';
+import { createWindow } from "./create-window";
 import Store from "electron-store";
 import serve from "electron-serve";
 import path from "path";
@@ -47,7 +47,6 @@ const APP_VERSION = (() => {
     return PACKAGE_JSON.version;
 })();
 
-
 class DEAP {
     // quick reference to electron.app;
     static get app() {
@@ -72,7 +71,7 @@ class DEAP {
     /**
      * setup app using given config
      */
-    static setup(config = {}, callback=()=>{}) {
+    static setup(config = {}, callback = () => {}) {
         this._tray = null;
         this._windows = {};
         this._config = config;
@@ -84,9 +83,9 @@ class DEAP {
         });
         this.setUserAgent("dekitarpg.com");
         // setup global logfile
-        if (app.isPackaged) LoggyBoi.logpath = path.join(process.resourcesPath, '..', 'app.log'); // Packaged 
-        else LoggyBoi.logpath = path.join(app.getAppPath(), 'app.log'); // Development mode
-        
+        if (app.isPackaged) LoggyBoi.logpath = path.join(process.resourcesPath, "..", "app.log"); // Packaged
+        else LoggyBoi.logpath = path.join(app.getAppPath(), "app.log"); // Development mode
+
         LoggyBoi.setGlobalOptions({
             ...config.logger,
             file_options: {
@@ -98,20 +97,20 @@ class DEAP {
             //     host: '127.0.0.1',
             // }
         });
-        this.logger = createLogger('deap');
+        this.logger = createLogger("deap");
         this.logger.info(app.getAppPath());
         if (callback) callback(this);
     }
     static useLogger(id) {
         const logger = (action, ...args) => {
-            const {idtag} = this.logger; // get the current idtag
+            const { idtag } = this.logger; // get the current idtag
             this.logger.idtag = id; // set the idtag to the id
             DEAP.logger[action](...args); // log the action to the console
             DEAP.logger.idtag = idtag; // reset the idtag to previous value
-        }
-        const logkeys = ['log', 'info', 'warn', 'error', 'fatal'];
+        };
+        const logkeys = ["log", "info", "warn", "error", "fatal"];
         return logkeys.reduce((acc, key) => {
-            return {...acc, [key]: (...args) => logger(key, ...args)};
+            return { ...acc, [key]: (...args) => logger(key, ...args) };
         }, {});
     }
     static setInstanceLock(single) {
@@ -119,7 +118,7 @@ class DEAP {
     }
     static setDatastore(store_options) {
         this._datastore = new Store(store_options);
-        console.log('datastore:', this._datastore.store);
+        console.log("datastore:", this._datastore.store);
     }
     static setUserAgent(agent_str) {
         this._user_agent = `${APP_NAME} ${APP_VERSION} ${agent_str}`.trim();
@@ -135,6 +134,12 @@ class DEAP {
             if (key === "app") return app.getAppPath();
             return app.getPath(key);
         });
+        ipcMain.handle("open-external", (event, url) => {
+            shell.openExternal(url)
+        });
+        ipcMain.handle("open-file-location", (event, filepath) => {
+            shell.showItemInFolder(filepath);
+        });
         ipcMain.handle("open-file-dialog", async (event, options) => {
             if (options) {
                 return await dialog.showOpenDialog(options);
@@ -149,7 +154,7 @@ class DEAP {
             const filters = [{ name: "Stylesheet", extensions: ["css"] }];
             return await dialog.showSaveDialog({ filters });
         });
-        ipcMain.handle("get-config", async (event, key, defaultvalue=null) => {
+        ipcMain.handle("get-config", async (event, key, defaultvalue = null) => {
             return this._datastore.get(key, defaultvalue);
         });
         ipcMain.handle("set-config", async (event, key, value) => {
@@ -173,7 +178,7 @@ class DEAP {
             if (app.isPackaged) autoUpdater.quitAndInstall(true, true);
         });
         ipcMain.handle("app-action", async (event, id, action) => {
-            console.log('app-action:', id, action);
+            console.log("app-action:", id, action);
             switch (action) {
                 case "maximize": {
                     if (this._windows[id].isMaximized()) {
@@ -193,8 +198,8 @@ class DEAP {
         ipcMain.handle("get-window-id", async (event) => {
             return BrowserWindow.fromWebContents(event.sender)?.deap_id;
         });
-        ipcMain.handle('check-image-path', async (event, pathtocheck = this._config.app_icon.ico) => {
-            const thepath = path.join(__dirname, pathtocheck)
+        ipcMain.handle("check-image-path", async (event, pathtocheck = this._config.app_icon.ico) => {
+            const thepath = path.join(__dirname, pathtocheck);
             return {
                 path: thepath,
                 valid: !nativeImage.createFromPath(thepath).isEmpty(),
@@ -232,12 +237,9 @@ class DEAP {
             transparent: windoe_config.opts.transparent,
             webPreferences: {
                 preload: windoe_config.load,
-                // devTools: true, //!app.isPackaged,
-
                 enableRemoteModule: false,
                 nodeIntegration: false,
                 contextIsolation: true,
-                // contextIsolation: false,
             },
         });
         this._windows[id].setMenu(null);
@@ -289,10 +291,12 @@ class DEAP {
     // creates a system tray icon and defines its options
     static createTray(windoe) {
         let trayIcon;
-        if(!app.isPackaged) { // when in dev mode
-            trayIcon = this._config.app_icon.ico; 
-        } else { // fix for packaged app
-            trayIcon = path.join(__dirname, './icon.ico');
+        if (!app.isPackaged) {
+            // when in dev mode
+            trayIcon = this._config.app_icon.ico;
+        } else {
+            // fix for packaged app
+            trayIcon = path.join(__dirname, "./icon.ico");
         }
         this._tray = new Tray(nativeImage.createFromPath(trayIcon));
         const menu = this.createTrayMenu(windoe);
@@ -341,12 +345,12 @@ class DEAP {
         const openAtLogin = this._datastore.get("auto-boot");
         app.setLoginItemSettings({ openAtLogin });
     }
-    static launch(callbacks={}) {
+    static launch(callbacks = {}) {
         if (this._config.handle_rejections) {
-            process.on('unhandledRejection', this.logger.error);
+            process.on("unhandledRejection", this.logger.error);
         }
         if (this._config.handle_exceptions) {
-            process.on('uncaughtException', this.logger.error);
+            process.on("uncaughtException", this.logger.error);
         }
         app.on("ready", () => this.onAppReady(callbacks));
         app.on("activate", () => this.onAppActivate(callbacks));
@@ -358,7 +362,7 @@ class DEAP {
         // create window when electron has initialized.
         this.createWindow("main");
 
-        setTimeout(()=>{
+        setTimeout(() => {
             this.initializeAutoUpdater();
         }, 3000);
 
@@ -391,12 +395,12 @@ class DEAP {
         if (callbacks.onSecondInstanceLaunched) callbacks.onSecondInstanceLaunched(this);
     }
     static initializeAutoUpdater() {
-        console.log('initializing auto-updater:', app.isPackaged);
+        console.log("initializing auto-updater:", app.isPackaged);
         if (!app.isPackaged) {
-            this.main_window?.webContents?.send("auto-updater", 'not-packaged');
+            this.main_window?.webContents?.send("auto-updater", "not-packaged");
             return;
         }
-        this.main_window?.webContents?.send("auto-updater", 'initializing');
+        this.main_window?.webContents?.send("auto-updater", "initializing");
         // define listeners:
         const updater_events = ["checking-for-update", "update-available", "update-not-available", "download-progress", "update-downloaded", "before-quit-for-update", "error"];
         for (const event of updater_events) {
