@@ -3,6 +3,15 @@
 # PalHUB::Client by dekitarpg@gmail.com
 ########################################
 !?// EXAMPLE USAGE: 
+!?// add raw-loader to project to load .md and .json files
+yarn add raw-loader
+
+!?// Add rules to next..config.js for raw loading md/json files
+config.module.rules.push({
+    test: /\.(?:[a-zA-Z0-9]+)?\.(md|json)$/, 
+    use: 'raw-loader',
+});
+
 !?// import file from '@hooks/useLocalization';
 import useLocalization, { LocalizationProvider } from '@hooks/useLocalization';
 
@@ -58,7 +67,7 @@ export const LocalizationProvider = ({ children }) => {
         }
         if (Array.isArray(bundle_point)) return bundle_point; 
         if (typeof bundle_point !== 'string') return pointkey;
-        return bundle_point ?? pointkey;
+        return bundle_point;// ?? pointkey;
     }, [bundle]);
 
     // translate to string with replacers (inner function ~ not directly exposed)
@@ -77,7 +86,7 @@ export const LocalizationProvider = ({ children }) => {
         bundle_point = matches.reduce((acc, match) => {
             let data = replacers;//JSON.parse(JSON.stringify(replacers));
             for (const key of match.split('.')) {
-                if (data[key]) data = data[key];
+                if (data[key] !== undefined) data = data[key];
             }
             return acc.replaceAll(`{{${match}}}`, data);
         }, bundle_point);
