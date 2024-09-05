@@ -138,7 +138,7 @@ export default function ServerCardComponent({ server, onClick=()=>{}, ad=false }
                             </div>
                             <div className='col text-end'>
                                 {/* <CommonIcons.account fill='currentColor' height="0.9rem" /> */}
-                                <span className='ps-1'>Players: {server.playerCount} / {server.serverPlayerMaxNum}</span>
+                                <span className='ps-1'>{t('/servers.players', {server})}</span>
                             </div>
                         </div>
                     </small></small>
