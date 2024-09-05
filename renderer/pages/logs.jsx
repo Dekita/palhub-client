@@ -20,6 +20,8 @@ import useSelectedGame from '@hooks/useSelectedGame';
 //     return { props: {} };
 // };
 
+let app_log_path = null;
+let ue4ss_log_path = null; 
 
 export default function LogsPage(props) {
     const game = useSelectedGame();
@@ -32,13 +34,17 @@ export default function LogsPage(props) {
     const [scrollPosition, setScrollPosition] = React.useState(0);
     const [showScrollHelpers, setShowScrollHelpers] = React.useState(false);
 
+    const openFileLocation = React.useCallback(async() => {
+        const logPath = logPageID === 0 ? app_log_path : ue4ss_log_path;
+        try { await window.ipc.invoke('open-file-location', logPath) } 
+        catch (error) { applog('error', error.message) }
+    }, [logPageID]);
+
+
     React.useEffect(() => {
         // Ensure the palhub library is loaded
         if (!onRunCommonChecks()) return applog('error','modules not loaded');
         // if (!commonData) return;
-
-        let app_log_path = null;
-        let ue4ss_log_path = null; 
 
         // Listen for changes in the various watched files
         const removeWatchedFileChangeHandler = window.ipc.on('watched-file-change', (data, contents) => {
@@ -82,10 +88,6 @@ export default function LogsPage(props) {
         if (main_body) main_body.scrollTo(0, main_body.scrollHeight);
     }, []);
     
-    React.useEffect(scrollToBottom, [appLogs, ue4ssLogs, logPageID]);
-
-
-    
     // Handler for the scroll event
     React.useEffect(() => {
         const main_body = document.getElementById('main-body');
@@ -104,9 +106,10 @@ export default function LogsPage(props) {
         // Cleanup the event listener when the component unmounts
         return () => main_body.removeEventListener('scroll', handleScroll);
     }, []);  // The empty dependency array ensures this effect runs once when the component mounts
-  
 
-
+    // Scroll to the bottom of the logs when they change
+    React.useEffect(scrollToBottom, [appLogs, ue4ssLogs, logPageID]);
+    
     const logString = [appLogs, ue4ssLogs][logPageID];
 
     return <React.Fragment>
@@ -138,9 +141,14 @@ export default function LogsPage(props) {
                         }}
                     />
                 </div>
-                <div className='col-3 col-md-2 col-lg-1'>
+                <div className='col-8 col-md-3 col-lg-3 pb-3 pe-0'>
+                    <button className='btn btn-dark w-100' onClick={openFileLocation}>
+                        {t('/logs.open-file')}
+                    </button>
+                </div>
+                <div className='col-4 col-md-2 col-lg-1 pb-3'>
                     <button className='btn btn-info w-100' onClick={scrollToBottom}>
-                        <CommonIcons.arrow_down fill='currentColor' height="1.3rem" />
+                        <CommonIcons.arrow_down fill='currentColor' height="1.25rem" />
                     </button>
                 </div>
             </div>

@@ -143,7 +143,7 @@
         "name": "Servers",
         "desc": "Join custom servers with ease!",
         "betawarn": "THE SERVER LISTING FEATURE IS CURRENTLY IN BETA",
-        "players": "Players: {{amount}} / {{max}}",
+        "players": "Players: {{server.playerCount}} / {{server.serverPlayerMaxNum}}",
         "powered": "server listing powered by",
 
         "list-button": {
@@ -210,7 +210,8 @@
         "desc": "View the logs of the application and your games!",
         "head": "{{app.brandname}} Logs",
         "tabs": ["Application", "Game"],
-        "words": ["Printing game logs since 2024..."]
+        "words": ["Printing game logs since 2024..."],
+        "open-file": "Open File Location"
     },
     
     "/settings": {
