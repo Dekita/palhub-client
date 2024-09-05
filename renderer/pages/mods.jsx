@@ -74,7 +74,7 @@ export default function ModsPage() {
     const [modlistID, setModlistID] = React.useState(0);
     const [mods, setMods] = React.useState([]);
     const [ads, setAds] = React.useState([]);
-    const modlistTypes = tA('/mods.tabs') ?? [];
+    const modlistTypes = tA('/mods.tabs', 5) ?? [];
     const modSearchRef = React.useRef(null);
     
     const showSaveModList = modlistID === 0;

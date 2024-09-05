@@ -4,28 +4,27 @@
 ########################################
 */
 import React from 'react';
-import DOMPurify from 'dompurify';
-import * as CommonIcons from 'config/common-icons';
 import { fetcher } from "@hooks/useSwrJSON";
 import DekFileTree from '@components/core/dek-filetree';
-import { SphereSpinner } from 'react-spinners-kit';
 import BBCodeRenderer from "@components/core/bbcode";
-import { ProgressBar } from 'react-bootstrap';
-
 import OverlayTrigger from 'react-bootstrap/OverlayTrigger';
+import ProgressBar from 'react-bootstrap/ProgressBar';
 import Tooltip from 'react-bootstrap/Tooltip';
-import Popover from 'react-bootstrap/Popover';
+// import Popover from 'react-bootstrap/Popover';
+import * as CommonIcons from '@config/common-icons';
+import useLocalization from '@hooks/useLocalization';
+import useSelectedGame from '@hooks/useSelectedGame';
 
 export default function ModFileCard({mod, file}) {
+    const game = useSelectedGame();
+    const { t, tA, language } = useLocalization();    
     const [filetree, setFiletree] = React.useState(null);
     const [showFileTree, setShowFileTree] = React.useState(false);
     const [isDownloaded, setIsDownloaded] = React.useState(false);
     const [isInstalled, setIsInstalled] = React.useState(false);
-
     const [isDownloading, setIsDownloading] = React.useState(false);
     const [isInstalling, setIsInstalling] = React.useState(false);
     const [isUninstalling, setIsUninstalling] = React.useState(false);
-
     const [downloadProgress, setDownloadProgress] = React.useState(0);
 
     React.useEffect(() => {
@@ -185,32 +184,20 @@ export default function ModFileCard({mod, file}) {
 
     const buttonWidth = 54;
 
-
     return <div className='row' style={{minHeight:92}}>
         <div className={`col`}>
             <div className='row'>
                 <div className='col'>
-                    <h6 className={`pe-3 mb-0`}>v{file.version} - {file.file_name}</h6>
-                    <small className='text-dark'>uploaded: {new Date(file.uploaded_time).toLocaleString()}</small>
-                    <small className='text-dark'> - size: {bytesToSize(file.size_in_bytes)}</small>
+                    <h6 className={`pe-3 mb-0`}>{t('modals.mod-details.file-version', {file})}</h6>
+                    <small className='text-dark'>{t('modals.mod-details.file-info', {
+                        date: new Date(file.uploaded_time).toLocaleString(language ?? 'en', { dateStyle: 'medium', timeStyle: 'short' }), 
+                        size: bytesToSize(file.size_in_bytes),
+                    })}</small>
                 </div>
-                
                 <div className='col text-end pe-0' style={{maxWidth:108}}>
-                    {file.is_primary && (
-                        <span className='badge bg-secondary border border-secondary2 w-100'>
-                            suggested
-                        </span>
-                    )}
-                    {isInstalled && (
-                            <span className='badge bg-success border border-success2 w-100'>
-                                installed
-                            </span>
-                    )}
-                    {isDownloaded && !isInstalled && (
-                        <span className='badge bg-primary border border-primary2 w-100'>
-                            downloaded
-                        </span>
-                    )}
+                    {file.is_primary && <span className='badge bg-secondary border border-secondary2 w-100'>{t('common.suggested')}</span>}
+                    {isInstalled && <span className='badge bg-success border border-success2 w-100'>{t('common.installed')}</span>}
+                    {isDownloaded && !isInstalled && <span className='badge bg-primary border border-primary2 w-100'>{t('common.downloaded')}</span>}
                 </div>
             </div>
             
@@ -218,7 +205,7 @@ export default function ModFileCard({mod, file}) {
         </div>
         <div className="col text-end px-0" style={{maxWidth: 206}}>
             <OverlayTrigger placement={placement} delay={delay} overlay={
-                <Tooltip className="text-end">View File Tree</Tooltip>
+                <Tooltip className="text-end">{t('modals.mod-details.popups.view-tree')}</Tooltip>
             }>
                 <button
                     disabled={false}
@@ -230,7 +217,10 @@ export default function ModFileCard({mod, file}) {
             </OverlayTrigger>
 
             <OverlayTrigger placement={placement} delay={delay} overlay={
-                <Tooltip className="text-end">Virus Scan Results<br />(opens in default browser)</Tooltip>
+                <Tooltip className="text-end">
+                    {t('modals.mod-details.popups.view-scan')}<br />
+                    {t('common.open-link')}    
+                </Tooltip>
             }>
                 <a
                     disabled={false}
@@ -245,7 +235,7 @@ export default function ModFileCard({mod, file}) {
             
             {isDownloaded && isInstalled && (
             <OverlayTrigger placement={placement} delay={delay} overlay={
-                <Tooltip className="text-end">Uninstall mod files from your local palworld game directory.</Tooltip>
+                <Tooltip className="text-end">{t('modals.mod-details.popups.uninstall')}</Tooltip>
             }>
                 <button
                     disabled={false}
@@ -258,7 +248,7 @@ export default function ModFileCard({mod, file}) {
             
             {!isDownloaded && (
             <OverlayTrigger placement={placement} delay={delay} overlay={
-                <Tooltip className="text-end">Download Mod Files</Tooltip>
+                <Tooltip className="text-end">{t('modals.mod-details.popups.download')}</Tooltip>
             }>
                 <button
                     style={{minWidth: buttonWidth}}
@@ -271,7 +261,7 @@ export default function ModFileCard({mod, file}) {
 
             {isDownloaded && !isInstalled && (
             <OverlayTrigger placement={placement} delay={delay} overlay={
-                <Tooltip className="text-end">Install mod files to your local palworld game directory.</Tooltip>
+                <Tooltip className="text-end">{t('modals.mod-details.popups.install')}</Tooltip>
             }>
                 <button
                     disabled={false}
@@ -288,7 +278,7 @@ export default function ModFileCard({mod, file}) {
                     style={{minWidth: buttonWidth}}
                     className='btn hover-dark hover-danger col p-0'
                     onClick={onUninstallModCache}>
-                    remove files from cache
+                    {t('modals.mod-details.remove')}
                 </button>
             )}
 
@@ -298,7 +288,7 @@ export default function ModFileCard({mod, file}) {
                     style={{minWidth: buttonWidth}}
                     className='btn hover-dark hover-danger col p-0'
                     onClick={onUninstallModFiles}>
-                    uninstall mod files
+                    {t('modals.mod-details.uninstall')}
                 </button>
             )}
 
@@ -311,10 +301,6 @@ export default function ModFileCard({mod, file}) {
                     />
                 </div>
             )}
-
-            {/* <div className="d-flex justify-content-center p-3">
-                <SphereSpinner color='currentColor' />
-            </div> */}
         </div>
 
         {showFileTree && <DekFileTree data={filetree} />}

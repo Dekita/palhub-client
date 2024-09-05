@@ -18,13 +18,10 @@ import useSelectedGame from '@hooks/useSelectedGame';
 export default function FAQPage(props) {
     const { t, tA, tO } = useLocalization();
     const game = useSelectedGame();
-
     const tagline = t('/faq.head');
     const rawFAQs = tO('/faq.faqs') ?? [];
-    console.log({rawFAQs});
-    const questions = rawFAQs.map((v,i) => t(`/faq.faqs.${i}.q`));
     const answers = rawFAQs.map((v,i) => t(`/faq.faqs.${i}.a`));
-
+    const questions = rawFAQs.map((v,i) => t(`/faq.faqs.${i}.q`));
     return <React.Fragment>
         <BrandHeader type='altsmall' words={questions} tagline={tagline}/>
         <Container className='text-center py-5 noverflow'>

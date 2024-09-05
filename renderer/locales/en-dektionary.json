@@ -14,6 +14,7 @@
         "open-link": "opens in your default browser",
         "no-info": "No Information Available",
         "can-update": "Can Update",
+        "suggested": "Suggested",
         "installed": "Installed",
         "downloaded": "Downloaded",
         "required": "Not On Disk",
@@ -70,7 +71,19 @@
         },
         "mod-details": {
             "tabs": ["Details", "Download"],
-            "view-page": "View on {{common.nexus}}"
+            "view-page": "View on {{common.nexus}}",
+            "file-info": "Uploaded: {{date}} - {{size}}",
+            "file-version": "v{{file.version}} - {{file.file_name}}",
+            "remove": "Remove files from cache",
+            "uninstall": "Uninstall mod files",
+            "download": "Download mod files",
+            "popups": {
+                "view-tree": "View File Tree",
+                "view-scan": "Virus Scan Results",
+                "uninstall": "Uninstall mod files from your local game directory.",
+                "download": "Download mod files to the {{app.brandname}} cache directory.",
+                "install": "Install mod files to your local game directory."
+            }
         },
         "server-details": {
             "tabs": ["Details", "Settings", "Mods"],
@@ -151,6 +164,7 @@
     "/privacy": {
         "name": "Privacy",
         "desc": "Learn how we handle your data!",
+        "tldr": "tldr: we dont collect your data at all!",
         "head": "Privacy Policy"
     },
     

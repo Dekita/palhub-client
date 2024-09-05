@@ -5,7 +5,7 @@
 */
 
 import Head from 'next/head';
-import React, { useState, cloneElement, Children, useMemo, useEffect } from 'react';
+import React, { useState, cloneElement, Children, useMemo } from 'react';
 import { useRouter } from 'next/router';
 import useThemeSystem, { THEMES } from '@hooks/useThemeSystem';
 import useWindowNameFromDEAP from '@hooks/useWindowNameFromDEAP';
@@ -14,7 +14,8 @@ import MetaHead from '@components/core/metahead';
 import Appbar from '@components/core/appbar';
 import Navbar from '@components/core/navbar';
 import Footer from '@components/core/footer';
-import { SphereSpinner, PongSpinner } from 'react-spinners-kit';
+import { PongSpinner } from 'react-spinners-kit';
+import useLocalization from '@hooks/useLocalization';
 
 function GoogleTagManager() {
     const enabled = process.env.GOOGLE_TAG_ENABLED;
@@ -33,7 +34,9 @@ function GoogleTagManager() {
 }
 
 
-export default function Layout({ children, ready }) {
+export default function Layout({ children }) {
+    const { ready } = useLocalization();
+
     // const [showSettingsModal, setShowSettingsModal] = useState(false);
     const [theme_id, setThemeID, bg_id, setBgID] = useThemeSystem();
     const [showNavbarModal, setShowNavbarModal] = useState(false);
@@ -99,7 +102,8 @@ export default function Layout({ children, ready }) {
                 {can_show_navbar && <Footer />}
             </React.Fragment>}
             {/* A basic loading page for when app/localization is finished loading */}
-            {!ready && <div className={`main-body h-full game-bg-full ${bg}`}>
+            {/* deap-dragbar to still allow for the window to be moved while loading */}
+            {!ready && <div className={`main-body h-full game-bg-full ${bg} deap-dragbar`}>
                 <div className='h-100 d-flex justify-content-center align-items-center'>
                     <div className='d-grid text-center text-secondary'>
                         <PongSpinner color='currentColor' size={256} />

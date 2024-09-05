@@ -6,7 +6,6 @@
 import React from 'react';
 import BrandHeader from '@components/core/brand-header';
 import Container from 'react-bootstrap/Container';
-import Dektionary from 'config/dektionary';
 import DekChoice from '@components/core/dek-choice';
 
 import * as CommonIcons from '@config/common-icons';
@@ -23,9 +22,6 @@ import useSelectedGame from '@hooks/useSelectedGame';
 
 
 export default function LogsPage(props) {
-    const words = ['Printing game logs since 2024...'];
-    const title = `${Dektionary.brandname}: Logs`;
-
     const game = useSelectedGame();
     const { t, tA } = useLocalization();
     const applog = useAppLogger("LogsPage");
