@@ -4,21 +4,19 @@
 ########################################
 */
 
-import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import IconX from '@svgs/fa5/regular/window-close.svg';
 // import Carousel from 'react-bootstrap/Carousel';
 import Button from 'react-bootstrap/Button';
 import Modal from 'react-bootstrap/Modal';
-import ModTable from "@components/core/mod-table";
-import useAppLogger from "@hooks/useAppLogger";
-import useCommonChecks from "@hooks/useCommonChecks";
-import useModalResizer from "@hooks/useModalResizer";
-import wait from "@utils/wait";
-
+import ModTable from '@components/core/mod-table';
+import useAppLogger from '@hooks/useAppLogger';
+import useCommonChecks from '@hooks/useCommonChecks';
+import useModalResizer from '@hooks/useModalResizer';
+import wait from 'utils/wait';
 
 import useLocalization from '@hooks/useLocalization';
 import useSelectedGame from '@hooks/useSelectedGame';
-
 
 /**
 * Validate pasted JSON
@@ -50,24 +48,24 @@ Expected structure:
     }
 ]
 */
-    
-export default function LoadListModal({show,setShow}) {
+
+export default function LoadListModal({ show, setShow }) {
     const game = useSelectedGame();
     const { t, tA } = useLocalization();
-    const applog = useAppLogger("LoadListModal");
+    const applog = useAppLogger('LoadListModal');
     const [commonData, onRunCommonChecks] = useCommonChecks();
-    const {fullscreen, height} = useModalResizer();
+    const { fullscreen, height } = useModalResizer();
     const [logMessages, setLogMessages] = useState([]);
     const [isProcessing, setIsProcessing] = useState(false);
     const [isComplete, setIsComplete] = useState(false);
     const [mods, setMods] = useState(null);
     const logRef = useRef(null);
 
-    const addLogMessage = (message, applogtype=null) => {
-        setLogMessages(old => [...old, message]);
+    const addLogMessage = (message, applogtype = null) => {
+        setLogMessages((old) => [...old, message]);
         if (applogtype) applog(applogtype, message);
         if (logRef.current) {
-            setTimeout(() => logRef.current.scrollTop = logRef.current.scrollHeight);
+            setTimeout(() => (logRef.current.scrollTop = logRef.current.scrollHeight));
         }
     };
 
@@ -100,17 +98,17 @@ export default function LoadListModal({show,setShow}) {
         } catch (e) {
             return false;
         }
-    }
+    };
 
-    const processJSON = useCallback(async(json) => {
-        if (!onRunCommonChecks()) return applog('error','modules not loaded');
-        if (!json) return applog('error','json not found - unable to process');
+    const processJSON = useCallback(async (json) => {
+        if (!onRunCommonChecks()) return applog('error', 'modules not loaded');
+        if (!json) return applog('error', 'json not found - unable to process');
 
         // const api_key = await window.uStore.get('api_key');
         const game_path = await window.uStore.get('game_path');
         const cache_dir = await window.uStore.get('cache_dir');
 
-        // use mod as both 'mod' and 'file' for palhub checks, 
+        // use mod as both 'mod' and 'file' for palhub checks,
         for (const mod of json) {
             mod.downloaded = await window.palhub('checkModFileIsDownloaded', cache_dir, mod);
             mod.installed = await window.palhub('checkModIsInstalled', game_path, mod, mod);
@@ -119,7 +117,7 @@ export default function LoadListModal({show,setShow}) {
     }, []);
 
     const onClickedLoadFromFile = useCallback(async () => {
-        if (!onRunCommonChecks()) return applog('error','modules not loaded');
+        if (!onRunCommonChecks()) return applog('error', 'modules not loaded');
         applog('info', 'Loading Mod List From File');
 
         const result = await window.ipc.invoke('open-file-dialog', {
@@ -127,8 +125,8 @@ export default function LoadListModal({show,setShow}) {
             properties: ['openFile'],
             filters: [
                 { name: 'JSON Files', extensions: ['json'] },
-                { name: 'All Files', extensions: ['*'] }
-            ]
+                { name: 'All Files', extensions: ['*'] },
+            ],
         });
 
         if (result.filePaths.length === 0) return applog('error', 'No File Selected');
@@ -141,8 +139,8 @@ export default function LoadListModal({show,setShow}) {
         applog('info', `Loaded ${json.length} mods from file`);
     }, []);
 
-    const onTextAreaChange = useCallback(async(e) => {
-        if (!onRunCommonChecks()) return applog('error','modules not loaded');
+    const onTextAreaChange = useCallback(async (e) => {
+        if (!onRunCommonChecks()) return applog('error', 'modules not loaded');
         if (!e.target.value) return;
         applog('info', 'Loading Mod List From Pasted JSON');
 
@@ -173,9 +171,9 @@ export default function LoadListModal({show,setShow}) {
         applog('info', `Loaded ${json.length} mods from pasted JSON`);
     }, []);
 
-    const onClickedDownloadAndInstall = useCallback(async() => {
-        if (!onRunCommonChecks()) return applog('error','modules not loaded');
-        if (!mods) return applog('error','mods not found - unable to process');
+    const onClickedDownloadAndInstall = useCallback(async () => {
+        if (!onRunCommonChecks()) return applog('error', 'modules not loaded');
+        if (!mods) return applog('error', 'mods not found - unable to process');
 
         const api_key = await window.uStore.get('api_key');
         const game_path = await window.uStore.get('game_path');
@@ -199,15 +197,15 @@ export default function LoadListModal({show,setShow}) {
 
         const total = mods.length;
         for (const [index, mod] of mods.entries()) {
-            addLogMessage(`Processing Mod... ${index+1} / ${total}`);
+            addLogMessage(`Processing Mod... ${index + 1} / ${total}`);
 
             await wait(wait_between);
-            // check if mod is already downloaded 
+            // check if mod is already downloaded
             try {
                 if (!mod.downloaded) {
                     addLogMessage(`Getting Download URL: (${mod.mod_id}-${mod.file_id}) ${mod.name}`, 'info');
                     const file_links = await window.nexus(api_key, 'getDownloadURLs', mod.mod_id, mod.file_id);
-                    const download_url = file_links.find(link => !!link.URI)?.URI;
+                    const download_url = file_links.find((link) => !!link.URI)?.URI;
                     addLogMessage(`Mod Download URL: ${download_url}`, 'info');
                     const downloaded = await window.palhub('downloadMod', cache_dir, download_url, mod, mod);
                     addLogMessage(`Downloaded Mod... ${mod.name} - ${downloaded}`, 'info');
@@ -227,7 +225,7 @@ export default function LoadListModal({show,setShow}) {
             } catch (error) {
                 addLogMessage(`Error Installing Mod: ${mod.name}`, 'error');
                 addLogMessage(error.message, 'error');
-             }
+            }
             await wait(wait_between);
         }
 
@@ -238,80 +236,88 @@ export default function LoadListModal({show,setShow}) {
     }, [mods]);
 
     useEffect(() => {
-        if (!onRunCommonChecks()) return applog('error','modules not loaded');
-        const remove_dl_handler = window.ipc.on('download-mod-file', ({mod_id, file_id, percentage}) => {
+        if (!onRunCommonChecks()) return applog('error', 'modules not loaded');
+        const remove_dl_handler = window.ipc.on('download-mod-file', ({ mod_id, file_id, percentage }) => {
             addLogMessage(`Downloading Mod: ${mod_id} / ${file_id} - ${percentage}%`, 'info');
         });
-        const remove_in_handler = window.ipc.on('install-mod-file', ({install_path, name, version, mod_id, file_id, entries}) => {
-            addLogMessage(`Installing Mod: ${name} v${version} - (${mod_id}-${file_id})`, 'info');
-        });
-        const remove_ex_handler = window.ipc.on('extract-mod-file', ({entry, outputPath}) => {
+        const remove_in_handler = window.ipc.on(
+            'install-mod-file',
+            ({ install_path, name, version, mod_id, file_id, entries }) => {
+                addLogMessage(`Installing Mod: ${name} v${version} - (${mod_id}-${file_id})`, 'info');
+            }
+        );
+        const remove_ex_handler = window.ipc.on('extract-mod-file', ({ entry, outputPath }) => {
             addLogMessage(`Extracting: ${entry}`, 'info');
         });
         return () => {
             remove_dl_handler();
             remove_in_handler();
             remove_ex_handler();
-        }        
+        };
     }, []);
 
     const shouldShowLogs = isComplete || isProcessing;
 
-    return <Modal
-        show={show}
-        size="lg"
-        fullscreen={fullscreen}
-        onHide={handleCancel}
-        backdrop='static'
-        keyboard={false}
-        centered>
-        <Modal.Header className='p-4 theme-border '>
-            <Modal.Title className='col'>
-                <strong>{t('modals.load-mods.head')}</strong>
-            </Modal.Title>
-            {!isProcessing && <Button
-                variant='none'
-                className='p-0 hover-danger no-shadow'
-                onClick={handleCancel}>
-                <IconX className='modalicon' fill='currentColor' />
-            </Button>}
-        </Modal.Header>
-        <Modal.Body className="p-0">
-            {/* add area for logs */}
-            {shouldShowLogs && <div className='overflow-auto m-0 p-3' style={{height}} ref={logRef}>
-                <pre className='m-0 p-2'>{logMessages.join('\n')}</pre>
-            </div>}
-            {/* map mods into a table */}
-            {!shouldShowLogs && mods && <ModTable mods={mods} showStatus={true}/>}
-            {/* add area for users to paste json as text */}
-            {!shouldShowLogs && !mods && <div className='p-2'>
-                <textarea
-                    className='form-control form-secondary overflow-y-auto m-0' 
-                    placeholder={t('modals.load-mods.help')}
-                    style={{resize: 'none', height}}
-                    onChange={onTextAreaChange}
-                />
-            </div>}
-        </Modal.Body>
-        {!shouldShowLogs && <Modal.Footer className='d-flex justify-content-center'>
-            {mods && <Button
-                variant='danger'
-                className='col p-2 px-3'
-                onClick={()=> setMods(null)}>
-                <strong>{t('common.cancel')}</strong>
-            </Button>}
-            {mods && <Button
-                variant='success'
-                className='col p-2 px-3'
-                onClick={onClickedDownloadAndInstall}>
-                <strong>{t('modals.load-mods.load')}</strong>
-            </Button>}
-            {!mods && <Button
-                variant='secondary'
-                className='col p-2 px-3'
-                onClick={onClickedLoadFromFile}>
-                <strong>{t('modals.check-mods.load-json')}</strong>
-            </Button>}
-        </Modal.Footer>}
-    </Modal>;
+    return (
+        <Modal
+            show={show}
+            size="lg"
+            fullscreen={fullscreen}
+            onHide={handleCancel}
+            backdrop="static"
+            keyboard={false}
+            centered
+        >
+            <Modal.Header className="p-4 theme-border ">
+                <Modal.Title className="col">
+                    <strong>{t('modals.load-mods.head')}</strong>
+                </Modal.Title>
+                {!isProcessing && (
+                    <Button variant="none" className="p-0 hover-danger no-shadow" onClick={handleCancel}>
+                        <IconX className="modalicon" fill="currentColor" />
+                    </Button>
+                )}
+            </Modal.Header>
+            <Modal.Body className="p-0">
+                {/* add area for logs */}
+                {shouldShowLogs && (
+                    <div className="overflow-auto m-0 p-3" style={{ height }} ref={logRef}>
+                        <pre className="m-0 p-2">{logMessages.join('\n')}</pre>
+                    </div>
+                )}
+                {/* map mods into a table */}
+                {!shouldShowLogs && mods && <ModTable mods={mods} showStatus={true} />}
+                {/* add area for users to paste json as text */}
+                {!shouldShowLogs && !mods && (
+                    <div className="p-2">
+                        <textarea
+                            className="form-control form-secondary overflow-y-auto m-0"
+                            placeholder={t('modals.load-mods.help')}
+                            style={{ resize: 'none', height }}
+                            onChange={onTextAreaChange}
+                        />
+                    </div>
+                )}
+            </Modal.Body>
+            {!shouldShowLogs && (
+                <Modal.Footer className="d-flex justify-content-center">
+                    {mods && (
+                        <Button variant="danger" className="col p-2 px-3" onClick={() => setMods(null)}>
+                            <strong>{t('common.cancel')}</strong>
+                        </Button>
+                    )}
+                    {mods && (
+                        <Button variant="success" className="col p-2 px-3" onClick={onClickedDownloadAndInstall}>
+                            <strong>{t('modals.load-mods.load')}</strong>
+                        </Button>
+                    )}
+                    {!mods && (
+                        <Button variant="secondary" className="col p-2 px-3" onClick={onClickedLoadFromFile}>
+                            <strong>{t('modals.check-mods.load-json')}</strong>
+                        </Button>
+                    )}
+                </Modal.Footer>
+            )}
+        </Modal>
+    );
 }

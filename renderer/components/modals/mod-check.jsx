@@ -4,7 +4,7 @@
 ########################################
 */
 
-import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import IconX from '@svgs/fa5/regular/window-close.svg';
 import Button from 'react-bootstrap/Button';
 import Modal from 'react-bootstrap/Modal';
@@ -13,14 +13,13 @@ import ModTable from '@components/core/mod-table';
 
 import useLocalization from '@hooks/useLocalization';
 import useSelectedGame from '@hooks/useSelectedGame';
-import wait from '@utils/wait';
+import wait from 'utils/wait';
 
-
-export default function CheckModsModal({show,setShow}) {
+export default function CheckModsModal({ show, setShow }) {
     const game = useSelectedGame();
     const { t, tA } = useLocalization();
     const handleCancel = () => setShow(false);
-    const {isDesktop} = useScreenSize();
+    const { isDesktop } = useScreenSize();
     const fullscreen = !isDesktop;
 
     // if (!mod) mod = {name: 'n/a', author: 'n/a', summary: 'n/a', description: 'n/a', picture_url: 'n/a'};
@@ -35,12 +34,11 @@ export default function CheckModsModal({show,setShow}) {
     const [logMessages, setLogMessages] = useState([]);
     const logRef = useRef(null);
 
-
     const addLogMessage = (message) => {
-        setLogMessages(old => [...old, message]);
+        setLogMessages((old) => [...old, message]);
         setTimeout(() => {
             if (!logRef?.current) return;
-            logRef.current.scrollTop = logRef.current.scrollHeight
+            logRef.current.scrollTop = logRef.current.scrollHeight;
         });
     };
 
@@ -49,16 +47,19 @@ export default function CheckModsModal({show,setShow}) {
     };
 
     const prepareModList = (mods, modConfig) => {
-        return JSON.stringify(mods.map(mod => ({
-            name: mod.name,
-            mod_id: mod.mod_id,
-            author: mod.author,
-            version: mod.version,
-            file_id: modConfig.mods[mod.mod_id].file_id,
-            file_name: modConfig.mods[mod.mod_id].file_name,
-        })), null, 4).trim();
-    }
-
+        return JSON.stringify(
+            mods.map((mod) => ({
+                name: mod.name,
+                mod_id: mod.mod_id,
+                author: mod.author,
+                version: mod.version,
+                file_id: modConfig.mods[mod.mod_id].file_id,
+                file_name: modConfig.mods[mod.mod_id].file_name,
+            })),
+            null,
+            4
+        ).trim();
+    };
 
     const onCopyModList = useCallback(() => {
         const json = prepareModList(mods, modConfig);
@@ -66,12 +67,12 @@ export default function CheckModsModal({show,setShow}) {
     }, [mods, modConfig]);
 
     const onSaveModList = useCallback(() => {
-        // download json document: 
+        // download json document:
         const element = document.createElement('a');
         const json = prepareModList(mods, modConfig);
-        const file = new Blob([json], {type: 'application/json'});
+        const file = new Blob([json], { type: 'application/json' });
         element.href = URL.createObjectURL(file);
-        element.download = "mod-list-filename.json";
+        element.download = 'mod-list-filename.json';
         document.body.appendChild(element); // Required for this to work in FireFox
         element.click();
         document.body.removeChild(element);
@@ -80,13 +81,13 @@ export default function CheckModsModal({show,setShow}) {
 
     const checkLatestIsNewer = (installed, latest) => {
         // remove all characters to ensure strings are only numbers
-        const splitter = str => str.split('.').map(e => e.replace(/\D/g, ''));
+        const splitter = (str) => str.split('.').map((e) => e.replace(/\D/g, ''));
         const [i_major, i_minor, i_patch] = splitter(installed).map(Number);
         const [l_major, l_minor, l_patch] = splitter(latest).map(Number);
         return i_major < l_major || i_minor < l_minor || i_patch < l_patch;
-    }
+    };
 
-    const onUpdateMods = useCallback(async() => {
+    const onUpdateMods = useCallback(async () => {
         resetLogMessages();
         setShouldShowLogs(true);
 
@@ -99,7 +100,7 @@ export default function CheckModsModal({show,setShow}) {
 
         const total = mods.length;
         for (const [index, mod] of mods.entries()) {
-            addLogMessage(`Processing Mod... ${index+1} / ${total}`);
+            addLogMessage(`Processing Mod... ${index + 1} / ${total}`);
 
             const latest = mod.version;
             const installed = modConfig.mods[mod.mod_id].version;
@@ -110,15 +111,14 @@ export default function CheckModsModal({show,setShow}) {
 
             try {
                 addLogMessage(`Getting Latest Version: ${mod.name}`);
-                const {files} = await window.nexus(api_key, 'getModFiles', mod.mod_id);
-                files.sort((a,b) => b.uploaded_timestamp - a.uploaded_timestamp);
-                const latest_file = files.find(file => file.version === latest);
-    
-    
+                const { files } = await window.nexus(api_key, 'getModFiles', mod.mod_id);
+                files.sort((a, b) => b.uploaded_timestamp - a.uploaded_timestamp);
+                const latest_file = files.find((file) => file.version === latest);
+
                 addLogMessage(`Getting Download Link: ${mod.name}`);
                 const file_links = await window.nexus(api_key, 'getDownloadURLs', mod.mod_id, latest_file.file_id);
-                const download_url = file_links.find(link => !!link.URI)?.URI;
-                console.log({mod, latest_file, file_links, download_url});
+                const download_url = file_links.find((link) => !!link.URI)?.URI;
+                console.log({ mod, latest_file, file_links, download_url });
 
                 try {
                     addLogMessage(`Downloading Mod From: ${download_url}`);
@@ -127,32 +127,31 @@ export default function CheckModsModal({show,setShow}) {
                     console.log('download error:', error);
                     addLogMessage(error);
                 }
-    
+
                 await wait(wait_between);
 
                 try {
                     const install = await window.palhub('installMod', cache_dir, game_path, mod, latest_file);
-    
+
                     await wait(wait_between);
                     addLogMessage(`Successfully Installed Mod: ${mod.name}`);
-                    console.log({install});
+                    console.log({ install });
                 } catch (error) {
                     console.log('install error:', error);
                     addLogMessage(error);
                 }
-                await wait(wait_between);                
-
+                await wait(wait_between);
             } catch (error) {
                 console.log('download error:', error);
                 addLogMessage(error);
             }
         }
 
-        await wait(wait_between);                
+        await wait(wait_between);
         setShouldShowLogs(false);
     }, [mods, modConfig]);
 
-    const onValidateFiles = useCallback(async() => {
+    const onValidateFiles = useCallback(async () => {
         resetLogMessages();
         setShouldShowLogs(true);
 
@@ -164,12 +163,11 @@ export default function CheckModsModal({show,setShow}) {
         await wait(wait_between);
 
         const total = mods.length;
-        
-        
+
         for (const [index, mod] of mods.entries()) {
-            addLogMessage(`Processing Mod... ${index+1} / ${total}`);
+            addLogMessage(`Processing Mod... ${index + 1} / ${total}`);
             try {
-                console.log(mod)
+                console.log(mod);
                 const file = modConfig.mods[mod.mod_id];
                 const result = await window.palhub('validateModFiles', game_path, mod, file);
                 addLogMessage(`Validation Successful: ${mod.name} - ${result}`);
@@ -184,16 +182,14 @@ export default function CheckModsModal({show,setShow}) {
         setShouldShowLogs(false);
     }, [mods, modConfig]);
 
-
     const updateButtonEnabled = useMemo(() => {
         if (!mods || !modConfig) return false;
-        return mods.some(mod => {
+        return mods.some((mod) => {
             const latest = mod.version;
             const installed = modConfig.mods[mod.mod_id].version;
             return checkLatestIsNewer(installed, latest);
         });
     }, [mods, modConfig]);
-
 
     useEffect(() => {
         (async () => {
@@ -209,9 +205,13 @@ export default function CheckModsModal({show,setShow}) {
             const config = await window.palhub('readJSON', game_path);
             if (!config) return console.error('config not loaded');
             const mod_ids = Object.keys(config?.mods || []);
-            setMods(await Promise.all(mod_ids.map(async mod_id => {
-                return await window.nexus(api_key, 'getModInfo', mod_id);
-            })));
+            setMods(
+                await Promise.all(
+                    mod_ids.map(async (mod_id) => {
+                        return await window.nexus(api_key, 'getModInfo', mod_id);
+                    })
+                )
+            );
             setModConfig(config);
         })();
     }, [shouldShowLogs]);
@@ -219,16 +219,19 @@ export default function CheckModsModal({show,setShow}) {
     useEffect(() => {
         if (!window.ipc) return console.error('ipc not loaded');
 
-        const remove_dl_handler = window.ipc.on('download-mod-file', ({mod_id, file_id, percentage}) => {
+        const remove_dl_handler = window.ipc.on('download-mod-file', ({ mod_id, file_id, percentage }) => {
             addLogMessage(`Downloading Mod: ${mod_id} / ${file_id} - ${percentage}%`);
         });
 
-        const remove_in_handler = window.ipc.on('install-mod-file', ({install_path, name, version, mod_id, file_id, entries}) => {
-            addLogMessage(`Installing Mod: ${name} v${version}`);
-            // console.log({install_path, mod_id, file_id, entries});
-        });
+        const remove_in_handler = window.ipc.on(
+            'install-mod-file',
+            ({ install_path, name, version, mod_id, file_id, entries }) => {
+                addLogMessage(`Installing Mod: ${name} v${version}`);
+                // console.log({install_path, mod_id, file_id, entries});
+            }
+        );
 
-        const remove_ex_handler = window.ipc.on('extract-mod-file', ({entry, outputPath}) => {
+        const remove_ex_handler = window.ipc.on('extract-mod-file', ({ entry, outputPath }) => {
             addLogMessage(`Extracting: ${entry}`);
             // console.log({entry, outputPath});
         });
@@ -240,98 +243,110 @@ export default function CheckModsModal({show,setShow}) {
             remove_dl_handler();
             remove_in_handler();
             remove_ex_handler();
-        }        
+        };
     }, []);
 
-    console.log({mods, modConfig});
+    console.log({ mods, modConfig });
 
-    const height = fullscreen ? "calc(100vh - 182px)" : "calc(100vh / 4 * 2 + 26px)";
+    const height = fullscreen ? 'calc(100vh - 182px)' : 'calc(100vh / 4 * 2 + 26px)';
 
     // return the actual envmodal
-    return <Modal
-        show={show}
-        size="lg"
-        fullscreen={fullscreen}
-        onHide={handleCancel}
-        backdrop='static'
-        keyboard={false}
-        centered>
-        <Modal.Header className='p-4 theme-border '>
-            <Modal.Title className='col'>
-                <strong>{t('modals.check-mods.head')} ({mods.length})</strong>
-            </Modal.Title>
-            <Button
-                variant='none'
-                className='p-0 hover-danger no-shadow'
-                onClick={handleCancel}>
-                <IconX className='modalicon' fill='currentColor' />
-            </Button>
-        </Modal.Header>
-        <Modal.Body className="p-0">
-            {/* map mods into a table */}
-            {!shouldShowLogs && modConfig && <ModTable mods={mods.map(mod => {
-                const modConfigEntry = modConfig?.mods[mod.mod_id];
-                if (!modConfigEntry) return null;
-                const {file_id, file_name, version} = modConfigEntry;
-                return {
-                    ...mod,
-                    file_id,
-                    file_name,
-                    installed: true, 
-                    downloaded: true,
-                    latest: mod.version === version,
-                }
-            })} showStatus={true}/>}
-            {/* show the log messages while downloading/installing/validating */}
-            {shouldShowLogs && <div className='overflow-auto m-0 p-3' style={{height}} ref={logRef}>
-                <pre className='m-0 p-2'>{logMessages.join('\n')}</pre>
-            </div>}
-        </Modal.Body>
+    return (
+        <Modal
+            show={show}
+            size="lg"
+            fullscreen={fullscreen}
+            onHide={handleCancel}
+            backdrop="static"
+            keyboard={false}
+            centered
+        >
+            <Modal.Header className="p-4 theme-border ">
+                <Modal.Title className="col">
+                    <strong>
+                        {t('modals.check-mods.head')} ({mods.length})
+                    </strong>
+                </Modal.Title>
+                <Button variant="none" className="p-0 hover-danger no-shadow" onClick={handleCancel}>
+                    <IconX className="modalicon" fill="currentColor" />
+                </Button>
+            </Modal.Header>
+            <Modal.Body className="p-0">
+                {/* map mods into a table */}
+                {!shouldShowLogs && modConfig && (
+                    <ModTable
+                        mods={mods.map((mod) => {
+                            const modConfigEntry = modConfig?.mods[mod.mod_id];
+                            if (!modConfigEntry) return null;
+                            const { file_id, file_name, version } = modConfigEntry;
+                            return {
+                                ...mod,
+                                file_id,
+                                file_name,
+                                installed: true,
+                                downloaded: true,
+                                latest: mod.version === version,
+                            };
+                        })}
+                        showStatus={true}
+                    />
+                )}
+                {/* show the log messages while downloading/installing/validating */}
+                {shouldShowLogs && (
+                    <div className="overflow-auto m-0 p-3" style={{ height }} ref={logRef}>
+                        <pre className="m-0 p-2">{logMessages.join('\n')}</pre>
+                    </div>
+                )}
+            </Modal.Body>
 
-        <Modal.Footer className='d-block'>
-            <div className="row">
-                <div className='col-6 col-md-3 mb-2 mb-md-0 px-1'>
-                    <Button
-                        // size='sm'
-                        variant='primary'
-                        className='w-100'
-                        disabled={false}
-                        onClick={onCopyModList}>
-                        <strong>{t('modals.check-mods.copy-json')}</strong>
-                    </Button>
+            <Modal.Footer className="d-block">
+                <div className="row">
+                    <div className="col-6 col-md-3 mb-2 mb-md-0 px-1">
+                        <Button
+                            // size='sm'
+                            variant="primary"
+                            className="w-100"
+                            disabled={false}
+                            onClick={onCopyModList}
+                        >
+                            <strong>{t('modals.check-mods.copy-json')}</strong>
+                        </Button>
+                    </div>
+                    <div className="col-6 col-md-3 mb-2 mb-md-0 px-1">
+                        <Button
+                            // size='sm'
+                            variant="secondary"
+                            className="w-100"
+                            disabled={false}
+                            onClick={onSaveModList}
+                        >
+                            <strong>{t('modals.check-mods.save-json')}</strong>
+                        </Button>
+                    </div>
+                    <div className="col-6 col-md-3 mb-2 mb-md-0 px-1">
+                        <Button
+                            // size='sm'
+                            variant="warning"
+                            className="w-100"
+                            disabled={!updateButtonEnabled}
+                            onClick={onUpdateMods}
+                        >
+                            <strong>{t('modals.check-mods.update')}</strong>
+                        </Button>
+                    </div>
+                    <div className="col-6 col-md-3 mb-2 mb-md-0 px-1">
+                        <Button
+                            // size='sm'
+                            variant="success"
+                            className="w-100"
+                            disabled={false}
+                            onClick={onValidateFiles}
+                        >
+                            <strong>{t('modals.check-mods.validate')}</strong>
+                        </Button>
+                    </div>
                 </div>
-                <div className='col-6 col-md-3 mb-2 mb-md-0 px-1'>
-                    <Button
-                        // size='sm'
-                        variant='secondary'
-                        className='w-100'
-                        disabled={false}
-                        onClick={onSaveModList}>
-                        <strong>{t('modals.check-mods.save-json')}</strong>
-                    </Button>
-                </div>
-                <div className='col-6 col-md-3 mb-2 mb-md-0 px-1'>
-                    <Button
-                        // size='sm'
-                        variant='warning'
-                        className='w-100'
-                        disabled={!updateButtonEnabled}
-                        onClick={onUpdateMods}>
-                        <strong>{t('modals.check-mods.update')}</strong>
-                    </Button>
-                </div>
-                <div className='col-6 col-md-3 mb-2 mb-md-0 px-1'>
-                    <Button
-                        // size='sm'
-                        variant='success'
-                        className='w-100'
-                        disabled={false}
-                        onClick={onValidateFiles}>
-                        <strong>{t('modals.check-mods.validate')}</strong>
-                    </Button>
-                </div>
-            </div>
-
-        </Modal.Footer>
-    </Modal>;
+            </Modal.Footer>
+        </Modal>
+    );
 }

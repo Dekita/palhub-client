@@ -12,7 +12,7 @@
 // 2. This function is more flexible and can be used to replace a specific key-value pair in a specific section.
 // 3. This function does NOT require the entire ini file to be parsed and stringified, thus, comments and formatting are preserved.
 // 
-export default function (iniContentString, section, key, newValue) {
+export default function replaceIniKey(iniContentString, section, key, newValue) {
     // Create a regular expression to match the specific section and key
     const sectionRegex = new RegExp(`\\[${section}\\][\\s\\S]*?${key}\\s*=\\s*.*`, 'g');
     // Create a replacer function that replaces the old value with the new value

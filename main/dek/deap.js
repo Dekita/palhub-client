@@ -12,7 +12,7 @@
 
 import { app, dialog, ipcMain, BrowserWindow, Menu, Tray, nativeImage, shell, session } from "electron";
 import { autoUpdater } from "electron-updater";
-import createLogger, { LoggyBoi } from "../../utils/dek/logger";
+import createLogger, { LoggyBoi } from "./logger";
 import { createWindow } from "./create-window";
 import Store from "electron-store";
 import serve from "electron-serve";

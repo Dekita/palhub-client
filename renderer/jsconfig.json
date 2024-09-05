@@ -2,9 +2,9 @@
     "compilerOptions": {
         "baseUrl": ".",
         "paths": {
-            "@utils/*": ["../utils/*"],
+            "@utils/*": ["utils/*"],
             "@hooks/*": ["hooks/*"],
-            "@dek/*": ["../utils/dek/*"],
+            "@dek/*": ["utils/dek/*"],
             "@config/*": ["config/*"],
             "@styles/*": ["styles/*"],
             "@svgs/*": ["public/svgs/*"],
