@@ -208,7 +208,7 @@ export default function ServersPage() {
                                                         </div>
                                                         <div className='col-6 text-end'>
                                                             {/* <CommonIcons.account fill='currentColor' height="0.9rem" /> */}
-                                                            <span className='ps-1'>{t('/servers.players', {amount: server.playerCount, max: server.serverPlayerMaxNum})}</span>
+                                                            <span className='ps-1'>{t('/servers.players', {server})}</span>
                                                         </div>
                                                     </div>
                                                 </small></small>
