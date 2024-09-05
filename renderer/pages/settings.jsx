@@ -20,6 +20,8 @@ import useSelectedGame from '@hooks/useSelectedGame';
 import useAppLogger from '@hooks/useAppLogger';
 import wait from '@utils/wait';
 
+import checkIsDevEnvironment from '@utils/isDevEnv';
+
 const SetupStep = ({step, handleUE4SSInstall}) => {
     const { t, tA } = useLocalization();
     const game = useSelectedGame();
@@ -72,6 +74,7 @@ const SetupStep = ({step, handleUE4SSInstall}) => {
 
 export default function SettingsPage({modals, ThemeController}) {
     const { t, tA, changeLanguage, language, VALID_LANGUAGES } = useLocalization();
+    const isDevEnvironment = checkIsDevEnvironment();
     const game = useSelectedGame();
     
     // initial settings data for the application
@@ -390,19 +393,21 @@ export default function SettingsPage({modals, ThemeController}) {
                         </button>
                     </div> */}   
 
-                    <ENVEntryLabel 
-                        name={t('/settings.options.language.name')} 
-                        tooltip={t('/settings.options.language.desc')} 
-                    />
-                    <DekChoice
-                        className='pb-3'
-                        choices={VALID_LANGUAGES}
-                        active={VALID_LANGUAGES.indexOf(language)}
-                        onClick={(i,value)=>{
-                            changeLanguage(value);
-                        }}
-                    />
 
+                    {isDevEnvironment && <React.Fragment>
+                        <ENVEntryLabel 
+                            name={t('/settings.options.language.name')} 
+                            tooltip={t('/settings.options.language.desc')} 
+                        />
+                        <DekChoice
+                            className='pb-3'
+                            choices={VALID_LANGUAGES}
+                            active={VALID_LANGUAGES.indexOf(language)}
+                            onClick={(i,value)=>{
+                                changeLanguage(value);
+                            }}
+                        />
+                    </React.Fragment>}
 
                     </div>
                 </div>

@@ -85,34 +85,25 @@ export default function DekSelect({
         showUL ? 'active' : '',
     ].join(' ');
 
-    return (
-        <div
-            className={mainclasses}
-            onClick={onClickElement}
-            disabled={disableInput}
-            ref={ref}
-            id={uid}>
-            <small className='btn-select-value form-control'>{selected_text}</small>
-            <span className='btn-select-arrow text-center'>
-                <IconComponent width={16} height={16} fill='currentColor' />
-            </span>
-            <ul className={showUL ? 'd-block thin-scroller' : 'd-none'}>
-                {child_array.map((child) => {
-                    const { text, id } = child.props;
-                    // console.log('child:', child);
-                    const has_children = Children.toArray(
-                        child.props.children
-                    ).length;
-                    const thischild = has_children
-                        ? child.props.children
-                        : text;
-                    return (
-                        <li id={id} key={child.key || id} onClick={onClickItem}>
-                            {thischild}
-                        </li>
-                    );
-                })}
-            </ul>
-        </div>
-    );
+    return <div
+        className={mainclasses}
+        onClick={onClickElement}
+        disabled={disableInput}
+        ref={ref}
+        id={uid}>
+        <small className='btn-select-value form-control'>{selected_text}</small>
+        <span className='btn-select-arrow text-center'>
+            <IconComponent width={16} height={16} fill='currentColor' />
+        </span>
+        <ul className={showUL ? 'd-block thin-scroller' : 'd-none'}>
+            {child_array.map((child) => {
+                const { text, id } = child.props;
+                const has_children = Children.toArray(child.props.children).length;
+                const thischild = has_children ? child.props.children : text;
+                return <li id={id} key={child.key || id} onClick={onClickItem}>
+                    {thischild}
+                </li>;
+            })}
+        </ul>
+    </div>;
 }

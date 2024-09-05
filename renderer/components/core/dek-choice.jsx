@@ -20,24 +20,22 @@ export default function DekChoice({
 
     // const [activeID, setActiveID] = useState(active);
     
-    return <>
-        <div className={'' + className} style={{ ...style }}>
-            <div className='btn-group dek-choice w-100' role="group">
-                {choices.map((choice, i) => {
-                    const Icon = icons[i];
-                    const isActive = active === i;
-                    const deClass = 'w-100 btn '+(isActive ? `btn-${color}` : `btn-dark hover-${color}`)+(disabled?' disabled':'');
-                    const deClick = ()=> {
-                        if (disabled) return;
-                        // setActiveID(i);
-                        onClick(i,choice);
-                    }
-                    return <div key={i} className={deClass} onClick={deClick} disabled={disabled}>
-                        {Icon ? <Icon fill='currentColor' height='1rem' /> : labels[i]}
-                    </div>
-                })}
-            </div>
-            {/* {!!text && <p className='d-inline px-2'>{text}</p>} */}
+    return <div className={'' + className} style={{ ...style }}>
+        <div className='btn-group dek-choice w-100' role="group">
+            {choices.map((choice, i) => {
+                const Icon = icons[i];
+                const isActive = active === i;
+                const deClass = 'w-100 btn '+(isActive ? `btn-${color}` : `btn-dark hover-${color}`)+(disabled?' disabled':'');
+                const deClick = ()=> {
+                    if (disabled) return;
+                    // setActiveID(i);
+                    onClick(i,choice);
+                }
+                return <div key={i} className={deClass} onClick={deClick} disabled={disabled}>
+                    {Icon ? <Icon fill='currentColor' height='1rem' /> : labels[i]}
+                </div>
+            })}
         </div>
-    </>
+        {/* {!!text && <p className='d-inline px-2'>{text}</p>} */}
+    </div>
 }

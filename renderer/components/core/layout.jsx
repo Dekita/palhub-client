@@ -21,7 +21,7 @@ function GoogleTagManager() {
     const enabled = process.env.GOOGLE_TAG_ENABLED;
     const id = process.env.GOOGLE_TAG_ID;
     if (!enabled) return null;
-    return <>
+    return <React.Fragment>
         <Script async src={`https://www.googletagmanager.com/gtag/js?id=${id}`} />
         <Script id="google-analytics">{`
             window.dataLayer = window.dataLayer || [];
@@ -30,7 +30,7 @@ function GoogleTagManager() {
             gtag('config', ${id});
         `}
         </Script>
-    </>
+    </React.Fragment>
 }
 
 

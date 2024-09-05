@@ -96,6 +96,17 @@
         }
     },
 
+    "#updater": {
+        "starting": "Initializing:..",
+        "checking": "Checking for updates:..",
+        "current": "No updates available!",
+        "available": "Update Available!",
+        "preparing": "Preparing Update:..",
+        "downloading": "UPDATING @ {{mbsp}} - {{perc}}%",
+        "error": "Error updating: {{error}}",
+        "install": "INSTALL UPDATE"
+    },
+
     "#footer": {
         "hover-nexus-api": "{{common.nexus}} API Rate Limits: Hourly / Daily",
         "hover-users-api": "The number of people using {{app.brandname}} within 24 hours!",

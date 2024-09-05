@@ -6,15 +6,12 @@
 import { motion } from 'framer-motion';
 import Image from 'next/image';
 import { useTypewriter } from 'react-simple-typewriter';
-
 import useMediaQuery from '@hooks/useMediaQuery';
 import * as CommonIcons from '@config/common-icons';
 import useLocalization from '@hooks/useLocalization';
 import useSelectedGame from '@hooks/useSelectedGame';
 
-import commonWords from '@config/common-words';
-
-export default function BrandHeader({ words = commonWords, tagline, type }) {
+export default function BrandHeader({ words, tagline, type }) {
     const isDesktop = useMediaQuery('(min-width: 960px)');
 
     const game = useSelectedGame();
