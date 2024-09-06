@@ -45,8 +45,6 @@ export default function Layout({ children }) {
     const active_route = useRouter().pathname;
     const bg = `game-bg-palworld${bg_id+1}`;
 
-    console.log({ready})
-
     const modals = {
         // onClickSettings: () => setShowSettingsModal(true),
         onClickHamburger: () => setShowNavbarModal(true),

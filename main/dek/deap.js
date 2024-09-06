@@ -88,8 +88,9 @@ class DEAP {
         });
         this.setUserAgent("dekitarpg.com");
         // setup global logfile
-        if (app.isPackaged) LoggyBoi.logpath = path.join(process.resourcesPath, "..", "app.log"); // Packaged
-        else LoggyBoi.logpath = path.join(app.getAppPath(), "app.log"); // Development mode
+        LoggyBoi.logpath = path.join(app.getPath("userData"), "app.log");
+        // if (app.isPackaged) LoggyBoi.logpath = path.join(process.resourcesPath, "..", "app.log"); // Packaged
+        // else LoggyBoi.logpath = path.join(app.getAppPath(), "app.log"); // Development mode
 
         LoggyBoi.setGlobalOptions({
             ...config.logger,
@@ -179,6 +180,9 @@ class DEAP {
         // ipcMain.handle("window-fully-rendered", async (event, id) => {
         //     this._windows[id].emit('window-fully-rendered');
         // });
+        ipcMain.handle("check-for-updates", async () => {
+            if (app.isPackaged) autoUpdater.checkForUpdates();
+        });
         ipcMain.handle("install-update", async () => {
             if (app.isPackaged) autoUpdater.quitAndInstall(true, true);
         });
@@ -420,6 +424,11 @@ class DEAP {
         }
         // begin checking updates:
         autoUpdater.checkForUpdates();
+        // check for updates every hour
+        setInterval(() => {
+            autoUpdater.checkForUpdates();
+        }, 1000 * 60 * 60); // 1 hour
+
         // autoUpdater.checkForUpdatesAndNotify();
     }
 }
