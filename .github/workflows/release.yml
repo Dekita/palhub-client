@@ -3,7 +3,7 @@ name: Build and Release Windows App
 on:
   push:
     branches:
-      - master # Trigger on master branch changes
+      - main # Trigger on main branch changes
     paths:
       - 'package.json' # Trigger only on package.json changes
 
@@ -15,17 +15,16 @@ jobs:
     - name: Checkout code
       uses: actions/checkout@v2
 
-    - name: Get previous package.json
-      id: old_package
-      run: git show HEAD^:package.json > old_package.json
+    - name: Get previous version from the last commit
+      id: old_version
+      run: |
+        git fetch origin main
+        git show HEAD~1:package.json > old_package.json || echo '{}' > old_package.json
+        echo "::set-output name=VERSION::$(jq -r '.version' old_package.json)"
 
     - name: Get current version
       id: current_version
       run: echo "::set-output name=VERSION::$(jq -r '.version' package.json)"
-
-    - name: Get previous version
-      id: old_version
-      run: echo "::set-output name=VERSION::$(jq -r '.version' old_package.json)"
 
     - name: Compare versions
       id: compare
@@ -45,7 +44,7 @@ jobs:
 
     - name: Install dependencies
       if: steps.compare.outcome == 'success'
-      run: yarn install # Install dependencies using Yarn
+      run: yarn install
 
     - name: Cache Yarn modules
       if: steps.compare.outcome == 'success'
