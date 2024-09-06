@@ -10,18 +10,23 @@ import Nexus from "@nexusmods/nexus-api";
 
 // import stringify from "json-stringify-pretty-compact";
 import { createReadStream, createWriteStream, watchFile, unwatchFile, readFileSync } from "fs";
+import { exec, execFile } from "child_process";
 import fs from "node:fs/promises";
 import path from "node:path";
 import {https} from "follow-redirects";
-import { fileURLToPath } from "url";
-// import AdmZip from 'adm-zip';
 import ArchiveHandler from "./archive-handler.js";
 import EventEmitter from "events";
 
-import { exec, execFile } from "child_process";
 
 export const Emitter = new EventEmitter();
 
+Emitter.EVENTS_TO_HANDLE = [
+    'watched-file-change',
+    'download-mod-file', 
+    'install-mod-file', 
+    'extract-mod-file', 
+    'ue4ss-process', 
+];
 
 function stringifyJSON(data) {
     return JSON.stringify(data, null, 4);
@@ -63,6 +68,8 @@ export class API {
 
 class DekNexus extends Nexus {
 
+    //! doesnt work - rip lol
+    //todo: ask for help on this one
     async getRequiredMods(modId) {
         await this.mQuota.wait();
         let urlPath = '/games/{gameId}/mods/{modId}/requirements';
@@ -76,10 +83,9 @@ class DekNexus extends Nexus {
 
 
 /**
- * PalHUB Client Interface <3
- * Handles client machine interactions. eg, managing mods, starting servers, etc.
- *
- */
+* PalHUB Client Interface <3
+* Handles client machine interactions. eg, managing mods, starting servers, etc.
+*/
 export class Client {
 
     static setAppDetails(appName, appVersion) {

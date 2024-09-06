@@ -9,9 +9,13 @@
 
 import config from "./config";
 import DEAP from "./dek/deap";
+import devstore from "./dek/devstore";
 import ipcHandlers from "./ipc-handlers";
 import { Client, Emitter } from './dek/palhub';
 import { setExternalVBS } from "./dek/detectSteamGame";
+
+// if the app is not packaged, update app version in the package.json file
+if (!DEAP.app.isPackaged) devstore.updateVersion(DEAP.pack_json);
 
 // set the app details for nexus api requests
 Client.setAppDetails(DEAP.name, DEAP.version);
@@ -33,7 +37,7 @@ for (const key in ipcHandlers) {
 }
 
 // handle events from DEAP that should be forwarded to the renderer process
-for (const event of ['download-mod-file', 'install-mod-file', 'extract-mod-file', 'ue4ss-process', 'watched-file-change']) {
+for (const event of Emitter.EVENTS_TO_HANDLE) {
     Emitter.on(event, (...args) => DEAP.main_window.webContents.send(event, ...args));
 }
 
