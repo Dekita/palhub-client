@@ -2,8 +2,10 @@ name: Build and Release Windows App
 
 on:
   push:
-    tags:
-      - 'v*'  # Triggers the workflow on version tags (e.g., v1.0.0)
+    branches:
+      - main # Trigger on main branch changes
+    paths:
+      - 'package.json' # Trigger only on package.json changes
 
 jobs:
   build:
@@ -13,32 +15,59 @@ jobs:
     - name: Checkout code
       uses: actions/checkout@v2
 
+    - name: Get previous package.json
+      id: old_package
+      run: git show HEAD^:package.json > old_package.json
+
+    - name: Get current version
+      id: current_version
+      run: echo "::set-output name=VERSION::$(jq -r '.version' package.json)"
+
+    - name: Get previous version
+      id: old_version
+      run: echo "::set-output name=VERSION::$(jq -r '.version' old_package.json)"
+
+    - name: Compare versions
+      id: compare
+      run: |
+        if [ "${{ steps.current_version.outputs.VERSION }}" = "${{ steps.old_version.outputs.VERSION }}" ]; then
+          echo "Version has not changed."
+          exit 0
+        else
+          echo "Version has changed."
+        fi
+
     - name: Set up Node.js
+      if: steps.compare.outcome == 'success'  # Only continue if the version has changed
       uses: actions/setup-node@v2
       with:
         node-version: '20'
 
     - name: Install dependencies
-      run: npm install
+      if: steps.compare.outcome == 'success'
+      run: yarn install # Install dependencies using Yarn
 
-    - name: Cache Electron and NPM modules
+    - name: Cache Yarn modules
+      if: steps.compare.outcome == 'success'
       uses: actions/cache@v2
       with:
         path: |
-          ~/.npm
+          ~/.cache/yarn
           node_modules
-        key: ${{ runner.os }}-npm-cache
+        key: ${{ runner.os }}-yarn-cache
         restore-keys: |
-          ${{ runner.os }}-npm-cache
+          ${{ runner.os }}-yarn-cache
 
     - name: Build the Electron app
+      if: steps.compare.outcome == 'success'
       env:
-        GH_TOKEN: ${{ secrets.GH_TOKEN }}  # GH_TOKEN is stored in GitHub secrets
-      run: npm run build  # Assumes "build" script is configured in package.json for electron-builder
+        GH_TOKEN: ${{ secrets.GH_TOKEN }}
+      run: yarn build
 
     - name: Upload release assets
+      if: steps.compare.outcome == 'success'
       uses: softprops/action-gh-release@v1
       with:
         files: dist/*
       env:
-        GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}  # Use the GitHub token from secrets
+        GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}

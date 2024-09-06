@@ -28,8 +28,12 @@ function updatePackageJSON(currentPackageJSON) {
         const packagePath = join(__dirname, '..', 'package.json');
         const packageJSON = currentPackageJSON ?? freshRequire(packagePath);
         const [date, time] = devstore.get('release').split(', ');
-        packageJSON.version = devstore.get('version');
         packageJSON.release = { date, time };
+        packageJSON.version = devstore.get('version');
+        // remove trailing zeros from version string if any
+        while (packageJSON.version.endsWith('0')) { 
+            packageJSON.version = packageJSON.version.slice(0, -1);
+        }
         const updatedJSON = JSON.stringify(packageJSON, null, 4);
         writeFileSync(packagePath, updatedJSON, { encoding: 'utf-8' });
         console.log('Updated package.json version:', packageJSON.version);
