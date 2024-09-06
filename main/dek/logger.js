@@ -342,7 +342,7 @@ class LoggyBoi {
 }
 
 // initialize default values
-LoggyBoi.setGlobalOptions();
+// LoggyBoi.setGlobalOptions();
 
 // export as function to quickly create new logger
 export default function createLogger(idtag, options) {

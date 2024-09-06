@@ -9,13 +9,9 @@
 
 import config from "./config";
 import DEAP from "./dek/deap";
-import devstore from "./dek/devstore";
 import ipcHandlers from "./ipc-handlers";
 import { Client, Emitter } from './dek/palhub';
 import { setExternalVBS } from "./dek/detectSteamGame";
-
-// if the app is not packaged, update app version in the package.json file
-if (!DEAP.app.isPackaged) devstore.updateVersion(DEAP.pack_json);
 
 // set the app details for nexus api requests
 Client.setAppDetails(DEAP.name, DEAP.version);

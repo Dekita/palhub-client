@@ -11,6 +11,7 @@
 */
 
 import { app, dialog, ipcMain, BrowserWindow, Menu, Tray, nativeImage, shell, session } from "electron";
+import { updateAppVersion } from "./devstore";
 import { autoUpdater } from "electron-updater";
 import createLogger, { LoggyBoi } from "./logger";
 import { createWindow } from "./create-window";
@@ -19,8 +20,6 @@ import serve from "electron-serve";
 import path from "path";
 // import fs from 'fs';
 
-const IS_PRODUCTION = process.env.NODE_ENV === "production";
-
 // !see: https://www.electronjs.org/docs/latest/api/command-line-switches
 // app.commandLine.appendSwitch('remote-debugging-port', '8315')
 
@@ -28,23 +27,25 @@ const IS_PRODUCTION = process.env.NODE_ENV === "production";
 // !see: https://www.electronjs.org/docs/latest/api/extensions
 // session.defaultSession.loadExtension(path.join(__dirname, '../../extensions/react-devtools'));
 
-if (IS_PRODUCTION) {
+if (app.isPackaged) {
     serve({ directory: "app" });
 } else {
     app.setPath("userData", `${app.getPath("userData")} (development)`);
 }
-
+// get the package.json file for the app (when in dev mode)
 const PACKAGE_JSON = (() => {
     if (app.isPackaged) return {};
     return require("../../package.json");
 })();
+// set the app name and version from package.json or app.getXXX()
 const APP_NAME = (() => {
     if (app.isPackaged) return app.getName();
     return PACKAGE_JSON.productName;
 })();
+// if the app is not packaged, update app version in the package.json file
 const APP_VERSION = (() => {
     if (app.isPackaged) return app.getVersion();
-    return PACKAGE_JSON.version;
+    return updateAppVersion(PACKAGE_JSON);
 })();
 
 class DEAP {
@@ -281,6 +282,10 @@ class DEAP {
         });
         this._windows[id].on("show", () => {
             // this._windows[id].webContents.send('deap-window-setup', id);
+            if (this._onLoadWindowCB) {
+                this._onLoadWindowCB(id, this._windows[id]);
+                this._onLoadWindowCB = null;
+            }
             this._windows[id].focus();
         });
         this._windows[id].webContents.on("before-input-event", (event, input) => {
@@ -332,7 +337,7 @@ class DEAP {
 
         if (windoe.isVisible()) windoe.reload();
         else {
-            if (IS_PRODUCTION) {
+            if (app.isPackaged) {
                 await windoe.loadURL(`app://./${config.page}`);
             } else {
                 const port = process.argv[2];
@@ -361,6 +366,7 @@ class DEAP {
         app.on("before-quit", () => this.onBeforeQuitApp(callbacks));
         app.on("window-all-closed", () => this.onAppWindowsClosed(callbacks));
         app.on("second-instance", () => this.onSecondInstanceLaunched(callbacks));
+        if (callbacks.onLoadWindow) this._onLoadWindowCB = callbacks.onLoadWindow;
     }
     static onAppReady(callbacks) {
         // create window when electron has initialized.
