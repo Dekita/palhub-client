@@ -55,6 +55,10 @@ class DEAP {
     static get name() {
         return APP_NAME;
     }
+    static get pack_json() {
+        if (app.isPackaged) return {};
+        return PACKAGE_JSON;
+    }
     static get version() {
         return APP_VERSION;
     }
