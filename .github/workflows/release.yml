@@ -10,47 +10,19 @@ on:
 jobs:
   build:
     runs-on: windows-latest
-
     steps:
     - name: Checkout code
       uses: actions/checkout@v2
 
-    - name: Get previous version from the last commit
-      id: old_version
-      run: |
-        git fetch origin master
-        git show HEAD~1:package.json > old_package.json || echo '{}' > old_package.json
-        $old_version = (Get-Content old_package.json | ConvertFrom-Json).version
-        echo "OLD_VERSION=$old_version" >> $env:GITHUB_ENV
-
-    - name: Get current version
-      id: current_version
-      run: |
-        $current_version = (Get-Content package.json | ConvertFrom-Json).version
-        echo "CURRENT_VERSION=$current_version" >> $env:GITHUB_ENV
-
-    - name: Compare versions
-      id: compare
-      run: |
-        if ($env:CURRENT_VERSION -eq $env:OLD_VERSION) {
-          Write-Host "Version has not changed."
-          exit 0
-        } else {
-          Write-Host "Version has changed."
-        }
-
     - name: Set up Node.js
-      if: steps.compare.outcome == 'success'  # Only continue if the version has changed
       uses: actions/setup-node@v2
       with:
         node-version: '20'
 
     - name: Install dependencies
-      if: steps.compare.outcome == 'success'
       run: yarn install
 
     - name: Cache Yarn modules
-      if: steps.compare.outcome == 'success'
       uses: actions/cache@v2
       with:
         path: |
@@ -61,13 +33,11 @@ jobs:
           ${{ runner.os }}-yarn-cache
 
     - name: Build the Electron app
-      if: steps.compare.outcome == 'success'
       env:
         GH_TOKEN: ${{ secrets.GH_TOKEN }}
       run: yarn build
 
     - name: Upload release assets
-      if: steps.compare.outcome == 'success'
       uses: softprops/action-gh-release@v1
       with:
         files: dist/*
