@@ -20,21 +20,24 @@ jobs:
       run: |
         git fetch origin main
         git show HEAD~1:package.json > old_package.json || echo '{}' > old_package.json
-        echo "::set-output name=VERSION::$(jq -r '.version' old_package.json)"
+        $old_version = (Get-Content old_package.json | ConvertFrom-Json).version
+        echo "OLD_VERSION=$old_version" >> $env:GITHUB_ENV
 
     - name: Get current version
       id: current_version
-      run: echo "::set-output name=VERSION::$(jq -r '.version' package.json)"
+      run: |
+        $current_version = (Get-Content package.json | ConvertFrom-Json).version
+        echo "CURRENT_VERSION=$current_version" >> $env:GITHUB_ENV
 
     - name: Compare versions
       id: compare
       run: |
-        if [ "${{ steps.current_version.outputs.VERSION }}" = "${{ steps.old_version.outputs.VERSION }}" ]; then
-          echo "Version has not changed."
+        if ($env:CURRENT_VERSION -eq $env:OLD_VERSION) {
+          Write-Host "Version has not changed."
           exit 0
-        else
-          echo "Version has changed."
-        fi
+        } else {
+          Write-Host "Version has changed."
+        }
 
     - name: Set up Node.js
       if: steps.compare.outcome == 'success'  # Only continue if the version has changed
