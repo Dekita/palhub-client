@@ -18,7 +18,7 @@ jobs:
     - name: Get previous version from the last commit
       id: old_version
       run: |
-        git fetch origin main
+        git fetch origin master
         git show HEAD~1:package.json > old_package.json || echo '{}' > old_package.json
         $old_version = (Get-Content old_package.json | ConvertFrom-Json).version
         echo "OLD_VERSION=$old_version" >> $env:GITHUB_ENV
