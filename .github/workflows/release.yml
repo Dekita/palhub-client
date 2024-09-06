@@ -3,7 +3,7 @@ name: Build and Release Windows App
 on:
   push:
     branches:
-      - main # Trigger on main branch changes
+      - master # Trigger on master branch changes
     paths:
       - 'package.json' # Trigger only on package.json changes
 
