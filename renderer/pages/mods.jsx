@@ -141,8 +141,8 @@ export default function ModsPage() {
                 case 0: new_mods = await getInstalledMods(api_key, game_path); break;
                 case 1: new_mods = await getDownloadedMods(api_key, cache_dir); break;
                 case 2: new_mods = await window.nexus(api_key, 'getLatestAdded'); break;
-                case 3: new_mods = await window.nexus(api_key, 'getLatestUpdated'); break;
-                case 4: new_mods = await window.nexus(api_key, 'getTrending'); break;
+                case 3: new_mods = await window.nexus(api_key, 'getTrending'); break;
+                case 4: new_mods = await window.nexus(api_key, 'getLatestUpdated'); break;
                 case 5: new_mods = await window.nexus(api_key, 'getTrackedMods'); break;
             }
             if (new_mods) {
