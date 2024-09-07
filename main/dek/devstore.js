@@ -62,6 +62,7 @@ export const updateAppVersion = (currentPackageJSON) => {
             packageJSON.version = version; 
             // remove trailing zeros from version string if any
             while (packageJSON.version.endsWith('0')) { 
+                if (packageJSON.version.endsWith('.0')) break;
                 packageJSON.version = packageJSON.version.slice(0, -1);
             }
             const updatedJSON = JSON.stringify(packageJSON, null, 4);

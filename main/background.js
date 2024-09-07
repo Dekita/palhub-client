@@ -24,18 +24,16 @@ DEAP.setup(config, ()=>{ // then run this callback
         if (DEAP.app.isPackaged) setExternalVBS(process.resourcesPath, 'vbs'); 
         else setExternalVBS(DEAP.app.getAppPath(), 'resources/vbs'); // Development mode
     }
+    // add all ipc handlers defined in ipc-handlers folder
+    for (const key in ipcHandlers) {
+        if (!Object.prototype.hasOwnProperty.call(ipcHandlers, key)) continue;
+        DEAP.addIPCHandler(key, ipcHandlers[key]);
+    }
+    // handle events from DEAP that should be forwarded to the renderer process
+    for (const event of Emitter.EVENTS_TO_HANDLE) {
+        Emitter.on(event, (...args) => DEAP.main_window.webContents.send(event, ...args));
+    }
 });
-
-// add all ipc handlers defined in ipc-handlers folder
-for (const key in ipcHandlers) {
-    if (!Object.prototype.hasOwnProperty.call(ipcHandlers, key)) continue;
-    DEAP.addIPCHandler(key, ipcHandlers[key]);
-}
-
-// handle events from DEAP that should be forwarded to the renderer process
-for (const event of Emitter.EVENTS_TO_HANDLE) {
-    Emitter.on(event, (...args) => DEAP.main_window.webContents.send(event, ...args));
-}
 
 // launch the electron app via DEAP wrapper
 DEAP.launch({

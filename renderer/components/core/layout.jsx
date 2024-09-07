@@ -16,6 +16,8 @@ import Navbar from '@components/core/navbar';
 import Footer from '@components/core/footer';
 import { PongSpinner } from 'react-spinners-kit';
 import useLocalization from '@hooks/useLocalization';
+import useDeepLinkListener from '@hooks/useDeepLinkListener';
+import useAppLogger from '@hooks/useAppLogger';
 
 function GoogleTagManager() {
     const enabled = process.env.GOOGLE_TAG_ENABLED;
@@ -36,6 +38,12 @@ function GoogleTagManager() {
 
 export default function Layout({ children }) {
     const { ready } = useLocalization();
+    const logger = useAppLogger("core/layout");
+    const [deepLink, linkChanged, consumeDeepLink] = useDeepLinkListener();
+
+    if (linkChanged) {
+        logger('info', `Received Deep Link: ${deepLink}`);
+    }
 
     // const [showSettingsModal, setShowSettingsModal] = useState(false);
     const [theme_id, setThemeID, bg_id, setBgID] = useThemeSystem();

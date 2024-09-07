@@ -17,7 +17,7 @@ import createLogger, { LoggyBoi } from "./logger";
 import { createWindow } from "./create-window";
 import Store from "electron-store";
 import serve from "electron-serve";
-import path from "path";
+import path from "node:path";
 // import fs from 'fs';
 
 // !see: https://www.electronjs.org/docs/latest/api/command-line-switches
@@ -27,11 +27,6 @@ import path from "path";
 // !see: https://www.electronjs.org/docs/latest/api/extensions
 // session.defaultSession.loadExtension(path.join(__dirname, '../../extensions/react-devtools'));
 
-if (app.isPackaged) {
-    serve({ directory: "app" });
-} else {
-    app.setPath("userData", `${app.getPath("userData")} (development)`);
-}
 // get the package.json file for the app (when in dev mode)
 const PACKAGE_JSON = (() => {
     if (app.isPackaged) return {};
@@ -80,23 +75,18 @@ class DEAP {
         this._tray = null;
         this._windows = {};
         this._config = config;
-        this.setupDefaultIPC();
-        this.setInstanceLock(!config.dev_mode && config.single_instance);
-        this.setDatastore({
-            name: "[dekita.palhub.data]",
-            defaults: config.data_store,
-        });
-        this.setUserAgent("dekitarpg.com");
+        // setup app instance lock and return if we are not the main instance
+        this._can_launch = this.setInstanceLock();
+        if (!this._can_launch) return;
+
+        this.setAppPathDatas();
         // setup global logfile
         LoggyBoi.logpath = path.join(app.getPath("userData"), "app.log");
-        // if (app.isPackaged) LoggyBoi.logpath = path.join(process.resourcesPath, "..", "app.log"); // Packaged
-        // else LoggyBoi.logpath = path.join(app.getAppPath(), "app.log"); // Development mode
-
         LoggyBoi.setGlobalOptions({
             ...config.logger,
             file_options: {
                 filename: LoggyBoi.logpath,
-                options: { flags: "w", encoding: "utf8" },
+                options: { flags: "a", encoding: "utf8" },
             },
             // http_options: {
             //     port: 9699,
@@ -105,8 +95,26 @@ class DEAP {
         });
         this.logger = createLogger("deap");
         this.logger.info(app.getAppPath());
+        this.setUserAgent("dekitarpg.com");
+        this.setupDefaultIPC();
+        this.setDatastore({
+            name: "[dekita.palhub.data]",
+            defaults: config.data_store,
+        });
         if (callback) callback(this);
     }
+    static setInstanceLock() {
+        if (!app.isPackaged) return true;
+        if (!this._config.single_instance) return true;
+        // returns true if we are the main instance
+        return app.requestSingleInstanceLock({}); 
+    }
+    static setAppPathDatas() {
+        // serve the app from the app.asar file when packaged
+        if (app.isPackaged) serve({ directory: "app" });
+        // set the userData path to include (development) when in dev mode
+        else app.setPath("userData", `${app.getPath("userData")} (development)`);
+    } 
     static useLogger(id) {
         const logger = (action, ...args) => {
             const { idtag } = this.logger; // get the current idtag
@@ -119,20 +127,19 @@ class DEAP {
             return { ...acc, [key]: (...args) => logger(key, ...args) };
         }, {});
     }
-    static setInstanceLock(single) {
-        if (single && !app.requestSingleInstanceLock({})) app.quit();
-    }
     static setDatastore(store_options) {
         this._datastore = new Store(store_options);
-        console.log("datastore:", this._datastore.store);
+        this.logger.info("Datastore initialized");
     }
     static setUserAgent(agent_str) {
         this._user_agent = `${APP_NAME} ${APP_VERSION} ${agent_str}`.trim();
+        this.logger.info(`User-Agent: ${this._user_agent}`);
     }
     /**
      * ■ ipc handlers:
      */
     static setupDefaultIPC() {
+        // default ipc handlers
         ipcMain.handle("get-name", (e) => APP_NAME);
         ipcMain.handle("get-version", (e) => APP_VERSION);
         ipcMain.handle("get-path", (event, key) => {
@@ -187,7 +194,7 @@ class DEAP {
             if (app.isPackaged) autoUpdater.quitAndInstall(true, true);
         });
         ipcMain.handle("app-action", async (event, id, action) => {
-            console.log("app-action:", id, action);
+            this.logger.info(`app-action: ${id} -- ${action}`);
             switch (action) {
                 case "maximize": {
                     if (this._windows[id].isMaximized()) {
@@ -253,7 +260,6 @@ class DEAP {
         });
         this._windows[id].setMenu(null);
         this._windows[id].on("minimize", (event) => {
-            // console.log('minimize event:', id, assign_systray, this._datastore.get("tiny-tray"));
             if (assign_systray && this._datastore.get("tiny-tray")) {
                 this._windows[id].setSkipTaskbar(true);
                 this.createTray(this._windows[id]);
@@ -298,19 +304,13 @@ class DEAP {
                 event.preventDefault();
             }
         });
-
         this.loadFileToWindow(id, windoe_config);
     }
     // creates a system tray icon and defines its options
     static createTray(windoe) {
         let trayIcon;
-        if (!app.isPackaged) {
-            // when in dev mode
-            trayIcon = this._config.app_icon.ico;
-        } else {
-            // fix for packaged app
-            trayIcon = path.join(__dirname, "./icon.ico");
-        }
+        if (!app.isPackaged) trayIcon = this._config.app_icon.ico;// when in dev mode
+        else trayIcon = path.join(__dirname, "./icon.ico"); // fix for packaged app
         this._tray = new Tray(nativeImage.createFromPath(trayIcon));
         const menu = this.createTrayMenu(windoe);
         this._tray.on("double-click", () => windoe.show());
@@ -320,13 +320,10 @@ class DEAP {
     static createTrayMenu(windoe) {
         return Menu.buildFromTemplate([
             { label: "Show", click: () => windoe.show() },
-            {
-                label: "Exit",
-                click: () => {
-                    app.isQuiting = true;
-                    app.quit();
-                },
-            },
+            { label: "Exit", click: () => {
+                app.isQuiting = true;
+                app.quit();
+            }},
         ]);
     }
     static destroyTray() {
@@ -338,20 +335,12 @@ class DEAP {
         // set user agent and show/reload
         const windoe = this._windows[id];
         windoe.webContents.setUserAgent(this._user_agent);
-
+        this.logger.info(`Loading window: ${id}`);
         if (windoe.isVisible()) windoe.reload();
         else {
-            if (app.isPackaged) {
-                await windoe.loadURL(`app://./${config.page}`);
-            } else {
-                const port = process.argv[2];
-                await windoe.loadURL(`http://localhost:${port}/${config.page}`);
-                windoe.webContents.openDevTools();
-            }
+            if (app.isPackaged) await windoe.loadURL(`app://./${config.page}`);
+            else await windoe.loadURL(`http://localhost:${process.argv[2]}/${config.page}`);
         }
-
-        this.logger.log(`loading window: ${id}`);
-        this.logger.log(config);
     }
     // updates the 'auto-start at system boot' feature
     static updateAutoBootMode() {
@@ -359,38 +348,49 @@ class DEAP {
         app.setLoginItemSettings({ openAtLogin });
     }
     static launch(callbacks = {}) {
+        // if we are not the main instance, then quit the app
+        if (!this._can_launch) return app.quit();
+        // handle uncaught exceptions and rejections
         if (this._config.handle_rejections) {
-            process.on("unhandledRejection", this.logger.error);
+            process.on("unhandledRejection", this?.logger?.error ?? console.error);
         }
         if (this._config.handle_exceptions) {
-            process.on("uncaughtException", this.logger.error);
+            process.on("uncaughtException", this?.logger?.error ?? console.error);
         }
+        // setup app event listeners
         app.on("ready", () => this.onAppReady(callbacks));
         app.on("activate", () => this.onAppActivate(callbacks));
         app.on("before-quit", () => this.onBeforeQuitApp(callbacks));
         app.on("window-all-closed", () => this.onAppWindowsClosed(callbacks));
-        app.on("second-instance", () => this.onSecondInstanceLaunched(callbacks));
+        // handles forwarding deep links for macOS
+        app.on('open-url', (...args) => this.onAppOpenURL(...args)); 
+        // handles forwarding deep links for windows / linux
+        app.on("second-instance", (...args) => this.onSecondInstanceLaunched(callbacks, ...args)); 
         if (callbacks.onLoadWindow) this._onLoadWindowCB = callbacks.onLoadWindow;
     }
     static onAppReady(callbacks) {
-        // create window when electron has initialized.
-        this.createWindow("main");
-
-        setTimeout(() => {
-            this.initializeAutoUpdater();
-        }, 3000);
-
+        // setup for deep linking in packaged app
+        if (app.isPackaged) {
+            let extra_args = []; 
+            if (process.defaultApp && process.argv.length >= 2) {
+                extra_args = [process.execPath, [path.resolve(process.argv[1])]];
+                this.logger.info(`deep-linking: ${extra_args.join(" --- ")}`);
+            }
+            app.setAsDefaultProtocolClient('dek-ue', ...extra_args);
+        }
+        this.createWindow("main"); // create main window when electron has initialized.
         if (callbacks.onAppReady) callbacks.onAppReady(this);
+        setTimeout(() => this.initializeAutoUpdater(), 3000);
     }
     static onAppActivate(callbacks) {
+        if (callbacks.onAppActivate) callbacks.onAppActivate(this);
         // On OS X it's common to re-create a window in the app when the
         // dock icon is clicked and there are no other windows open.
         if (!BrowserWindow.getAllWindows().length) this.createWindow("main");
-        if (callbacks.onAppActivate) callbacks.onAppActivate(this);
     }
     static onAppWindowsClosed(callbacks) {
-        if (process.platform !== "darwin") app.quit();
         if (callbacks.onAppWindowsClosed) callbacks.onAppWindowsClosed(this);
+        if (process.platform !== "darwin") app.quit();
     }
     // cleanup any resources before quitting
     static onBeforeQuitApp(callbacks) {
@@ -399,17 +399,26 @@ class DEAP {
         if (callbacks.onBeforeQuitApp) callbacks.onBeforeQuitApp(this);
     }
     // someone tried to run a second instance of app
-    static onSecondInstanceLaunched(callbacks) {
-        if (!this._config.single_instance) return;
-        if (!this.main_window) return;
-        if (this.main_window.isMinimized()) {
-            this.main_window.restore();
-        }
-        this.main_window.focus();
+    static onSecondInstanceLaunched(callbacks, event, commandLine, workingDirectory) {
+        if (!this._config.single_instance || !this.main_window) return;
+        // if (this.main_window.isMinimized()) this.main_window.restore();
         if (callbacks.onSecondInstanceLaunched) callbacks.onSecondInstanceLaunched(this);
+        // the commandLine is array of strings in which last element is deep link url
+        this.main_window.webContents.send("open-deap-link", commandLine.pop());
+        this.main_window.focus();
+    }
+    static onAppOpenURL(event, url) {
+        event.preventDefault();
+        // open-deep-link when macOS 
+        if (process.platform === 'darwin') {
+            this.logger.info(`open-deap-link[open-url]: ${url}`);
+            this.main_window?.webContents?.send("open-deap-link", url);
+        } else {
+            this.logger.error(`IGNORED-open-deap-link: ${url}`);
+        }
     }
     static initializeAutoUpdater() {
-        console.log("initializing auto-updater:", app.isPackaged);
+        this.logger.info(`initializing auto-updater: ${app.isPackaged}`);
         if (!app.isPackaged) {
             this.main_window?.webContents?.send("auto-updater", "not-packaged");
             return;
@@ -417,19 +426,13 @@ class DEAP {
         this.main_window?.webContents?.send("auto-updater", "initializing");
         // define listeners:
         const updater_events = ["checking-for-update", "update-available", "update-not-available", "download-progress", "update-downloaded", "before-quit-for-update", "error"];
-        for (const event of updater_events) {
-            autoUpdater.on(event, (...data) => {
-                this.main_window?.webContents?.send("auto-updater", event, ...data);
-            });
-        }
+        for (const event of updater_events) autoUpdater.on(event, (...data) => {
+            this.main_window?.webContents?.send("auto-updater", event, ...data);
+        });
         // begin checking updates:
         autoUpdater.checkForUpdates();
         // check for updates every hour
-        setInterval(() => {
-            autoUpdater.checkForUpdates();
-        }, 1000 * 60 * 60); // 1 hour
-
-        // autoUpdater.checkForUpdatesAndNotify();
+        setInterval(() => autoUpdater.checkForUpdates(), 1000 * 60 * 60); // 1 hour
     }
 }
 
