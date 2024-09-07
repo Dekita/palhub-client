@@ -23,9 +23,9 @@ export const DeepLinkProvider = ({ children }) => {
             setDeepLink(link);
         });
         return () => removeLinkListener();
-    }, [deepLink]);
+    }, []);
 
-    useCallback(() => {
+    useEffect(() => {
         if (!deepLink) return;
         setLinkChanged(true);
     }, [deepLink]);
@@ -34,6 +34,19 @@ export const DeepLinkProvider = ({ children }) => {
         if (!deepLink) return;
         setLinkChanged(false);
         setDeepLink(null);
+        // Parse the deep link
+        const url = new URL(deepLink);
+        // Ensure the protocol is correct
+        if (url.protocol !== 'dek-ue:') {
+            logger('error', `Invalid DEAP Link Protocol: ${url.protocol}`);
+            return { segments: [], params: {} };
+        }
+        // Split and filter to get path segments
+        const segments = url.pathname.split('/').filter(Boolean); 
+        // Use URLSearchParams to extract query parameters
+        const params = Object.fromEntries(url.searchParams.entries());
+        // Return the segments and params
+        return { segments, params };
     }, [deepLink]);
 
     const exposed = [deepLink, linkChanged, consumeDeepLink];

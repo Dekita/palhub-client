@@ -42,7 +42,10 @@ export default function Layout({ children }) {
     const [deepLink, linkChanged, consumeDeepLink] = useDeepLinkListener();
 
     if (linkChanged) {
-        logger('info', `Received Deep Link: ${deepLink}`);
+        logger('info', `Consumed Deep Link: ${deepLink}`);
+        const { segments, params } = consumeDeepLink();
+        logger('info', `AFTER Consumed Deep Link: ${segments.join('/')}`);
+        logger('info', `AFTER Consumed Deep Query: ${JSON.stringify(params)}`);
     }
 
     // const [showSettingsModal, setShowSettingsModal] = useState(false);
