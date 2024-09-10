@@ -4,17 +4,14 @@
 ########################################
 */
 import React from 'react';
-import BrandHeader from '@components/core/brand-header';
+// import BrandHeader from '@components/core/brand-header';
 import Container from 'react-bootstrap/Container';
 import DekChoice from '@components/core/dek-choice';
-
-import * as CommonIcons from '@config/common-icons';
-
 import useCommonChecks from '@hooks/useCommonChecks';
-import useAppLogger from '@hooks/useAppLogger';
-
 import useLocalization from '@hooks/useLocalization';
 import useSelectedGame from '@hooks/useSelectedGame';
+import * as CommonIcons from '@config/common-icons';
+import useAppLogger from '@hooks/useAppLogger';
 
 // export const getServerSideProps = async () => {
 //     return { props: {} };
@@ -27,7 +24,7 @@ export default function LogsPage(props) {
     const game = useSelectedGame();
     const { t, tA } = useLocalization();
     const applog = useAppLogger("LogsPage");
-    const [commonData, onRunCommonChecks] = useCommonChecks();
+    const { requiredModulesLoaded, getGameData } = useCommonChecks();
     const [appLogs, setAppLogs] = React.useState("");
     const [ue4ssLogs, setUE4SSLogs] = React.useState("");
     const [logPageID, setLogPageID] = React.useState(0);
@@ -41,10 +38,9 @@ export default function LogsPage(props) {
     }, [logPageID]);
 
 
+    //!? todo?: only watch the file for selected page?? 
     React.useEffect(() => {
-        // Ensure the palhub library is loaded
-        if (!onRunCommonChecks()) return applog('error','modules not loaded');
-        // if (!commonData) return;
+        if (!requiredModulesLoaded) return;
 
         // Listen for changes in the various watched files
         const removeWatchedFileChangeHandler = window.ipc.on('watched-file-change', (data, contents) => {
@@ -62,7 +58,8 @@ export default function LogsPage(props) {
                 setAppLogs(`Error fetching logs:\n${error.message}`);
             }
             try {
-                ue4ss_log_path = await window.palhub('joinPath', commonData.game_data.ue4ss_root, 'UE4SS.log');
+                const game_data = await getGameData();
+                ue4ss_log_path = await window.palhub('joinPath', game_data.ue4ss_root, 'UE4SS.log');
                 const ue4ss_log_string = await window.palhub('readFile', ue4ss_log_path, {encoding : 'utf-8'});
                 await window.palhub('watchForFileChanges', ue4ss_log_path);
                 setUE4SSLogs(ue4ss_log_string.trim());
@@ -77,7 +74,7 @@ export default function LogsPage(props) {
             if (app_log_path) window.palhub('unwatchFileChanges', app_log_path);
             if (ue4ss_log_path) window.palhub('unwatchFileChanges', ue4ss_log_path);
         }
-    }, [commonData]);
+    }, [game]);
 
     const scrollToTop = React.useCallback(() => {
         const main_body = document.getElementById('main-body');
@@ -134,11 +131,9 @@ export default function LogsPage(props) {
                     <DekChoice 
                         className='pb-3'
                         disabled={false}
-                        choices={tA('/logs.tabs', 2)}
                         active={logPageID}
-                        onClick={(i,value)=>{
-                            setLogPageID(i);
-                        }}
+                        choices={tA('/logs.tabs', 2)}
+                        onClick={(i,v)=>setLogPageID(i)}
                     />
                 </div>
                 <div className='col-8 col-md-3 col-lg-3 pb-3 pe-0'>

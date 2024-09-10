@@ -15,8 +15,9 @@ import { ENVEntry, ENVEntryLabel } from '@components/modals/common';
 import DekChoice from "@components/core/dek-choice";
 // import DekCheckbox from '@components/core/dek-checkbox';
 
+import CheckModsModal from '@components/modals/mod-check';
 import ModDetailsModal from '@components/modals/mod-details';
-import ModListModal from '@components/modals/mod-list';
+// import ModListModal from '@components/modals/mod-list';
 import Image from 'react-bootstrap/Image';
 import Carousel from 'react-bootstrap/Carousel';
 import BBCodeRenderer from "@components/core/bbcode";
@@ -25,6 +26,7 @@ import { useRouter } from 'next/router';
 import * as CommonIcons from '@config/common-icons';
 import useLocalization from '@hooks/useLocalization';
 import useSelectedGame from '@hooks/useSelectedGame';
+import useCommonChecks from '@hooks/useCommonChecks';
 
 
 /**
@@ -68,6 +70,12 @@ export default function ModsPage() {
     const router = useRouter();
     const game = useSelectedGame();
     const { t, tA } = useLocalization();
+    const { requiredModulesLoaded, commonAppData } = useCommonChecks();
+    const cache_dir = commonAppData?.cache;
+    const game_path = commonAppData?.selectedGame?.path;
+    const game_data = commonAppData?.selectedGame;
+    const api_key = commonAppData?.apis?.nexus;
+
     const [showModDetails, setShowModDetails] = React.useState(false);
     const [showModList, setShowModList] = React.useState(false);
     const [activeMod, setActiveMod] = React.useState(null);
@@ -81,24 +89,10 @@ export default function ModsPage() {
     // https://www.nexusmods.com/palworld/mods/1204
     const advertised_mods = [577, 1204, 146, 489];//1650, 487, 577, 489]//, 1204];//, 1314, 1650, 1640];
 
-    const onRunCommonChecks = () => {
-        return window && window.uStore && window.palhub;
-    }
-
-    React.useEffect(() => {
-        if (!onRunCommonChecks()) return console.error('modules not loaded');
-        (async () => {
-            const api_key = await window.uStore.get('api_key');
-            if (!api_key) return router.push('/settings');
-            
-            const game_path = await window.uStore.get('game_path');
-            if (!game_path) return router.push('/settings');
-            
-            const game_data = await window.palhub('validateGamePath', game_path);
-            if (!game_data.has_exe) return router.push('/settings');
-            if (!game_data.has_ue4ss) return router.push('/settings');
-        })();
-    }, []);
+    // React.useEffect(() => {
+    //     if (!requiredModulesLoaded) return;
+    //     redirectIfNeedConfigured();
+    // }, [requiredModulesLoaded]);
 
     const getInstalledMods = async (api_key, game_path) => {
         const config = await window.palhub('readJSON', game_path);
@@ -120,22 +114,16 @@ export default function ModsPage() {
 
     // load initial settings from store
     React.useEffect(() => {
+        if (!requiredModulesLoaded) return;
         (async () => {
-            if (!window.uStore) return console.error('uStore not loaded');
-            if (!window.palhub) return console.error('palhub not loaded');
-            if (!window.nexus) return console.error('nexus not loaded');
-
-            console.log({
-                uStore: window.uStore,
-                palhub: window.palhub,
-                nexus: window.nexus
-            })
-
-            const api_key = await window.uStore.get('api_key');
-            const game_path = await window.uStore.get('game_path');
-            const cache_dir = await window.uStore.get('cache_dir');
-
             let new_mods = null;
+            // // const api_key = await getApiKey();
+            // // const game_path = await getGamePath();
+            // // const cache_dir = await getCacheDir();
+            // const cache_dir = commonAppData?.cache;
+            // const game_path = commonAppData?.selectedGame?.game?.path;
+            // const game_data = commonAppData?.selectedGame?.data;
+            // const api_key = commonAppData?.apis?.nexus;
 
             switch (modlistID) { 
                 case 0: new_mods = await getInstalledMods(api_key, game_path); break;
@@ -193,10 +181,17 @@ export default function ModsPage() {
         if (!mod_id) return console.error('Invalid mod id or url');
         if (!window.uStore) return console.error('uStore not loaded');
         if (!window.nexus) return console.error('nexus not loaded');
-        const api_key = await window.uStore.get('api_key');
+        // const cache_dir = commonAppData?.cache;
+        // const game_path = commonAppData?.selectedGame?.game?.path;
+        // const game_data = commonAppData?.selectedGame?.data;
+        // const api_key = commonAppData?.apis?.nexus;
+
+        // const api_key = await getApiKey();
         const mod = await window.nexus(api_key, 'getModInfo', mod_id);
         onClickModCard(mod);
     }
+
+    console.log({commonAppData})
 
     
     const gold_mod = false;
@@ -208,8 +203,9 @@ export default function ModsPage() {
     const gradient_c = `bg-gradient-${color_b}-to-${color_a} border-${color_a}`;
 
     return <React.Fragment>
+        <CheckModsModal show={showModList} setShow={setShowModList} />
+        {/* <ModListModal show={showModList} setShow={setShowModList} mods={mods} /> */}
         <ModDetailsModal mod={activeMod} show={showModDetails} setShow={setShowModDetails} />
-        <ModListModal show={showModList} setShow={setShowModList} mods={mods} />
         <div className="container">
             <div className="mx-auto px-3 py-5">
                 <div className='position-relative'>

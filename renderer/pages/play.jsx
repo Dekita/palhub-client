@@ -8,43 +8,54 @@ import Image from 'react-bootstrap/Image';
 import CheckModsModal from '@components/modals/mod-check';
 import LoadListModal from '@components/modals/load-list';
 import PlayVanillaModal from '@components/modals/play-vanilla';
-import useCommonChecks from '@hooks/useCommonChecks';
 import useLocalization from '@hooks/useLocalization';
 import useSelectedGame from '@hooks/useSelectedGame';
+import useCommonChecks from '@hooks/useCommonChecks';
 import useAppLogger from '@hooks/useAppLogger';
 
 export default function PlayPage() {
     const game = useSelectedGame();
     const { t, tA } = useLocalization();
     const applog = useAppLogger("pages/play");
-    const [commonData, onRunCommonChecks] = useCommonChecks();
+    const { requiredModulesLoaded, commonAppData } = useCommonChecks();
+    const cache_dir = commonAppData?.cache;
+    const game_path = commonAppData?.selectedGame?.path;
+    const game_data = commonAppData?.selectedGame;
+    const api_key = commonAppData?.apis?.nexus;
+
     const [showLoadListModal, setShowLoadListModal] = React.useState(false);
     const [showCheckModsModal, setShowCheckModsModal] = React.useState(false);
     const [showPlayVanillaModal, setShowPlayVanillaModal] = React.useState(false);
-    const onClickCheckMods = async () => {
-        if (!onRunCommonChecks()) return applog('error','modules not loaded');
+    
+    const onClickCheckMods = React.useCallback(async () => {
+        if (!requiredModulesLoaded) return;
         setShowCheckModsModal(true);
-    }
-    const onClickLoadNewModlist = async () => {
-        if (!onRunCommonChecks()) return applog('error','modules not loaded');
+    }, [requiredModulesLoaded]);
+    
+    const onClickLoadNewModlist = React.useCallback(async () => {
+        if (!requiredModulesLoaded) return;
         setShowLoadListModal(true);
-    }
-    const onClickPlayVanillaPalworld = async () => {
-        if (!onRunCommonChecks()) return applog('error','modules not loaded');
+    }, [requiredModulesLoaded]);
+    
+    const onClickPlayVanillaPalworld = React.useCallback(async () => {
+        if (!requiredModulesLoaded) return;
         setShowPlayVanillaModal(true);
-    }
-    const onClickLaunchGame = async () => {
+    }, [requiredModulesLoaded]);
+    
+    const onClickLaunchGame = React.useCallback(async () => {
+        if (!requiredModulesLoaded) return;
         await onRunGameExe();
-    }
-    const onRunGameExe = async () => {
-        if (!onRunCommonChecks()) return applog('error','modules not loaded');
-        const game_path = await window.uStore.get('game_path');
-        if (!game_path) return applog('error','game_path not found');
-        const game_data = await window.palhub('validateGamePath', game_path);
-        if (!game_data.has_exe) return applog('error','game exe not found');
-        await window.palhub('launchExe', game_data.exe_path);
+    }, [requiredModulesLoaded]);
+
+    const onRunGameExe = React.useCallback(async () => {
+        if (!requiredModulesLoaded) return;
+        if (!game_data.has_exe) {
+            applog('error','game exe not found');
+            return;
+        }
         applog('info', `Launching Game: ${game_data.exe_path}`);
-    }
+        await window.palhub('launchExe', game_data.exe_path);
+    }, [requiredModulesLoaded, game_data]);
 
     return <React.Fragment>
         <CheckModsModal show={showCheckModsModal} setShow={setShowCheckModsModal} />

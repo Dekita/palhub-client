@@ -23,8 +23,6 @@ import DekChoice from "@components/core/dek-choice";
 // import DekCheckbox from '@components/core/dek-checkbox';
 
 import ServerDetailsModal from '@components/modals/server-details';
-import ModDetailsModal from '@components/modals/mod-details';
-import ModListModal from '@components/modals/mod-list';
 import Image from 'react-bootstrap/Image';
 import Carousel from 'react-bootstrap/Carousel';
 import BBCodeRenderer from "@components/core/bbcode";
@@ -35,6 +33,7 @@ import useSwrJSON from '@hooks/useSwrJSON';
 import * as CommonIcons from '@config/common-icons';
 import useLocalization from '@hooks/useLocalization';
 import useSelectedGame from '@hooks/useSelectedGame';
+import useCommonChecks from '@hooks/useCommonChecks';
 
 /**
 {
@@ -126,6 +125,12 @@ export default function ServersPage() {
     const router = useRouter();
     const game = useSelectedGame();
     const { t, tA } = useLocalization();
+    const { requiredModulesLoaded, commonAppData } = useCommonChecks();
+    const cache_dir = commonAppData?.cache;
+    const game_path = commonAppData?.selectedGame?.path;
+    const game_data = commonAppData?.selectedGame;
+    const api_key = commonAppData?.apis?.nexus;
+    
     const [showServerDetails, setShowServerDetails] = React.useState(false);
     const [activeServer, setActiveServer] = React.useState(null);
 
@@ -134,28 +139,8 @@ export default function ServersPage() {
     if (error) return (<h1>{error}</h1>);
     // return (<pre>{data}</pre>);
     console.log({data})
-
-
+    
     const show_ads = true;//
-    const onRunCommonChecks = () => {
-        return window && window.uStore && window.palhub;
-    }
-
-    React.useEffect(() => {
-        if (!onRunCommonChecks()) return console.error('modules not loaded');
-        (async () => {
-            const api_key = await window.uStore.get('api_key');
-            if (!api_key) return router.push('/settings');
-            
-            const game_path = await window.uStore.get('game_path');
-            if (!game_path) return router.push('/settings');
-            
-            const game_data = await window.palhub('validateGamePath', game_path);
-            if (!game_data.has_exe) return router.push('/settings');
-            if (!game_data.has_ue4ss) return router.push('/settings');
-        })();
-    }, []);
-
 
     const onClickServerCard = (mod) => {
         console.log('clicked server:', mod);
@@ -173,7 +158,6 @@ export default function ServersPage() {
 
     return <React.Fragment>
         <ServerDetailsModal show={showServerDetails} server={activeServer} setShow={setShowServerDetails} />
-
         <div className="container">
             <div className="mx-auto px-3 py-5">
                 <div className='position-relative'>
@@ -229,20 +213,15 @@ export default function ServersPage() {
                         </div>
                     </div>
                 </div>
-          
-
                 <div className='row pt-2'>
                     <div className='col card bg-danger text-center p-3 border border-2 border-warning'>
                         <strong>{t('/servers.betawarn')}</strong>
                     </div>
                 </div>
-
-
                 <div className="row mt-3">
                     {data?.servers?.map((server, i) => 
                         <ServerCardComponent key={i} server={server} onClick={onClickServerCard} ad={show_ads && i < 2} />
                     )}
-
                     <div className="col-12 col-md-6 col-lg-4 col-xl-3 mb-2">
                         <div className='card theme-border chartcard cursor-pointer' onClick={()=>router.push('/faq')}>
                             <div className='card-body text-start p-0'>
@@ -259,9 +238,6 @@ export default function ServersPage() {
                             </div>
                         </div>
                     </div>  
-
-
-
                 </div>
             </div>
         </div>

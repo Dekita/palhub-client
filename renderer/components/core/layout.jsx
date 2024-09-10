@@ -36,7 +36,7 @@ function GoogleTagManager() {
 }
 
 
-export default function Layout({ children }) {
+export default function DekAppLayoutWrapper({ children }) {
     const { ready } = useLocalization();
     const logger = useAppLogger("core/layout");
     const [deepLink, linkChanged, consumeDeepLink] = useDeepLinkListener();

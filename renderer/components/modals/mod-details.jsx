@@ -30,6 +30,7 @@ import Link from "next/link";
 
 import useLocalization from '@hooks/useLocalization';
 import useSelectedGame from '@hooks/useSelectedGame';
+import DekCommonAppModal from '@components/core/modal';
 
 export default function ModDetailsModal({show,setShow,mod}) {
     const game = useSelectedGame();
@@ -44,10 +45,10 @@ export default function ModDetailsModal({show,setShow,mod}) {
 
     const [modFiles, setModFiles] = useState([]);
 
-    const handleCancel = () => {
+    const onCancel = useCallback(() => {
         setShow(false);
         setTimeout(() => setModpageID(0), 250);
-    }
+    }, []);
 
     useEffect(() => {
         (async () => {
@@ -72,11 +73,52 @@ export default function ModDetailsModal({show,setShow,mod}) {
     
     if (!mod) return null;
 
+    const height = fullscreen ? "calc(100vh - 96px)" : "calc(100vh / 4 * 3)";
+    const headerText = `${mod.name} by ${mod.author}`;
+    const modalOptions = {show, setShow, onCancel, headerText, showX: true};
+    return <DekCommonAppModal {...modalOptions}>
+        <dekModalBody className='d-block overflow-y-scroll p-2' style={{height}}>
+            <div >
+
+                <div className='ratio ratio-16x9'>
+                    <img src={mod.picture_url} alt={mod.name} className='d-block w-100' />
+                </div>
+                <DekChoice 
+                    className='py-2'
+                    // disabled={true}
+                    choices={modpageTypes}
+                    active={modpageID}
+                    onClick={(i,value)=>{
+                        console.log(`Setting Page: ${value}`)
+                        setModpageID(i);
+                    }}
+                />
+                <Carousel interval={null} indicators={false} controls={false} className='theme-border' activeIndex={modpageID}>
+                    <Carousel.Item className="container-fluid">
+                        <BBCodeRenderer bbcodeText={mod.description} />
+                    </Carousel.Item>
+
+                    <Carousel.Item className="container-fluid">
+                        {modFiles.map((file, i) => {
+                            return <ModFileCard key={i} mod={mod} file={file} />
+                        })}
+                    </Carousel.Item>
+                </Carousel>
+                <div className="text-center mb-1">
+                    <Link href={`https://www.nexusmods.com/palworld/mods/${mod.mod_id}`} target='_blank' className='btn btn-warning p-2 px-4'>
+                        <strong>{t('modals.mod-details.view-page')}</strong><br />
+                        <small>{t('common.open-link')}</small>
+                    </Link>
+                </div>
+            </div>
+        </dekModalBody>
+    </DekCommonAppModal>;
+
     return <Modal
         show={show}
         size="lg"
         fullscreen={fullscreen}
-        onHide={handleCancel}
+        onHide={onCancel}
         backdrop='static'
         keyboard={false}
         centered>
@@ -87,7 +129,7 @@ export default function ModDetailsModal({show,setShow,mod}) {
             <Button
                 variant='none'
                 className='p-0 hover-danger no-shadow'
-                onClick={handleCancel}>
+                onClick={onCancel}>
                 <IconX className='modalicon' fill='currentColor' />
             </Button>
         </Modal.Header>

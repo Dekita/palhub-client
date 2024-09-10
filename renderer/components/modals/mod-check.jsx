@@ -13,23 +13,25 @@ import ModTable from '@components/core/mod-table';
 
 import useLocalization from '@hooks/useLocalization';
 import useSelectedGame from '@hooks/useSelectedGame';
+import useCommonChecks from '@hooks/useCommonChecks';
+import DekCommonAppModal from '@components/core/modal';
+
 import wait from 'utils/wait';
 
 export default function CheckModsModal({ show, setShow }) {
     const game = useSelectedGame();
     const { t, tA } = useLocalization();
-    const handleCancel = () => setShow(false);
+    const { requiredModulesLoaded, commonAppData } = useCommonChecks();
+    const cache_dir = commonAppData?.cache;
+    const game_path = commonAppData?.selectedGame?.path;
+    const game_data = commonAppData?.selectedGame;
+    const api_key = commonAppData?.apis?.nexus;
+
+    const onCancel = useCallback(() => setShow(false), []);
     const { isDesktop } = useScreenSize();
     const fullscreen = !isDesktop;
-
-    // if (!mod) mod = {name: 'n/a', author: 'n/a', summary: 'n/a', description: 'n/a', picture_url: 'n/a'};
-
-    // const [modFiles, setModFiles] = useState([]);
     const [modConfig, setModConfig] = useState({});
     const [mods, setMods] = useState([]);
-
-    const [isProcessing, setIsProcessing] = useState(false);
-    const [isComplete, setIsComplete] = useState(false);
     const [shouldShowLogs, setShouldShowLogs] = useState(false);
     const [logMessages, setLogMessages] = useState([]);
     const logRef = useRef(null);
@@ -91,9 +93,9 @@ export default function CheckModsModal({ show, setShow }) {
         resetLogMessages();
         setShouldShowLogs(true);
 
-        const api_key = await window.uStore.get('api_key');
-        const game_path = await window.uStore.get('game_path');
-        const cache_dir = await window.uStore.get('cache_dir');
+        // const api_key = nexusApiKey;//await getApiKey();
+        // const game_path = appGamePath;//await getGamePath();
+        // const cache_dir = appCacheDir;//await getCacheDir();
 
         const wait_between = 1000;
         await wait(wait_between);
@@ -155,9 +157,9 @@ export default function CheckModsModal({ show, setShow }) {
         resetLogMessages();
         setShouldShowLogs(true);
 
-        const api_key = await window.uStore.get('api_key');
-        const game_path = await window.uStore.get('game_path');
-        const cache_dir = await window.uStore.get('cache_dir');
+        // const api_key = nexusApiKey;//await getApiKey();
+        // const game_path = appGamePath;//await getGamePath();
+        // const cache_dir = appCacheDir;//await getCacheDir();
 
         const wait_between = 1000;
         await wait(wait_between);
@@ -192,161 +194,93 @@ export default function CheckModsModal({ show, setShow }) {
     }, [mods, modConfig]);
 
     useEffect(() => {
-        (async () => {
-            if (!window.uStore) return console.error('uStore not loaded');
-            if (!window.palhub) return console.error('palhub not loaded');
-            if (!window.nexus) return console.error('nexus not loaded');
-            if (!mods) return;
-
-            const api_key = await window.uStore.get('api_key');
-            const game_path = await window.uStore.get('game_path');
-            const cache_dir = await window.uStore.get('cache_dir');
-
-            const config = await window.palhub('readJSON', game_path);
-            if (!config) return console.error('config not loaded');
-            const mod_ids = Object.keys(config?.mods || []);
-            setMods(
-                await Promise.all(
-                    mod_ids.map(async (mod_id) => {
-                        return await window.nexus(api_key, 'getModInfo', mod_id);
-                    })
-                )
-            );
-            setModConfig(config);
-        })();
-    }, [shouldShowLogs]);
-
-    useEffect(() => {
-        if (!window.ipc) return console.error('ipc not loaded');
-
+        if (!requiredModulesLoaded) return;
         const remove_dl_handler = window.ipc.on('download-mod-file', ({ mod_id, file_id, percentage }) => {
             addLogMessage(`Downloading Mod: ${mod_id} / ${file_id} - ${percentage}%`);
         });
-
-        const remove_in_handler = window.ipc.on(
-            'install-mod-file',
-            ({ install_path, name, version, mod_id, file_id, entries }) => {
-                addLogMessage(`Installing Mod: ${name} v${version}`);
-                // console.log({install_path, mod_id, file_id, entries});
-            }
-        );
-
+        const remove_in_handler = window.ipc.on('install-mod-file', ({ install_path, name, version, mod_id, file_id, entries }) => {
+            addLogMessage(`Installing Mod: ${name} v${version}`);
+        });
         const remove_ex_handler = window.ipc.on('extract-mod-file', ({ entry, outputPath }) => {
             addLogMessage(`Extracting: ${entry}`);
-            // console.log({entry, outputPath});
         });
-
         return () => {
-            // window.ipc.removeListener('download-mod-file', download_handler);
-            // window.ipc.removeListener('install-mod-file', install_handler);
-            // window.ipc.removeListener('extract-mod-file', extract_handler);
             remove_dl_handler();
             remove_in_handler();
             remove_ex_handler();
         };
     }, []);
+    
+    useEffect(() => {
+        if (!requiredModulesLoaded) return;
+        (async () => {
+            if (!mods) return;
+
+            // const api_key = nexusApiKey;//await getApiKey();
+            // const game_path = appGamePath;//await getGamePath();
+            // const cache_dir = appCacheDir;//await getCacheDir();
+
+            const config = await window.palhub('readJSON', game_path);
+            if (!config) return console.error('config not loaded');
+            const mod_ids = Object.keys(config?.mods || []);
+            setMods(await Promise.all(mod_ids.map(async (mod_id) => {
+                return await window.nexus(api_key, 'getModInfo', mod_id);
+            })));
+            setModConfig(config);
+        })();
+    }, [shouldShowLogs, requiredModulesLoaded]);
 
     console.log({ mods, modConfig });
 
     const height = fullscreen ? 'calc(100vh - 182px)' : 'calc(100vh / 4 * 2 + 26px)';
-
-    // return the actual envmodal
-    return (
-        <Modal
-            show={show}
-            size="lg"
-            fullscreen={fullscreen}
-            onHide={handleCancel}
-            backdrop="static"
-            keyboard={false}
-            centered
-        >
-            <Modal.Header className="p-4 theme-border ">
-                <Modal.Title className="col">
-                    <strong>
-                        {t('modals.check-mods.head')} ({mods.length})
-                    </strong>
-                </Modal.Title>
-                <Button variant="none" className="p-0 hover-danger no-shadow" onClick={handleCancel}>
-                    <IconX className="modalicon" fill="currentColor" />
-                </Button>
-            </Modal.Header>
-            <Modal.Body className="p-0">
-                {/* map mods into a table */}
-                {!shouldShowLogs && modConfig && (
-                    <ModTable
-                        mods={mods.map((mod) => {
-                            const modConfigEntry = modConfig?.mods[mod.mod_id];
-                            if (!modConfigEntry) return null;
-                            const { file_id, file_name, version } = modConfigEntry;
-                            return {
-                                ...mod,
-                                file_id,
-                                file_name,
-                                installed: true,
-                                downloaded: true,
-                                latest: mod.version === version,
-                            };
-                        })}
-                        showStatus={true}
-                    />
-                )}
-                {/* show the log messages while downloading/installing/validating */}
-                {shouldShowLogs && (
-                    <div className="overflow-auto m-0 p-3" style={{ height }} ref={logRef}>
-                        <pre className="m-0 p-2">{logMessages.join('\n')}</pre>
-                    </div>
-                )}
-            </Modal.Body>
-
-            <Modal.Footer className="d-block">
-                <div className="row">
-                    <div className="col-6 col-md-3 mb-2 mb-md-0 px-1">
-                        <Button
-                            // size='sm'
-                            variant="primary"
-                            className="w-100"
-                            disabled={false}
-                            onClick={onCopyModList}
-                        >
-                            <strong>{t('modals.check-mods.copy-json')}</strong>
-                        </Button>
-                    </div>
-                    <div className="col-6 col-md-3 mb-2 mb-md-0 px-1">
-                        <Button
-                            // size='sm'
-                            variant="secondary"
-                            className="w-100"
-                            disabled={false}
-                            onClick={onSaveModList}
-                        >
-                            <strong>{t('modals.check-mods.save-json')}</strong>
-                        </Button>
-                    </div>
-                    <div className="col-6 col-md-3 mb-2 mb-md-0 px-1">
-                        <Button
-                            // size='sm'
-                            variant="warning"
-                            className="w-100"
-                            disabled={!updateButtonEnabled}
-                            onClick={onUpdateMods}
-                        >
-                            <strong>{t('modals.check-mods.update')}</strong>
-                        </Button>
-                    </div>
-                    <div className="col-6 col-md-3 mb-2 mb-md-0 px-1">
-                        <Button
-                            // size='sm'
-                            variant="success"
-                            className="w-100"
-                            disabled={false}
-                            onClick={onValidateFiles}
-                        >
-                            <strong>{t('modals.check-mods.validate')}</strong>
-                        </Button>
-                    </div>
+    const headerText = t('modals.check-mods.head', {game});
+    const modalOptions = {show, setShow, onCancel, headerText, showX: true};
+    return <DekCommonAppModal {...modalOptions}>
+        <dekModalBody className="d-grid">
+            {/* map mods into a table */}
+            {!shouldShowLogs && modConfig && <ModTable mods={mods.map((mod) => {
+                const modConfigEntry = modConfig?.mods[mod.mod_id];
+                if (!modConfigEntry) return null;
+                const { file_id, file_name, version } = modConfigEntry;
+                return {
+                    ...mod,
+                    file_id,
+                    file_name,
+                    installed: true,
+                    downloaded: true,
+                    latest: mod.version === version,
+                };
+                })}
+                showStatus={true}
+            />}
+            {/* show the log messages while downloading/installing/validating */}
+            {shouldShowLogs && <div className="overflow-auto m-0 p-3" style={{ height }} ref={logRef}>
+                <pre className="m-0 p-2">{logMessages.join('\n')}</pre>
+            </div>}
+        </dekModalBody>
+        <dekModalFooter className='d-block w-100'>
+            <div className="row">
+                <div className="col-6 col-md-3 mb-2 mb-md-0 px-1">
+                    <Button variant="primary" className="w-100" onClick={onCopyModList}>
+                        <strong>{t('modals.check-mods.copy-json')}</strong>
+                    </Button>
                 </div>
-            </Modal.Footer>
-        </Modal>
-    );
+                <div className="col-6 col-md-3 mb-2 mb-md-0 px-1">
+                    <Button variant="secondary" className="w-100" onClick={onSaveModList}>
+                        <strong>{t('modals.check-mods.save-json')}</strong>
+                    </Button>
+                </div>
+                <div className="col-6 col-md-3 mb-2 mb-md-0 px-1">
+                    <Button variant="warning" className="w-100" disabled={!updateButtonEnabled} onClick={onUpdateMods}>
+                        <strong>{t('modals.check-mods.update')}</strong>
+                    </Button>
+                </div>
+                <div className="col-6 col-md-3 mb-2 mb-md-0 px-1">
+                    <Button variant="success" className="w-100" onClick={onValidateFiles}>
+                        <strong>{t('modals.check-mods.validate')}</strong>
+                    </Button>
+                </div>
+            </div>
+        </dekModalFooter>
+    </DekCommonAppModal>;
 }

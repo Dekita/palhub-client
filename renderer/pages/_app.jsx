@@ -5,7 +5,8 @@
 */
 // import react and core layout
 import React from 'react';
-import Layout from '@components/core/layout';
+import DekAppLayoutWrapper from '@components/core/layout';
+import { CommonAppDataProvider } from '@hooks/useCommonChecks';
 import { LocalizationProvider } from '@hooks/useLocalization';
 import { DeepLinkProvider } from '@hooks/useDeepLinkListener';
 
@@ -18,9 +19,11 @@ export default function MainAppWrapper({ Component, pageProps }) {
     // console.log({Component, pageProps});
     return <LocalizationProvider>
         <DeepLinkProvider>
-            <Layout>
-                <Component {...pageProps}/>
-            </Layout>
+            <CommonAppDataProvider>
+                <DekAppLayoutWrapper>
+                    <Component {...pageProps}/>
+                </DekAppLayoutWrapper>
+            </CommonAppDataProvider>
         </DeepLinkProvider>
     </LocalizationProvider>
 };
