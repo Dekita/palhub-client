@@ -12,7 +12,7 @@ import { Client } from '../dek/palhub';
 const nexusApiCache = new Dekache({ name: "need some cache bruh?", mins: 5 });
 
 // a more long term cache for persistent storage of mod data
-const nexusApiModDataStore = new Store({ name: "nexusApiModData" });
+const nexusApiModDataStore = new Store({ name: "[dek.ue.nexus.cache]" });
 const lengthOfOneHour = 1000 * 60 * 60;
 const lengthOfOneDay = lengthOfOneHour * 24;
 const lengthOfOneWeek = lengthOfOneDay * 7;

@@ -12,9 +12,9 @@ files:
       - package.json
       - app
 
-# - from: node_modules/regedit/vbs
+# - from: resources/vbs
 extraFiles:
-  - from: resources/vbs
+  - from: node_modules/regedit/vbs
     to: resources/vbs
 
 publish:

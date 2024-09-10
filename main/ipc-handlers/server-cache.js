@@ -8,7 +8,7 @@ import Store from "electron-store";
 
 // Create a new instance of electron-store for handling
 // user specific data storage.
-const serverPasswordCache = new Store({ name: "server-pass-cache" });
+const serverPasswordCache = new Store({ name: "[dek.ue.server.pass]" });
 
 // export default 
 export default async (event, action, key, value) => {

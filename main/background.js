@@ -21,8 +21,9 @@ Client.setAppDetails(DEAP.name, DEAP.version);
 DEAP.setup(config, ()=>{ // then run this callback
     if (process.platform === 'win32') { // update regedit script path
         // In a packaged app, resourcesPath points to the resources directory
+        // when packaged, use the resourcesPath to find the vbs script
         if (DEAP.app.isPackaged) setExternalVBS(process.resourcesPath, 'vbs'); 
-        else setExternalVBS(DEAP.app.getAppPath(), 'resources/vbs'); // Development mode
+        // else setExternalVBS(DEAP.app.getAppPath(), 'resources/vbs'); // Development mode
     }
     // add all ipc handlers defined in ipc-handlers folder
     for (const key in ipcHandlers) {
@@ -42,5 +43,5 @@ DEAP.launch({
     // onAppWindowsClosed:() => {},
     // onSecondInstanceLaunched: () => {},
     // onBeforeQuitApp: () => {},
-    //! TODO: onLoadWindow(id, win) {}
+    // onLoadWindow(id, win) {}
 });

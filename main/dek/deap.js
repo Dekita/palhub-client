@@ -18,7 +18,6 @@ import { createWindow } from "./create-window";
 import Store from "electron-store";
 import serve from "electron-serve";
 import path from "node:path";
-// import fs from 'fs';
 
 // !see: https://www.electronjs.org/docs/latest/api/command-line-switches
 // app.commandLine.appendSwitch('remote-debugging-port', '8315')
@@ -26,6 +25,14 @@ import path from "node:path";
 // !see: https://www.electronjs.org/docs/latest/api/session
 // !see: https://www.electronjs.org/docs/latest/api/extensions
 // session.defaultSession.loadExtension(path.join(__dirname, '../../extensions/react-devtools'));
+
+// set the userData path to include (development) when in dev mode
+// called here to ensure imported libs that use electron store are 
+// also updated/configured to use the correct path
+if (!app.isPackaged) {
+    const basePath = app.getPath("userData");
+    app.setPath("userData", `${basePath} (dev)`);
+}
 
 // get the package.json file for the app (when in dev mode)
 const PACKAGE_JSON = (() => {
@@ -78,15 +85,20 @@ class DEAP {
         // setup app instance lock and return if we are not the main instance
         this._can_launch = this.setInstanceLock();
         if (!this._can_launch) return;
-
-        this.setAppPathDatas();
-        // setup global logfile
-        LoggyBoi.logpath = path.join(app.getPath("userData"), "app.log");
+        //! note: 
+        //! serve the app from the app.asar file when packaged
+        //! purposely after setInstanceLock to ensure that we
+        //! are the main instance of the application
+        if (app.isPackaged) serve({ directory: "app" });
+        // setup the logger system
+        const userDataPath = app.getPath("userData");
+        const logfileName = "[dek.ue.applog].log";
+        LoggyBoi.logpath = path.join(userDataPath, logfileName);
         LoggyBoi.setGlobalOptions({
             ...config.logger,
             file_options: {
                 filename: LoggyBoi.logpath,
-                options: { flags: "a", encoding: "utf8" },
+                options: { flags: "w", encoding: "utf8" },
             },
             // http_options: {
             //     port: 9699,
@@ -94,11 +106,11 @@ class DEAP {
             // }
         });
         this.logger = createLogger("deap");
-        this.logger.info(app.getAppPath());
-        this.setUserAgent("dekitarpg.com");
+        this.logger.info(userDataPath);
+        this.setUserAgent("by dekitarpg.com");
         this.setupDefaultIPC();
         this.setDatastore({
-            name: "[dekita.palhub.data]",
+            name: "[dek.ue.appdata]",
             defaults: config.data_store,
         });
         if (callback) callback(this);
@@ -109,12 +121,6 @@ class DEAP {
         // returns true if we are the main instance
         return app.requestSingleInstanceLock({}); 
     }
-    static setAppPathDatas() {
-        // serve the app from the app.asar file when packaged
-        if (app.isPackaged) serve({ directory: "app" });
-        // set the userData path to include (development) when in dev mode
-        else app.setPath("userData", `${app.getPath("userData")} (development)`);
-    } 
     static useLogger(id) {
         const logger = (action, ...args) => {
             const { idtag } = this.logger; // get the current idtag
@@ -133,7 +139,7 @@ class DEAP {
     }
     static setUserAgent(agent_str) {
         this._user_agent = `${APP_NAME} ${APP_VERSION} ${agent_str}`.trim();
-        this.logger.info(`User-Agent: ${this._user_agent}`);
+        this.logger.info(this._user_agent);
     }
     /**
      * ■ ipc handlers:
@@ -238,7 +244,7 @@ class DEAP {
         let reloading = false;
 
         // this._windows[id] = new BrowserWindow({
-        this._windows[id] = createWindow(id, {
+        this._windows[id] = createWindow(this, id, {
             icon: this._config.app_icon.ico,
             show: false,
             width,
@@ -294,7 +300,7 @@ class DEAP {
             // this._windows[id].webContents.send('deap-window-setup', id);
             if (this._onLoadWindowCB) {
                 this._onLoadWindowCB(id, this._windows[id]);
-                this._onLoadWindowCB = null;
+                // this._onLoadWindowCB = null;
             }
             this._windows[id].focus();
         });
@@ -418,7 +424,7 @@ class DEAP {
         }
     }
     static initializeAutoUpdater() {
-        this.logger.info(`initializing auto-updater: ${app.isPackaged}`);
+        this.logger.info(`Automatic Updates Enabled: ${app.isPackaged}`);
         if (!app.isPackaged) {
             this.main_window?.webContents?.send("auto-updater", "not-packaged");
             return;
