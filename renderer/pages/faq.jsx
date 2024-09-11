@@ -9,7 +9,6 @@ import Container from 'react-bootstrap/Container';
 import FAQCard from '@components/faq-card';
 
 import useLocalization from '@hooks/useLocalization';
-import useSelectedGame from '@hooks/useSelectedGame';
 
 // export const getServerSideProps = async () => {
 //     return { props: {} };
@@ -17,7 +16,6 @@ import useSelectedGame from '@hooks/useSelectedGame';
 
 export default function FAQPage(props) {
     const { t, tA, tO } = useLocalization();
-    const game = useSelectedGame();
     const tagline = t('/faq.head');
     const rawFAQs = tO('/faq.faqs') ?? [];
     const answers = rawFAQs.map((v,i) => t(`/faq.faqs.${i}.a`));

@@ -9,10 +9,8 @@ import Link from 'next/link';
 
 import * as CommonIcons from '@config/common-icons';
 import useLocalization from '@hooks/useLocalization';
-import useSelectedGame from '@hooks/useSelectedGame';
 
 export default function AboutPage() {
-    const game = useSelectedGame();
     const { t, tA } = useLocalization();
 
     return <div className="container">
