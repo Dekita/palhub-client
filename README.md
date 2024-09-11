@@ -1,15 +1,15 @@
 
 
 <div align="center">
-    <img style="max-height: 256px; width: auto;" src="resources/palhub-client-header.png" title="Main Logo" />
-    <div class="row p-3">
+    <img style="max-height: 256px; width: auto; margin-top: 12px;" src="resources/palhub-client-header.png" title="Main Logo" />
+    <div class="row">
         <img src="https://img.shields.io/github/downloads/Dekita/palhub-client/total?style=for-the-badge&logo=github">
         <a class="mx-2" href="https://discord.gg/WyTdramBkm" target="new">
         <img src="https://img.shields.io/discord/1132980259596271657?logo=discord&style=for-the-badge&logoColor=e4e4e4&label=Support%20Server"></a>
         <img src="https://img.shields.io/github/stars/Dekita/palhub-client?style=for-the-badge&logo=apache%20spark&logoColor=e4e4e4">
     </div>
 </div>
-<hr class="mt-1">
+<hr class="mt-0">
 
 
 ### What is PalHUB Client
