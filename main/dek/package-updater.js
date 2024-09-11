@@ -1,17 +1,17 @@
 /**
-* ■ devstore.js
+* ■ package-updater.js
 * author: dekitarpg@gmail.com
-* application specific storage: doesnt handle user datas
-* simply stores information on how many times the app
-* has been launched in dev mode! <3
+* stores information on how many times the app has been launched in dev mode! <3
+* can save the data to a separate file and/or update package.json version automatically
 */
 
-import DataStore from 'electron-store';
 import { join } from 'path';
 import { writeFileSync } from 'fs';
+import DataStore from 'electron-store';
 import freshRequire from './freshRequire';
 
 const UPDATE_PACKAGE_VERSION = true;
+const SAVE_TO_SEPERATE_FILE = false;
 
 export const updateAppVersion = (currentPackageJSON) => {
     // fallback default values for bootups/release/version
@@ -31,27 +31,29 @@ export const updateAppVersion = (currentPackageJSON) => {
         }
         default_version = version;
     }
-    // datastore initializaer contained in this function
-    // to avoid error when launch in production mode
-    const devstore = new DataStore({
-        cwd: join(__dirname, '..'),
-        name: "[dekapp.version]",
-        defaults: {
-            bootups: default_bootups, // stores #times server/app rebooted
-            release: default_release, // updates after each bootup
-            version: default_version, // version based on #bootups
-        },
-    });
     // actually increment the version from bootups counter
-    let new_bootups = devstore.get('bootups') + 1;
+    let new_bootups = default_bootups + 1;
     const major = Math.floor(new_bootups / 100 / 100);
     const minor = Math.floor(new_bootups / 100) % 100;
     const other = new_bootups % 100;
     const version = `${major}.${minor}.${other}`;
     const release = new Date().toLocaleString('en-US', { timeZone: 'UTC' });
-    devstore.set('bootups', new_bootups);
-    devstore.set('version', version);
-    devstore.set('release', release);
+    if (SAVE_TO_SEPERATE_FILE) {
+        // datastore initializaer contained in this function
+        // to avoid error when launch in production mode
+        const devstore = new DataStore({
+            cwd: join(__dirname, '..'),
+            name: "[dekapp.version]",
+            defaults: {
+                bootups: default_bootups, // stores #times server/app rebooted
+                release: default_release, // updates after each bootup
+                version: default_version, // version based on #bootups
+            },
+        });
+        devstore.set('bootups', new_bootups);
+        devstore.set('version', version);
+        devstore.set('release', release);
+    }
     // update package.json version if enabled
     if (UPDATE_PACKAGE_VERSION && currentPackageJSON) {
         try { 
@@ -75,4 +77,3 @@ export const updateAppVersion = (currentPackageJSON) => {
     }
     return version;
 }
-

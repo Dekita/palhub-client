@@ -11,7 +11,7 @@
 */
 
 import { app, dialog, ipcMain, BrowserWindow, Menu, Tray, nativeImage, shell, session } from "electron";
-import { updateAppVersion } from "./devstore";
+import { updateAppVersion } from "./package-updater";
 import { autoUpdater } from "electron-updater";
 import createLogger, { LoggyBoi } from "./logger";
 import { createWindow } from "./create-window";
