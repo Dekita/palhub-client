@@ -25,17 +25,17 @@ publish:
 
 win:
   target: nsis
-  icon: resources/icon.ico
+  icon: resources/images/icon.ico
 
 linux:
   target: AppImage
-  icon: resources/icon.png
+  icon: resources/images/icon.png
   category: Utility
 
 nsis:
   allowToChangeInstallationDirectory: true
-  uninstallerIcon: resources/icon.ico
-  installerIcon: resources/icon.ico
+  uninstallerIcon: resources/images/icon.ico
+  installerIcon: resources/images/icon.ico
   license: LICENSE
   perMachine: true
   oneClick: false

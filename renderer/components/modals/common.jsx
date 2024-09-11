@@ -70,7 +70,7 @@ export function ENVEntryLabel({name, envdatas, tooltip}) {
     const icon_size = 16;
 
 
-    const placement = 'bottom';
+    const placement = 'top';
     const onClick = () => {};
 
     return <div className="px-2 pb-2">
