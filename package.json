@@ -1,6 +1,6 @@
 {
     "private": false,
-    "version": "0.4.49",
+    "version": "0.4.8",
     "name": "dekita-palhub-client",
     "productName": "PalHUB Client",
     "description": "PalHUB Client written by DekitaRPG",
@@ -62,7 +62,7 @@
         "@svgr/webpack": "^8.1.0",
         "autoprefixer": "^10.4.20",
         "electron": "^32.0.2",
-        "electron-builder": "^25.0.5",
+        "electron-builder": "^24.13.3",
         "eslint": "^9",
         "eslint-config-next": "14.2.9",
         "next": "^14.2.9",
@@ -77,6 +77,6 @@
     },
     "release": {
         "date": "9/11/2024",
-        "time": "1:29:21 AM"
+        "time": "4:40:25 AM"
     }
 }
