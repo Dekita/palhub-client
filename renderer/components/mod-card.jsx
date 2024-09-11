@@ -42,7 +42,6 @@ import React from 'react';
 import Col from 'react-bootstrap/Col';
 // import Image from 'next/image';
 import Image from 'react-bootstrap/Image';
-import styles from '@styles/modcard.module.css';
 import Card from 'react-bootstrap/Card';
 import * as CommonIcons from 'config/common-icons';
 import { SphereSpinner } from 'react-spinners-kit';
@@ -62,8 +61,8 @@ export default function ModCardComponent({ mod, onClick=()=>{}, ad=false }) {
                     <div className="ratio ratio-16x9">
                         <Image src={mod.picture_url ?? mod.uploaded_users_profile_url} alt={mod.name} fluid thumbnail />
                     </div>
-                    {ad && <div className={styles.modcard}>
-                        <IconComponent fill='currentColor' className={styles.modicon}/>
+                    {ad && <div className='modcard'>
+                        <IconComponent fill='currentColor' className='modicon'/>
                     </div>}
                 </Card.Title>
 

@@ -90,7 +90,6 @@ import React from 'react';
 import Col from 'react-bootstrap/Col';
 // import Image from 'next/image';
 import Image from 'react-bootstrap/Image';
-import styles from '@styles/modcard.module.css';
 import Card from 'react-bootstrap/Card';
 // import { SphereSpinner } from 'react-spinners-kit';
 import DOMPurify from 'dompurify';
@@ -115,13 +114,13 @@ export default function ServerCardComponent({ server, onClick=()=>{}, ad=false }
                     <div className="ratio ratio-16x9">
                         <Image src={server.splashURL} alt={server.name} fluid thumbnail />
                     </div>
-                    {false && <div className={styles.modcard}>
+                    {false && <div className='modcard'>
                         <div className='p-0'>
                             <span className='alert bg-info px-1 py-0'>{server.allowConnectPlatform}</span>
                         </div>
                     </div>}
-                    {ad && <div className={styles.modcard}>
-                        <IconComponent fill='currentColor' className={styles.modicon}/>
+                    {ad && <div className='modcard'>
+                        <IconComponent fill='currentColor' className='modiocn'/>
                     </div>}
                 </Card.Title>
 
