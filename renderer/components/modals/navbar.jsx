@@ -5,38 +5,26 @@
 modal is displayed when mobile (small viewpoert) user
 clicks on "hamburger menu" in navbar :)
 */
-
+import React from 'react';
 import { motion } from 'framer-motion';
-import Button from 'react-bootstrap/Button';
-import Modal from 'react-bootstrap/Modal';
 import Card from 'react-bootstrap/Card';
-import IconX from '@svgs/fa5/regular/window-close.svg';
-import Footer from '@components/core/footer';
 import { useRouter } from 'next/router';
 import navbar_items from 'config/navbar-items';
 // import * as CommonIcons from 'config/common-icons';
 import useLocalization from '@hooks/useLocalization';
+import DekCommonAppModal from '@components/core/modal';
 
 export default function NavbarModal({ show, setShow }) {
-    const handleCancel = () => setShow(false);
+    const onCancel = React.useCallback(() => setShow(false), []);
     const { t } = useLocalization();
     const router = useRouter();
-    return <Modal show={show} onHide={handleCancel} fullscreen centered>
-        <Modal.Header className='navbar theme-text'>
-            <Modal.Title>
-                <small><strong>{t('app.brandname')}</strong></small>
-            </Modal.Title>
-            <Button
-                variant='none'
-                className='p-0 hover-dark no-shadow'
-                onClick={handleCancel}>
-                <IconX className='modalicon' fill='currentColor' />
-            </Button>
-        </Modal.Header>
-        <Modal.Body className='container-fluid'>
-            {navbar_items.map((element, index) => {
+    const headerText = t('app.brandname');
+    const modalOptions = {show, setShow, onCancel, headerText, showX: true};
+    return <DekCommonAppModal {...modalOptions}>
+        <dekModalBody className="d-grid pt-4 pb-2 text-center">
+        {navbar_items.map((element, index) => {
                 const delay = index * 0.1 + 0.25;
-                const onClick = () => { handleCancel(); router.push(element.href) };
+                const onClick = () => { onCancel(); router.push(element.href) };
                 return <div key={index} className={`btn no-shadow p-0 w-100 hover-dark text-center`} onClick={onClick}>
                     <motion.div
                         initial={{ y: 64, opacity: 0 }}
@@ -76,7 +64,6 @@ export default function NavbarModal({ show, setShow }) {
                     </motion.div>
                 </div>;
             })}
-        </Modal.Body>
-        <Footer/>
-    </Modal>;
+        </dekModalBody>
+    </DekCommonAppModal>;
 }

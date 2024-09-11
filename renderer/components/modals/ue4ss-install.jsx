@@ -4,23 +4,22 @@
 ########################################
 */
 
-import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
-import IconX from '@svgs/fa5/regular/window-close.svg';
-
-import Modal from 'react-bootstrap/Modal';
-// import useMediaQuery from '@hooks/useMediaQuery';
+import React from 'react';
 import useScreenSize from '@hooks/useScreenSize';
+import useLocalization from '@hooks/useLocalization';
+import DekCommonAppModal from '@components/core/modal';
 import replaceUe4ssIniKeyValue from 'utils/replaceIniKey';
 
 export default function InstallUe4ssModal({ show, setShow }) {
-    const handleCancel = () => setShow(false);
+    const onCancel = React.useCallback(() => setShow(false), []);
     const { isDesktop } = useScreenSize();
+    const { t } = useLocalization();
     const fullscreen = !isDesktop;
 
     const height = fullscreen ? 'calc(100vh - 182px)' : 'calc(100vh / 4 * 2 + 26px)';
-    const logRef = useRef(null);
+    const logRef = React.useRef(null);
 
-    const [logMessages, setLogMessages] = useState([]);
+    const [logMessages, setLogMessages] = React.useState([]);
 
     const addLogMessage = (message) => {
         setLogMessages((old) => [...old, message]);
@@ -35,7 +34,7 @@ export default function InstallUe4ssModal({ show, setShow }) {
     };
 
     // initialize the ue4ss installation's configuration
-    const setUe4ssDefaultSettings = useCallback(async () => {
+    const setUe4ssDefaultSettings = React.useCallback(async () => {
         if (!window.uStore) return console.error('uStore not loaded');
         if (!window.palhub) return console.error('palhub not loaded');
         if (!window.nexus) return console.error('nexus not loaded');
@@ -54,8 +53,8 @@ export default function InstallUe4ssModal({ show, setShow }) {
         }
     }, []);
 
-    useEffect(() => {
-        if (!window.ipc) return console.error('ipc not loaded');
+    React.useEffect(() => {
+        if (!window.ipc) return;
 
         const remove_ue4ss_handler = window.ipc.on('ue4ss-process', (type, data) => {
             switch (type) {
@@ -81,27 +80,13 @@ export default function InstallUe4ssModal({ show, setShow }) {
         return () => remove_ue4ss_handler();
     }, []);
 
-    // return the actual envmodal
-    return (
-        <Modal
-            show={show}
-            size="lg"
-            fullscreen={fullscreen}
-            onHide={handleCancel}
-            backdrop="static"
-            keyboard={false}
-            centered
-        >
-            <Modal.Header className="p-4 theme-border ">
-                <Modal.Title className="col">
-                    <strong>Installing UE4SS.. Please Wait.</strong>
-                </Modal.Title>
-            </Modal.Header>
-            <Modal.Body className="text-center">
-                <div className="overflow-auto m-0 p-3" style={{ height }} ref={logRef}>
-                    <pre className="m-0 p-2 text-start">{logMessages.join('\n')}</pre>
-                </div>
-            </Modal.Body>
-        </Modal>
-    );
+    const headerText = t('modals.modloader.installing-ue4ss');
+    const modalOptions = {show, setShow, onCancel, headerText, showX: true};
+    return <DekCommonAppModal {...modalOptions}>
+        <dekModalBody className="d-grid p-3 px-4 text-center">
+            <div className="overflow-auto m-0 p-3" style={{ height }} ref={logRef}>
+                <pre className="m-0 p-2 text-start">{logMessages.join('\n')}</pre>
+            </div>
+        </dekModalBody>
+    </DekCommonAppModal>;
 }

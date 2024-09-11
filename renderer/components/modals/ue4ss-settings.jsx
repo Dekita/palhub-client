@@ -22,6 +22,8 @@ import IconX from '@svgs/fa5/regular/window-close.svg';
 import useCommonChecks from '@hooks/useCommonChecks';
 
 import replaceUe4ssIniKeyValue from 'utils/replaceIniKey';
+import DekCommonAppModal from '@components/core/modal';
+
 
 const UE4SS_NUMBOOLS = [
     'EnableHotReloadSystem',
@@ -104,8 +106,7 @@ export default function Ue4ssSettingsModal({ show, setShow }) {
     React.useEffect(() => {
         (async () => {
             if (!requiredModulesLoaded || !show) return;
-            if (!game_data.has_exe) return router.push('/settings');
-            if (!game_data.has_ue4ss) return router.push('/settings');
+            if (!game_data?.has_exe || !game_data?.has_ue4ss) return;
             const ini_path = await window.palhub('joinPath', game_data.ue4ss_root, 'UE4SS-settings.ini');
             const ini_string = await window.palhub('readFile', ini_path, { encoding: 'utf-8' });
             setSettings(parse(ini_string));

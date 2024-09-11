@@ -93,6 +93,9 @@
             "join-discord": "Join {{server.serverName}} Discord",
             "install-mods": "Install {{server.serverName}} Mod List",
             "install-note": "Note: alters your active mod list"
+        },
+        "modloader": {
+            "installing-ue4ss": "Installing UE4SS.. Please Wait."
         }
     },
 

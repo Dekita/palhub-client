@@ -4,75 +4,91 @@
 ########################################
 */
 
-import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
-import IconX from '@svgs/fa5/regular/window-close.svg';
-
+import React from 'react';
 import Carousel from 'react-bootstrap/Carousel';
-import Button from 'react-bootstrap/Button';
-import Modal from 'react-bootstrap/Modal';
-// import Col from 'react-bootstrap/Col';
-// import Row from 'react-bootstrap/Row';
-
-// import useMediaQuery from '@hooks/useMediaQuery';
-import useScreenSize from '@hooks/useScreenSize';
-
 import MarkdownRenderer from '@components/markdown/renderer';
-import BBCodeRenderer from '@components/core/bbcode';
+// import BBCodeRenderer from '@components/core/bbcode';
 
 import { ENVEntry, ENVEntry_Input, ensureEntryValueType } from '@components/modals/common';
 // import DekSelect from '@components/core/dek-select';
-import DekSwitch from '@components/core/dek-switch';
+// import DekSwitch from '@components/core/dek-switch';
 import DekChoice from '@components/core/dek-choice';
 // import DekCheckbox from '@components/core/dek-checkbox';
 
 import ModFileCard from '@components/core/mod-file-card';
 import Link from 'next/link';
 
-import wait from 'utils/wait';
 import DekCheckbox from '@components/core/dek-checkbox';
 
 import * as CommonIcons from '@config/common-icons';
 import useLocalization from '@hooks/useLocalization';
-import useSelectedGame from '@hooks/useSelectedGame';
+import DekCommonAppModal from '@components/core/modal';
+import useScreenSize from '@hooks/useScreenSize';
+import wait from '@utils/wait';
+
+// HIDDEN either because should not be shown to end user, 
+// or because the information is shown in a different way <3
+const HIDDEN_SERVER_DATA_KEYS = [
+    'mods',
+    'splashURL',
+    'serverName',
+    'gameVersion',
+    'serverDescription',
+    'longServerDescription',
+    'serverURL',
+    'discordURL',
+    'rESTAPIPort',
+    'rESTAPIEnabled',
+    'rCONEnabled',
+    'rCONPort',
+    'banListURL',
+    'logFormatType',
+    'DekitaWasHere',
+    'bUseAuth',
+    'publicPort',
+    'adminPassword',
+    'serverPassword',
+    'publicIP',
+    'autoSaveSpan',
+    'palhubServerURL',
+    'discordServerID',
+    'playerCount',
+    'fps',
+];
+
 
 export default function ServerDetailsModal({ show, setShow, server }) {
-    const game = useSelectedGame();
     const { t, tA } = useLocalization();
     const { isDesktop } = useScreenSize();
     const fullscreen = !isDesktop;
-    const height = fullscreen ? 'calc(100vh - 182px)' : 'calc(100vh - 256px)';
+    const height = fullscreen ? "calc(100vh - 96px)" : "calc(100vh / 4 * 3)";
 
-    // if (!mod) mod = {name: 'n/a', author: 'n/a', summary: 'n/a', description: 'n/a', picture_url: 'n/a'};
-
-    const [serverpageID, setServerpageID] = useState(0);
+    const [serverpageID, setServerpageID] = React.useState(0);
     const serverpageTypes = tA('modals.server-details.tabs', 3);
-    const [servermodFiles, setServerModFiles] = useState([]);
+    const [servermodFiles, setServerModFiles] = React.useState([]);
 
-    const [logMessages, setLogMessages] = useState([]);
-    const [isProcessing, setIsProcessing] = useState(false);
-    const [isComplete, setIsComplete] = useState(false);
-    const logRef = useRef(null);
+    const [logMessages, setLogMessages] = React.useState([]);
+    const [isProcessing, setIsProcessing] = React.useState(false);
+    const [isComplete, setIsComplete] = React.useState(false);
+    const logRef = React.useRef(null);
 
-    const [showPassword, setShowPassword] = useState(false);
-    const [rememberPassword, setRememberPassword] = useState(true);
-    const passwordRef = useRef(null);
+    const [showPassword, setShowPassword] = React.useState(false);
+    const [rememberPassword, setRememberPassword] = React.useState(true);
+    const passwordRef = React.useRef(null);
 
-    const [hasGotMods, setHasGotMods] = useState(false);
-    const [hasGotPassword, setHasGotPassword] = useState(false);
+    const [hasGotMods, setHasGotMods] = React.useState(false);
+    const [hasGotPassword, setHasGotPassword] = React.useState(false);
 
     const addLogMessage = (message) => {
         setLogMessages((old) => [...old, message]);
-        if (logRef.current) {
-            setTimeout(() => (logRef.current.scrollTop = logRef.current.scrollHeight));
-            // logRef.current.scrollTop = logRef.current.scrollHeight;
-        }
+        if (logRef.current) setTimeout(() => (logRef.current.scrollTop = logRef.current.scrollHeight));
     };
 
     const resetLogMessages = () => {
         setLogMessages([]);
     };
 
-    const handleCancel = () => {
+    const onCancel = React.useCallback(() => {
         setShow(false);
         setTimeout(() => {
             setIsProcessing(false);
@@ -80,9 +96,9 @@ export default function ServerDetailsModal({ show, setShow, server }) {
             setIsComplete(false);
             setServerpageID(0);
         }, 250);
-    };
+    }, []);
 
-    const onClickJoinServer = useCallback(async () => {
+    const onClickJoinServer = React.useCallback(async () => {
         try {
             if (!window.uStore) return console.error('uStore not loaded');
             if (!window.palhub) return console.error('palhub not loaded');
@@ -112,18 +128,13 @@ export default function ServerDetailsModal({ show, setShow, server }) {
             // await window.uStore.set('remeber_server_passwords', rememberPassword);
 
             console.log('writing launch config:', game_data.content_path);
-            await window.palhub(
-                'writeJSON',
-                game_data.content_path,
-                {
-                    'auto-join-server': {
-                        // Handle IPv4-mapped IPv6 addresses (like ::ffff:172.24.0.6)
-                        path: server.palhubServerURL,
-                        pass: passwordRef?.current?.value ?? '',
-                    },
+            await window.palhub('writeJSON', game_data.content_path, {
+                'auto-join-server': {
+                    // Handle IPv4-mapped IPv6 addresses (like ::ffff:172.24.0.6)
+                    path: server.palhubServerURL,
+                    pass: passwordRef?.current?.value ?? '',
                 },
-                'palhub.launch.config.json'
-            );
+            }, 'palhub.launch.config.json');
 
             console.log('launching game:', game_data.exe_path);
             await window.palhub('launchExe', game_data.exe_path);
@@ -134,7 +145,7 @@ export default function ServerDetailsModal({ show, setShow, server }) {
         }
     }, [server, servermodFiles, passwordRef, rememberPassword]);
 
-    const onInstallServerModList = useCallback(async () => {
+    const onInstallServerModList = React.useCallback(async () => {
         console.log('onInstallServerModList');
         // return;
 
@@ -212,20 +223,17 @@ export default function ServerDetailsModal({ show, setShow, server }) {
         }, 1000);
     }, [servermodFiles]);
 
-    useEffect(() => {
+    React.useEffect(() => {
         if (!window.ipc) return console.error('ipc not loaded');
 
         const remove_dl_handler = window.ipc.on('download-mod-file', ({ mod_id, file_id, percentage }) => {
             addLogMessage(`Downloading Mod: ${mod_id} / ${file_id} - ${percentage}%`);
         });
 
-        const remove_in_handler = window.ipc.on(
-            'install-mod-file',
-            ({ install_path, name, version, mod_id, file_id, entries }) => {
-                addLogMessage(`Installing Mod: ${name} v${version}`);
-                // console.log({install_path, mod_id, file_id, entries});
-            }
-        );
+        const remove_in_handler = window.ipc.on('install-mod-file', ({ install_path, name, version, mod_id, file_id, entries }) => {
+            addLogMessage(`Installing Mod: ${name} v${version}`);
+            // console.log({install_path, mod_id, file_id, entries});
+        });
 
         const remove_ex_handler = window.ipc.on('extract-mod-file', ({ entry, outputPath }) => {
             addLogMessage(`Extracting: ${entry}`);
@@ -233,9 +241,6 @@ export default function ServerDetailsModal({ show, setShow, server }) {
         });
 
         return () => {
-            // window.ipc.removeListener('download-mod-file', download_handler);
-            // window.ipc.removeListener('install-mod-file', install_handler);
-            // window.ipc.removeListener('extract-mod-file', extract_handler);
             remove_dl_handler();
             remove_in_handler();
             remove_ex_handler();
@@ -244,7 +249,7 @@ export default function ServerDetailsModal({ show, setShow, server }) {
 
     const shouldShowLogs = isComplete || isProcessing;
 
-    useEffect(() => {
+    React.useEffect(() => {
         (async () => {
             if (!window.uStore) return console.error('uStore not loaded');
             if (!window.palhub) return console.error('palhub not loaded');
@@ -309,119 +314,76 @@ export default function ServerDetailsModal({ show, setShow, server }) {
 
     if (!server) return null;
 
-    // return the actual envmodal
-    return (
-        <Modal
-            show={show}
-            size="lg"
-            fullscreen={fullscreen}
-            onHide={handleCancel}
-            backdrop="static"
-            keyboard={false}
-            centered
-        >
-            <Modal.Header className="p-4 theme-border ">
-                <Modal.Title className="col">
-                    <strong>{server.serverName}</strong> <small>{server.gameVersion}</small>
-                </Modal.Title>
-                {!shouldShowLogs && (
-                    <Button variant="none" className="p-0 hover-danger no-shadow" onClick={handleCancel}>
-                        <IconX className="modalicon" fill="currentColor" />
-                    </Button>
-                )}
-            </Modal.Header>
-            <Modal.Body className="overflow-y-scroll" style={fullscreen ? {} : { height: 'calc(100vh / 4 * 3)' }}>
-                {!shouldShowLogs && (
-                    <>
-                        <div className="ratio ratio-16x9">
-                            <img src={server.splashURL} alt={server.serverName} className="d-block w-100" />
-                        </div>
-                        <div className="row">
-                            <DekChoice
-                                className="col py-3"
-                                // disabled={true}
-                                choices={serverpageTypes}
-                                active={serverpageID}
-                                onClick={(i, value) => {
-                                    console.log(`Setting Page: ${value}`);
-                                    setServerpageID(i);
-                                }}
-                            />
-                            <div className="col-12 col-sm-4 col-md-3 pt-sm-3 pt-0 py-3">
-                                <button className="btn btn-success px-4 w-100" onClick={onClickJoinServer}>
-                                    <strong>{t('modals.server-details.join')}</strong>
-                                    <br />
-                                </button>
-                            </div>
-                        </div>
-                    </>
-                )}
+    const carouselOptions = {
+        interval: null,
+        indicators: false,
+        controls: false,
+        className: 'theme-border',
+        activeIndex: serverpageID,
+    };
 
-                {(!hasGotMods || !hasGotPassword) && (
-                    <div className="alert alert-danger text-center">
-                        {!hasGotMods && (
-                            <div className="container">
-                                <strong>{t('common.note')}</strong> {t('modals.server-details.mods-required')}
-                            </div>
-                        )}
-                        {!hasGotPassword && (
-                            <div className="container">
-                                <strong>{t('common.note')}</strong> {t('modals.server-details.pass-required')}
-                            </div>
-                        )}
+    const headerText = `${server.serverName} - ${server.gameVersion}`;
+    const modalOptions = {show, setShow, onCancel, headerText, showX: !shouldShowLogs};
+    return <DekCommonAppModal {...modalOptions}>
+        <dekModalBody className='d-block overflow-y-scroll' style={{height}}>
+            <div className='p-3'>
+                {!shouldShowLogs && <React.Fragment>
+                    <div className="ratio ratio-16x9">
+                        <img src={server.splashURL} alt={server.serverName} className="d-block w-100" />
                     </div>
-                )}
+                    <div className="row">
+                        <DekChoice
+                            className="col py-3"
+                            // disabled={true}
+                            choices={serverpageTypes}
+                            active={serverpageID}
+                            onClick={(i, value) => {
+                                console.log(`Setting Page: ${value}`);
+                                setServerpageID(i);
+                            }}
+                        />
+                        <div className="col-12 col-sm-4 col-md-3 pt-sm-3 pt-0 py-3">
+                            <button className="btn btn-success px-4 w-100" onClick={onClickJoinServer}>
+                                <strong>{t('modals.server-details.join')}</strong>
+                                <br />
+                            </button>
+                        </div>
+                    </div>
+                </React.Fragment>}
 
-                {/* <MarkdownRenderer markdownText={serverLongDescriptionMD} /> */}
+                {(!hasGotMods || !hasGotPassword) && <div className="alert alert-danger text-center">
+                    {!hasGotMods && <div className="container">
+                        <strong>{t('common.note')}</strong> {t('modals.server-details.mods-required')}
+                    </div>}
+                    {!hasGotPassword && <div className="container">
+                        <strong>{t('common.note')}</strong> {t('modals.server-details.pass-required')}
+                    </div>}
+                </div>}
 
-                <Carousel
-                    interval={null}
-                    indicators={false}
-                    controls={false}
-                    className="theme-border"
-                    activeIndex={serverpageID}
-                >
+                <Carousel {...carouselOptions}>
                     <Carousel.Item className="container-fluid">
                         {/* <BBCodeRenderer bbcodeText={server.longServerDescription} /> */}
                         <MarkdownRenderer>{server.longServerDescription}</MarkdownRenderer>
-                        {server.discordServerID && (
-                            <div className="text-center mb-1">
-                                <Link
-                                    href={`https://discord.gg/${server.discordServerID}`}
-                                    target="_blank"
-                                    className="btn btn-warning p-2 px-4"
-                                >
-                                    <strong>{t('modals.server-details.join-discord', { server })}</strong>
-                                    <br />
-                                    <small>{t('common.open-link')}</small>
-                                </Link>
-                            </div>
-                        )}
+                        {server.discordServerID && <div className="text-center mb-1">
+                            <Link className="btn btn-warning p-2 px-4" href={`https://discord.gg/${server.discordServerID}`} target="_blank">
+                                <strong>{t('modals.server-details.join-discord', { server })}</strong>
+                                <br />
+                                <small>{t('common.open-link')}</small>
+                            </Link>
+                        </div>}
                     </Carousel.Item>
 
                     <Carousel.Item className="container-fluid">
                         {server?.serverPassword?.length && (
                             <div className="row">
                                 <div className="card bg-secondary border border-secondary2 pt-3 px-3 pb-2 mb-3">
-                                    {/* <ENVEntry 
-                                name="Server Password"
-                                value={''}
-                                type="password"
-                                updateSetting={()=>{}}
-                                tooltip="This server requires a password to join."
-                            /> */}
-
-                                    <input
+                                    <input autoComplete="off"
                                         type={showPassword ? 'text' : 'password'}
                                         placeholder="Enter Server Password Here.."
                                         className="form-control form-dark theme-bg mb-1"
-                                        // disabled={working}
-                                        autoComplete="off"
-                                        // list="fruitsList"
                                         style={{ width: '100%' }}
                                         ref={passwordRef}
                                     />
-
                                     <div className="row px-2">
                                         <div className="col">
                                             <DekCheckbox
@@ -449,109 +411,41 @@ export default function ServerDetailsModal({ show, setShow, server }) {
                         )}
 
                         <div className="row">
-                            {Object.keys(server)
-                                .sort()
-                                .map((key, i) => {
-                                    const disallowed = [
-                                        'mods',
-                                        'splashURL',
-                                        'serverName',
-                                        'gameVersion',
-                                        'serverDescription',
-                                        'longServerDescription',
-                                        'serverURL',
-                                        'discordURL',
-                                        'rESTAPIPort',
-                                        'rESTAPIEnabled',
-                                        'rCONEnabled',
-                                        'rCONPort',
-                                        'banListURL',
-                                        'logFormatType',
-                                        'DekitaWasHere',
-                                        'bUseAuth',
-                                        'publicPort',
-                                        'adminPassword',
-                                        'serverPassword',
-                                        'publicIP',
-                                        'autoSaveSpan',
-                                        'palhubServerURL',
-                                        'discordServerID',
-                                        'playerCount',
-                                        'fps',
-                                    ];
-                                    if (disallowed.includes(key)) return null;
-                                    return (
-                                        <div key={i} className="col-12 col-md-6">
-                                            <div className="row">
-                                                <div className="col-6">
-                                                    <strong>{key}</strong>
-                                                </div>
-                                                <div className="col-6 text-end">
-                                                    {ensureEntryValueType(server[key]) || '???'}
-                                                </div>
-                                            </div>
+                            {Object.keys(server).sort().map((key, i) => {
+                                if (HIDDEN_SERVER_DATA_KEYS.includes(key)) return null;
+                                return <div key={i} className="col-12 col-md-6">
+                                    <div className="row">
+                                        <div className="col-6">
+                                            <strong>{key}</strong>
                                         </div>
-                                    );
-                                })}
+                                        <div className="col-6 text-end">
+                                            {ensureEntryValueType(server[key]) || '???'}
+                                        </div>
+                                    </div>
+                                </div>;
+                            })}
                         </div>
                     </Carousel.Item>
 
                     <Carousel.Item className="container-fluid">
-                        {shouldShowLogs && (
-                            <div className="m-0 p-3" ref={logRef}>
-                                <pre className="m-0 p-2">{logMessages.join('\n')}</pre>
+                        {shouldShowLogs && <div className="m-0 p-3" ref={logRef}>
+                            <pre className="m-0 p-2">{logMessages.join('\n')}</pre>
+                        </div>}
+                        {!shouldShowLogs && <React.Fragment>
+                            {servermodFiles.map(({ file, mod }, i) => {
+                                return <ModFileCard key={i} mod={mod} file={file} />;
+                            })}
+                            <div className="text-center mb-1">
+                                <button className="btn btn-success p-2 px-4" onClick={onInstallServerModList}>
+                                    <strong>{t('modals.server-details.install-mods', { server })}</strong>
+                                    <br />
+                                    <small>{t('modals.install-note')}</small>
+                                </button>
                             </div>
-                        )}
-
-                        {!shouldShowLogs && (
-                            <>
-                                {servermodFiles.map(({ file, mod }, i) => {
-                                    return <ModFileCard key={i} mod={mod} file={file} />;
-                                })}
-                                <div className="text-center mb-1">
-                                    <button className="btn btn-success p-2 px-4" onClick={onInstallServerModList}>
-                                        <strong>{t('modals.server-details.install-mods', { server })}</strong>
-                                        <br />
-                                        <small>{t('modals.install-note')}</small>
-                                    </button>
-                                </div>
-                            </>
-                        )}
+                        </React.Fragment>}
                     </Carousel.Item>
                 </Carousel>
-
-                {/* <div className="container">
-            <div className="row gap-3">
-                {<Button
-                    // size='sm'
-                    variant='secondary'
-                    className='col p-3'
-                    disabled={false}
-                    onClick={()=>{}}>
-                    <strong>Server Website</strong>
-                </Button>}
-                {<Button
-                    // size='sm'
-                    variant='secondary'
-                    className='col p-3'
-                    disabled={false}
-                    onClick={()=>{}}>
-                    <strong>Server Discord</strong>
-                </Button>}
             </div>
-            </div> */}
-            </Modal.Body>
-            {/* <Modal.Footer className='d-flex justify-content-center'>
-            <Button
-                // size='sm'
-                variant='success'
-                className='col p-2'
-                disabled={false}
-                onClick={onDownloadInstall}>
-                <strong>Download & Install</strong><br />
-                <small>powered by nexusmods</small>
-            </Button>
-        </Modal.Footer> */}
-        </Modal>
-    );
+        </dekModalBody>
+    </DekCommonAppModal>;
 }

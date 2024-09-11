@@ -21,6 +21,8 @@ import useAppLogger from '@hooks/useAppLogger';
 import wait from 'utils/wait';
 
 import checkIsDevEnvironment from 'utils/isDevEnv';
+import useCommonChecks from '@hooks/useCommonChecks';
+
 
 const SetupStep = ({ step, handleUE4SSInstall }) => {
     const { t, tA } = useLocalization();
@@ -131,6 +133,14 @@ export default function SettingsPage({ modals, ThemeController }) {
     const { t, tA, changeLanguage, language, VALID_LANGUAGES } = useLocalization();
     const isDevEnvironment = checkIsDevEnvironment();
     const game = useSelectedGame();
+
+    const { requiredModulesLoaded, commonAppData } = useCommonChecks();
+    const cache_dir = commonAppData?.cache;
+    const game_path = commonAppData?.selectedGame?.path;
+    const game_data = commonAppData?.selectedGame;
+    const api_key = commonAppData?.apis?.nexus;
+
+
 
     // initial settings data for the application
     const [settings, setSettings] = React.useState({
