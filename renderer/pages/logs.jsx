@@ -21,10 +21,14 @@ let app_log_path = null;
 let ue4ss_log_path = null; 
 
 export default function LogsPage(props) {
-    const game = useSelectedGame();
     const { t, tA } = useLocalization();
     const applog = useAppLogger("LogsPage");
-    const { requiredModulesLoaded, getGameData } = useCommonChecks();
+    const { requiredModulesLoaded, commonAppData } = useCommonChecks();
+    const cache_dir = commonAppData?.cache;
+    const game_path = commonAppData?.selectedGame?.path;
+    const game_data = commonAppData?.selectedGame;
+    const api_key = commonAppData?.apis?.nexus;
+
     const [appLogs, setAppLogs] = React.useState("");
     const [ue4ssLogs, setUE4SSLogs] = React.useState("");
     const [logPageID, setLogPageID] = React.useState(0);
@@ -58,7 +62,6 @@ export default function LogsPage(props) {
                 setAppLogs(`Error fetching logs:\n${error.message}`);
             }
             try {
-                const game_data = await getGameData();
                 ue4ss_log_path = await window.palhub('joinPath', game_data.ue4ss_root, 'UE4SS.log');
                 const ue4ss_log_string = await window.palhub('readFile', ue4ss_log_path, {encoding : 'utf-8'});
                 await window.palhub('watchForFileChanges', ue4ss_log_path);
@@ -74,7 +77,7 @@ export default function LogsPage(props) {
             if (app_log_path) window.palhub('unwatchFileChanges', app_log_path);
             if (ue4ss_log_path) window.palhub('unwatchFileChanges', ue4ss_log_path);
         }
-    }, [game]);
+    }, []);
 
     const scrollToTop = React.useCallback(() => {
         const main_body = document.getElementById('main-body');
