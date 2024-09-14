@@ -59,7 +59,6 @@ class DEAP {
         return APP_NAME;
     }
     static get pack_json() {
-        if (app.isPackaged) return {};
         return PACKAGE_JSON;
     }
     static get version() {
@@ -160,9 +159,7 @@ class DEAP {
             shell.showItemInFolder(filepath);
         });
         ipcMain.handle("open-file-dialog", async (event, options) => {
-            if (options) {
-                return await dialog.showOpenDialog(options);
-            }
+            if (options) return await dialog.showOpenDialog(options);
             const extensions = ["jpg", "png", "gif"];
             return await dialog.showOpenDialog({
                 filters: [{ name: "Images", extensions }],

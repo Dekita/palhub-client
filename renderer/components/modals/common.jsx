@@ -97,7 +97,7 @@ export function ENVEntryLabel({name, envdatas, tooltip}) {
 }
 
 
-export function ENVEntry_Input({name, value, updateSetting, defaults, envdatas, tooltip, type='text'}) {
+export function ENVEntry_Input({name, value, onClick, updateSetting, defaults, envdatas, tooltip, type='text'}) {
     // const [knownValue, setKnownValue] = useState(value);
 
     const onKeyUp = (e) => {
@@ -122,6 +122,7 @@ export function ENVEntry_Input({name, value, updateSetting, defaults, envdatas, 
             name={name + "-input"} 
             className='form-control form-secondary' 
             onChange={onChanged} 
+            onClick={onClick}
             // disabled={working}
             autoComplete="off"
             // list="fruitsList"
@@ -134,7 +135,7 @@ export function ENVEntry_Input({name, value, updateSetting, defaults, envdatas, 
 
 
 
-export function ENVEntry_Bool({name, value, updateSetting, defaults, envdatas, tooltip, labels}) {
+export function ENVEntry_Bool({name, value, onClick, updateSetting, defaults, envdatas, tooltip, labels}) {
     // const [knownValue, setKnownValue] = useState(value);
     // updateSetting(name)
     return <div className="py-2">
@@ -151,7 +152,7 @@ export function ENVEntry_Bool({name, value, updateSetting, defaults, envdatas, t
     </div>
 }
 
-export function ENVEntry({name=null, value=null, updateSetting=()=>{}, defaults={}, envdatas={}, tooltip='', type='', labels=null}) {
+export function ENVEntry({name=null, value=null, onClick=()=>{}, updateSetting=()=>{}, defaults={}, envdatas={}, tooltip='', type='', labels=null}) {
     // value = ensureEntryValueType(value);
     // console.log(`entry for ${name}:`, typeof value, {name, value})
     const { t, tA } = useLocalization();
@@ -160,7 +161,7 @@ export function ENVEntry({name=null, value=null, updateSetting=()=>{}, defaults=
     if (labels && labels.length === 1) labels.push(labels[0]);
 
     if (type === 'numbool') value = value === '1';
-    const passthrough = {name, value, updateSetting, defaults, envdatas, tooltip, type, labels};
+    const passthrough = {name, value, onClick, updateSetting, defaults, envdatas, tooltip, type, labels};
     if (type === 'numbool') return <ENVEntry_Bool {...passthrough} />
 
     switch (typeof value) {

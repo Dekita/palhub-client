@@ -3,26 +3,16 @@
 # PalHUB::Client by dekitarpg@gmail.com
 ########################################
 */
-
-import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
-import useScreenSize from '@hooks/useScreenSize';
-import Modal from 'react-bootstrap/Modal';
-
 import React from 'react';
-import Container from 'react-bootstrap/Container';
 import Collapse from 'react-bootstrap/Collapse';
-
 import { stringify, parse } from 'ini';
 import { ENVEntry, ENVEntryLabel, ensureEntryValueType } from '@components/modals/common';
-
 import DekChoice from '@components/core/dek-choice';
-import DekSelect from '@components/core/dek-select';
-import DekCheckbox from '@components/core/dek-checkbox';
-import IconX from '@svgs/fa5/regular/window-close.svg';
-import useCommonChecks from '@hooks/useCommonChecks';
-
-import replaceUe4ssIniKeyValue from 'utils/replaceIniKey';
 import DekCommonAppModal from '@components/core/modal';
+import useScreenSize from '@hooks/useScreenSize';
+import useCommonChecks from '@hooks/useCommonChecks';
+import useLocalization from '@hooks/useLocalization';
+import replaceUe4ssIniKeyValue from '@utils/replaceIniKey';
 
 
 const UE4SS_NUMBOOLS = [
@@ -68,28 +58,27 @@ export default function Ue4ssSettingsModal({ show, setShow }) {
     const { isDesktop } = useScreenSize();
     const fullscreen = !isDesktop;
     const { requiredModulesLoaded, commonAppData } = useCommonChecks();
-    const cache_dir = commonAppData?.cache;
-    const game_path = commonAppData?.selectedGame?.game?.path;
-    const game_data = commonAppData?.selectedGame?.data;
-    const api_key = commonAppData?.apis?.nexus;
+    const game = commonAppData?.selectedGame;
+    const { t, tA, ready } = useLocalization('ue4ss');
 
-
-    const height = fullscreen ? 'calc(100vh - 182px)' : 'calc(100vh / 4 * 2 + 26px)';
+    // const height = fullscreen ? 'calc(100vh - 182px)' : 'calc(100vh / 4 * 2 + 26px)';
+    const height = fullscreen ? "calc(100vh - 96px)" : "calc(100vh / 4 * 2 + 26px)";
 
     const [showAdvanced, setShowAdvanced] = React.useState(false);
     const [hasChanges, setHasChanges] = React.useState(false);
     const [settings, setSettings] = React.useState({});
+    const [rawINI, setRawINI] = React.useState('');
 
-    const handleCancel = () => {
+    const onCancel = React.useCallback(() => {
         setShow(false);
         setTimeout(() => {
             setHasChanges(false);
             setShowAdvanced(false);
         }, 250);
-    };
+    }, [setShow]);
 
     // function to call for updating individual setting
-    const updateSetting = (key, value) => {
+    const updateSetting = React.useCallback((key, value) => {
         const keys = key.split('.');
         setSettings((data) => {
             // if value is function, call it passing data and use return value as new value
@@ -101,26 +90,12 @@ export default function Ue4ssSettingsModal({ show, setShow }) {
         });
         setHasChanges(true);
         console.log('updated setting:', key, value);
-    };
-
-    React.useEffect(() => {
-        (async () => {
-            if (!requiredModulesLoaded || !show) return;
-            if (!game_data?.has_exe || !game_data?.has_ue4ss) return;
-            const ini_path = await window.palhub('joinPath', game_data.ue4ss_root, 'UE4SS-settings.ini');
-            const ini_string = await window.palhub('readFile', ini_path, { encoding: 'utf-8' });
-            setSettings(parse(ini_string));
-        })();
-    }, [requiredModulesLoaded, game_data, show]);
+    }, [setSettings, setHasChanges]);
 
     const onApply = React.useCallback(async () => {
         if (!requiredModulesLoaded) return;
         console.log('saving ini:..');
-
-        const ini_path = await window.palhub('joinPath', game_data.ue4ss_root, 'UE4SS-settings.ini');
-        const ini_string = await window.palhub('readFile', ini_path, { encoding: 'utf-8' });
-
-        let updated_ini = `${ini_string}`;
+        let updated_ini = `${rawINI}`;
         for (const category in settings) {
             for (const [key, data] of Object.entries(settings[category])) {
                 if (['MajorVersion', 'MinorVersion'].includes(key)) continue;
@@ -131,115 +106,88 @@ export default function Ue4ssSettingsModal({ show, setShow }) {
         // const new_ini_string = stringify(settings);
         await window.palhub('writeFile', ini_path, updated_ini, { encoding: 'utf-8' });
         setHasChanges(false);
-    }, [settings]);
+    }, [requiredModulesLoaded, game, settings, rawINI]);
+    
+    React.useEffect(() => {
+        (async () => {
+            if (!requiredModulesLoaded || !show) return;
+            if (!game?.has_exe || !game?.has_ue4ss) return;
+            const ini_path = await window.palhub('joinPath', game.ue4ss_root, 'UE4SS-settings.ini');
+            const ini_string = await window.palhub('readFile', ini_path, { encoding: 'utf-8' });
+            setSettings(parse(ini_string));
+            setRawINI(ini_string);
+        })();
+    }, [requiredModulesLoaded, game, show]);
 
-    if (settings) console.log(settings);
+    // if (settings) console.log(settings);
 
-    return <Modal
-        show={show}
-        size="lg"
-        fullscreen={fullscreen}
-        onHide={handleCancel}
-        backdrop="static"
-        keyboard={false}
-        centered>
-        <Modal.Header className="p-4 theme-border ">
-            <Modal.Title className="col">
-                <strong>UE4SS-Settings.ini Configuration</strong>
-            </Modal.Title>
-            <div className="btn p-0 hover-danger no-shadow" onClick={handleCancel}>
-                <IconX className="modalicon" fill="currentColor" />
-            </div>
-        </Modal.Header>
-        <Modal.Body className="p-0">
-            <div className="overflow-auto m-0 p-3 pt-4" style={{ height }}>
-                {hasChanges && (
-                    <div className="mb-3">
-                        <div className="btn btn-danger w-100 p-3" onClick={onApply}>
-                            <strong>Save Unsaved Changes</strong>
-                        </div>
-                    </div>
-                )}
-
-                <ENVEntryLabel name="Show UE4SS Console" tooltip="Display the UE4SS console when the game launches?" />
-                <DekChoice
-                    className="pb-3"
-                    disabled={false}
-                    choices={['No', 'Console', 'GUI']}
-                    active={
-                        settings?.Debug?.ConsoleEnabled === '1'
-                            ? 1
-                            : settings?.Debug?.GuiConsoleEnabled === '1'
-                            ? 2
-                            : 0
-                    }
-                    onClick={(i, value) => {
-                        const isGui = value === 'GUI';
-                        const isConsole = value === 'Console';
-                        updateSetting('Debug.ConsoleEnabled', isConsole ? '1' : '0');
-                        updateSetting('Debug.GuiConsoleEnabled', isGui ? '1' : '0');
-                        updateSetting('Debug.GuiConsoleVisible', isGui ? '1' : '0');
-                    }}
-                />
-
-                <ENVEntryLabel name="GUI Console Graphics API" tooltip="The display mode for the gui console." />
-                <DekChoice
-                    className="pb-3"
-                    disabled={settings?.Debug?.GuiConsoleEnabled !== '1'}
-                    choices={['DX11', 'D3D11', 'OpenGL']}
-                    active={
-                        settings?.Debug?.GraphicsAPI === 'dx11' ? 0 : settings?.Debug?.GraphicsAPI === 'd3d11' ? 1 : 2
-                    }
-                    onClick={(i, value) => {
-                        updateSetting(
-                            'Debug.GraphicsAPI',
-                            value === 'DX11' ? 'dx11' : value === 'D3D11' ? 'd3d11' : 'opengl'
-                        );
-                    }}
-                />
-
-                <div className="row">
-                    <div className="col">
-                        <ENVEntry
-                            name="bUseUObjectArrayCache"
-                            value={settings?.General?.bUseUObjectArrayCache}
-                            updateSetting={(name, value) => updateSetting(`General.${name}`, value)}
-                            tooltip="Toggling this can help if your game crashes on startup. Disabled works best for most."
-                        />
-                    </div>
-                    <div className="col">
-                        <ENVEntry
-                            name="Show UE4SS Developer Settings"
-                            value={showAdvanced}
-                            updateSetting={(name, value) => setShowAdvanced(value)}
-                        />
-                    </div>
+    const headerText = t('modal.header');
+    const modalOptions = {show, setShow, onCancel, headerText, showX: true};
+    return <DekCommonAppModal {...modalOptions}>
+        <dekModalBody className='d-block overflow-y-auto p-3' style={{height}}>
+            {hasChanges && <div className="mb-3">
+                <div className="btn btn-danger w-100 p-3" onClick={onApply}>
+                    <strong>{t('modal.save-changes')}</strong>
                 </div>
-
-                <Collapse in={showAdvanced}>
-                    <div className="row">
-                        <hr className="text-secondary border-4 mt-3" />
-                        <h3 className="text-dark font-bold mb-0 text-center">UE4SS Developer Settings</h3>
-                        {Object.keys(settings).map((key) => {
-                            // if (key === 'General') return null;
-                            return Object.keys(settings[key]).map((name, index) => {
-                                if (IGNORED_UE4SS_CONFIG.includes(name)) return null;
-                                // if (key === 'General' && name === 'bUseUObjectArrayCache') return null;
-                                const value = settings[key][name];
-                                const updater = (name, value) => updateSetting(`${key}.${name}`, value ? '1' : '0');
-                                const type = UE4SS_NUMBOOLS.includes(name) ? 'numbool' : ensureEntryValueType(value);
-                                return (
-                                    <div className="col-12 col-md-6" key={index}>
-                                        <ENVEntry
-                                            {...{ name, value, type, updateSetting: updater, defaults: settings }}
-                                        />
-                                    </div>
-                                );
-                            });
-                        })}
-                    </div>
-                </Collapse>
+            </div>}
+            <ENVEntryLabel name={t('modal.show-console-name')} tooltip={t('modal.show-console-help')} />
+            <DekChoice
+                className="pb-3"
+                choices={tA('modal.console-choices', 3)}
+                active={settings?.Debug?.ConsoleEnabled === '1' ? 1 : (settings?.Debug?.GuiConsoleEnabled === '1' ? 2 : 0)}
+                onClick={(i, value) => {
+                    const isGui = value === 'GUI';
+                    const isConsole = value === 'Console';
+                    updateSetting('Debug.ConsoleEnabled', isConsole ? '1' : '0');
+                    updateSetting('Debug.GuiConsoleEnabled', isGui ? '1' : '0');
+                    updateSetting('Debug.GuiConsoleVisible', isGui ? '1' : '0');
+                }}
+            />
+            <ENVEntryLabel name={t('modal.graphics-api-name')} tooltip={t('modal.graphics-api-help')} />
+            <DekChoice
+                className="pb-3"
+                choices={tA('modal.guiconsole-choices', 3)}
+                disabled={settings?.Debug?.GuiConsoleEnabled !== '1'}
+                active={settings?.Debug?.GraphicsAPI === 'dx11' ? 0 : settings?.Debug?.GraphicsAPI === 'd3d11' ? 1 : 2}
+                onClick={(i, value) => updateSetting('Debug.GraphicsAPI', ["dx11", "d3d11", "opengl"][i])}
+            />
+            <div className="row">
+                <div className="col">
+                    <ENVEntry
+                        name="bUseUObjectArrayCache" //{t('General.bUseUObjectArrayCache.name')}
+                        value={settings?.General?.bUseUObjectArrayCache}
+                        updateSetting={(name, value) => updateSetting(`General.bUseUObjectArrayCache`, !!value)}
+                        tooltip={t('General.bUseUObjectArrayCache.desc')}
+                    />
+                </div>
+                <div className="col">
+                    <ENVEntry
+                        name={t('modal.show-all-settings')}
+                        value={showAdvanced}
+                        updateSetting={(name, value) => setShowAdvanced(value)}
+                        tooltip={t('modals.show-all-help')}
+                    />
+                </div>
             </div>
-        </Modal.Body>
-    </Modal>;
+            <Collapse in={showAdvanced}>
+                <div className="row">
+                    <hr className="text-secondary border-4 mt-4" />
+                    {Object.keys(settings).map((key) => {
+                        return Object.keys(settings[key]).map((name, index) => {
+                            if (IGNORED_UE4SS_CONFIG.includes(name)) return null;
+                            const value = settings[key][name];
+                            const type = UE4SS_NUMBOOLS.includes(name) ? 'numbool' : ensureEntryValueType(value);
+                            const updater = (name, value) => updateSetting(`${key}.${name}`, ()=>{
+                                return type === "numbool" ? (value ? "1" : "0") : value;
+                            });
+                            const tooltip = t(`${key}.${name}.desc`);
+                            return <div className="col-12 col-md-6" key={index}>
+                                <ENVEntry {...{ name, value, type, updateSetting: updater, defaults: settings, tooltip }}/>
+                            </div>;
+                        });
+                    })}
+                </div>
+            </Collapse>
+        </dekModalBody>
+    </DekCommonAppModal>;
 }

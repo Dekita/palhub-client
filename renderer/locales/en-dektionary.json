@@ -30,7 +30,8 @@
                 "This is a game where you can do stuff and things.",
                 "You can play this game with mods to enhance your experience, and even play with friends on modified servers.",
                 "Or.. You could choose to play plain old vanilla without any mods at all, but that's super boring."
-            ]
+            ],
+            "theme-images": ["ThemeImageNameArray"]
         },
         "palworld": {
             "name": "Palworld",
@@ -38,7 +39,8 @@
                 "Palworld is a game where you catch your own party based creatures, and have them build your base while you explore the world with your friends. But you already knew that!!",
                 "{{games.generic.info.line.1}}",
                 "{{games.generic.info.line.2}}"
-            ]
+            ],
+            "theme-images": ["3pals", "Grizzbolt", "Lamball"]
         }
     },
     
@@ -229,12 +231,13 @@
             "Configure the settings below to get started;"
         ],
         "choices": {
-            "page": ["App Options", "Game Settings"],
+            "page": ["App Setup", "Customize", "Manage Games"],
             "install-type": ["steam", "epic", "xbox"]
         },
         "inputs": {
             "app-cache-dir": {
                 "name": "Application Cache Directory",
+                "open": "Select {{/settings.inputs.app-cache-dir.name}}",
                 "desc": "The path to {{app.brandname}} cache directory. This is where mods will be downloaded and stored."
             },
             "nexus-api-key": {
@@ -249,6 +252,8 @@
         "buttons": {
             "get-api-key": "Get {{common.nexus}} API Key",
             "edit-ue4ss-settings": "Edit UE4SS Settings",
+            "check-ue4ss-update": "Check For UE4SS Update",
+            "uninstall-ue4ss": "Uninstall UE4SS",
             "download-ue4ss": "Click here to download & install UE4SS",
             "play-game": "Play Game",
             "add-mods": "Add Mods"
@@ -309,6 +314,10 @@
                 "body": ["The path to your Palworld game installation is invalid.", "Please set a valid path to your Palworld game installation before continuing."]
             }
         }
+    },
+
+    "ue4ss-settings": {
+        
     }
 }
 

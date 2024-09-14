@@ -11,10 +11,8 @@ import * as CommonIcons from '@config/common-icons';
 import useLocalization from '@hooks/useLocalization';
 import useSelectedGame from '@hooks/useSelectedGame';
 
-export default function BrandHeader({ words, tagline, type }) {
+export default function BrandHeader({ words, tagline, type, showImage=true }) {
     const isDesktop = useMediaQuery('(min-width: 960px)');
-
-    const game = useSelectedGame();
     const { t, tA } = useLocalization();
 
     const [text] = useTypewriter({
@@ -22,7 +20,7 @@ export default function BrandHeader({ words, tagline, type }) {
         loop: 0, // Infinit
     });
 
-    const height = isDesktop ? 420 : 280;
+    const height = showImage ? isDesktop ? 420 : 280 : 128;
     const image_size = isDesktop ? 256 : 192;
 
     return <motion.div
@@ -38,7 +36,7 @@ export default function BrandHeader({ words, tagline, type }) {
         animate={{ height: height }}
         transition={{ duration: 1 }}>
         <div style={{ width: '100%', overflow: 'hidden' }}>
-            <motion.div
+            {showImage && <motion.div
                 initial={{ opacity: 0, y: 512 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 1 }}
@@ -53,7 +51,7 @@ export default function BrandHeader({ words, tagline, type }) {
                     unoptimized={true}
                     className='img-fluid'
                 />
-            </motion.div>
+            </motion.div>}
 
             <motion.div
                 initial={{ opacity: 0, y: -32 }}

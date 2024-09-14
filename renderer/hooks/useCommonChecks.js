@@ -6,6 +6,7 @@
 import React from 'react';
 import { useRouter } from 'next/router';
 // import useSelectedGame from './useSelectedGame';
+import useLocalization from './useLocalization';
 import useAppLogger from './useAppLogger';
 
 // Context for Localization
@@ -14,6 +15,7 @@ const CommonAppDataContext = React.createContext();
 
 // CommonAppData Provider Component
 export const CommonAppDataProvider = ({ children }) => {
+    const { t, tA, ready } = useLocalization();
     const applog = useAppLogger("hooks/useCommonChecks");
     const [requiredModulesLoaded, setRequiredModulesLoaded] = React.useState(false);
     const [commonAppData, setCommonAppData] = React.useState(null);
@@ -40,12 +42,24 @@ export const CommonAppDataProvider = ({ children }) => {
     }, [requiredModulesLoaded]);
 
     const updateSelectedGame = React.useCallback(async (game) => {
-        if (!games[game.id]) return;
-        const data = await window.palhub('validateGamePath', game.path);
-        updateCommonAppData('selectedGame', { ...game, data });
-        await window.uStore.set('games.active', game.id);
-    }, []);    
+        // todo
+    }, []);
 
+    const updateSelectedGamePath = React.useCallback(async (game_id, new_path) => {
+        const games = await window.uStore.get('games');
+        const game = games[game_id];
+        if (!game) return;
+        // update the game path stored in the uStore 
+        await window.uStore.set(`games.${commonAppData.games.active}.path`, new_path);
+        // validate the new path and update the selected game data
+        const data = await window.palhub('validateGamePath', new_path);
+        const idname = { id: game_id, name: t(`games.${game_id}.name`) };
+        const selectedGame = { ...idname, ...game, ...data };
+        updateCommonAppData('selectedGame', selectedGame);
+        await window.uStore.set('games.active', game_id);
+    }, [commonAppData?.games?.active]); 
+
+    // 
     // function to redirect to settings if required modules are loaded
     // 
     const router = useRouter();
@@ -65,7 +79,8 @@ export const CommonAppDataProvider = ({ children }) => {
             try {
                 const game = games[games.active];
                 const data = await window.palhub('validateGamePath', game.path);
-                selectedGame = { id: games.active, ...game, ...data };
+                const idname = { id: games.active, name: t(`games.${games.active}.name`) };
+                selectedGame = { ...idname, ...game, ...data };
             } catch (error) {
                 console.error(error);
             }
@@ -74,7 +89,7 @@ export const CommonAppDataProvider = ({ children }) => {
         // set the commonly used app datas
         setCommonAppData(prev => ({apis, cache, games, selectedGame}));
         setRequiredModulesLoaded(true);
-    }, []);
+    }, [ready]);
 
     // ensures that all required modules are fully loaded
     React.useEffect(() => {
@@ -82,10 +97,17 @@ export const CommonAppDataProvider = ({ children }) => {
         const REQUIRED_MODULES = ['uStore', 'palhub', 'logger', 'ipc'];
         if (REQUIRED_MODULES.some(module => !window[module])) return;
         refreshCommonDataWithRedirect();
-    }, []);
+    }, [ready]);
 
-    const exposed = { requiredModulesLoaded, commonAppData, updateCommonAppData, updateSelectedGame };
-    return <CommonAppDataContext.Provider value={exposed}>{children}</CommonAppDataContext.Provider>;
+    return <CommonAppDataContext.Provider value={{
+        requiredModulesLoaded, 
+        commonAppData, 
+        refreshApis,
+        refreshCache,
+        refreshGames,
+        updateSelectedGamePath, 
+        refreshCommonDataWithRedirect,
+    }}>{children}</CommonAppDataContext.Provider>;
 };
 
 // Export actual hook to useLocalization

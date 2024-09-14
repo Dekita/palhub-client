@@ -1,0 +1,186 @@
+{
+    "modal": {
+        "header": "UE4SS-Settings.ini Configuration",
+        "save-changes": "Save Unsaved Changes",
+        "console-choices": ["No", "Console", "GUI"],
+        "guiconsole-choices": ["DX11", "D3D11", "OpenGL"],
+        "show-all-settings": "Show All UE4SS Settings",
+        "show-all-help": "Shows all available developer settings for the UE4SS modloader.",
+        "show-console-name": "Show UE4SS Console",
+        "show-console-help": "Display the UE4SS console when the game launches?",
+        "graphics-api-name": "GUI Console Graphics API",
+        "graphics-api-help": "The Rendering API that will be used to for the ue4ss log window."
+    },
+    "Overrides": {
+        "ModsFolderPath": {
+            "name": "Mods Folder Path",
+            "desc": "Path to the 'Mods' folder"
+        }
+    },
+    "General": {
+        "EnableHotReloadSystem": {
+            "name": "Enable Hot Reload System",
+            "desc": "Enables the hot reload system for LUA mods."
+        },
+        "UseCache": {
+            "name": "Use Cache",
+            "desc": "Whether the cache system for AOBs will be used."
+        },
+        "InvalidateCacheIfDLLDiffers": {
+            "name": "Invalidate Cache If DLL Differs",
+            "desc": "Whether caches will be invalidated if ue4ss.dll has changed"
+        },
+        "SecondsToScanBeforeGivingUp": {
+            "name": "Seconds To Scan Before Giving Up",
+            "desc": "The number of seconds the scanner will scan for before giving up"
+        },
+        "bUseUObjectArrayCache": {
+            "name": "Use UObject Array Cache",
+            "desc": "Whether to create UObject listeners in GUObjectArray to create a fast cache for use instead of iterating GUObjectArray."
+        }
+    },
+    "EngineVersionOverride": {
+        "MajorVersion": {
+            "name": "Major Version",
+            "desc": "Major version of the engine"
+        },
+        "MinorVersion": {
+            "name": "Minor Version",
+            "desc": "Minor version of the engine"
+        }
+    },
+    "ObjectDumper": {
+        "LoadAllAssetsBeforeDumpingObjects": {
+            "name": "Load All Assets Before Dumping Objects",
+            "desc": "Whether to force all assets to be loaded before dumping objects"
+        }
+    },
+    "CXXHeaderGenerator": {
+        "DumpOffsetsAndSizes": {
+            "name": "Dump Offsets And Sizes",
+            "desc": "Whether to property offsets and sizes"
+        },
+        "KeepMemoryLayout": {
+            "name": "Keep Memory Layout",
+            "desc": "Whether memory layouts of classes and structs should be accurate"
+        },
+        "LoadAllAssetsBeforeGeneratingCXXHeaders": {
+            "name": "Load All Assets Before Generating CXX Headers",
+            "desc": "Whether to force all assets to be loaded before generating headers"
+        }
+    },
+    "UHTHeaderGenerator": {
+        "IgnoreAllCoreEngineModules": {
+            "name": "Ignore All Core Engine Modules",
+            "desc": "Whether to skip generating packages that belong to the engine"
+        },
+        "IgnoreEngineAndCoreUObject": {
+            "name": "Ignore Engine And Core UObject",
+            "desc": "Whether to skip generating the 'Engine' and 'CoreUObject' packages"
+        },
+        "MakeAllFunctionsBlueprintCallable": {
+            "name": "Make All Functions Blueprint Callable",
+            "desc": "Whether to force all UFUNCTION macros to have 'BlueprintCallable'"
+        },
+        "MakeAllPropertyBlueprintsReadWrite": {
+            "name": "Make All Property Blueprints Read Write",
+            "desc": "Whether to force all UPROPERTY macros to have 'BlueprintReadWrite'"
+        },
+        "MakeEnumClassesBlueprintType": {
+            "name": "Make Enum Classes Blueprint Type",
+            "desc": "Whether to force UENUM macros on enums to have 'BlueprintType' if the underlying type was implicit or uint8"
+        },
+        "MakeAllConfigsEngineConfig": {
+            "name": "Make All Configs Engine Config",
+            "desc": "Whether to force 'Config = Engine' on all UCLASS macros that use either one of: 'DefaultConfig', 'GlobalUserConfig' or 'ProjectUserConfig'"
+        }
+    },
+    "Debug": {
+        "ConsoleEnabled": {
+            "name": "Console Enabled",
+            "desc": "Whether to enable the external UE4SS debug console."
+        },
+        "GuiConsoleEnabled": {
+            "name": "GUI Console Enabled",
+            "desc": "Whether to enable the external UE4SS GUI debug console."
+        },
+        "GuiConsoleVisible": {
+            "name": "GUI Console Visible",
+            "desc": "Whether to make the external UE4SS GUI debug console visible."
+        },
+        "GuiConsoleFontScaling": {
+            "name": "GUI Console Font Scaling",
+            "desc": "Multiplier for Font Size within the Debug Gui"
+        },
+        "GraphicsAPI": {
+            "name": "Graphics API",
+            "desc": "The API that will be used to render the GUI debug window."
+        },
+        "LiveViewObjectsPerGroup": {
+            "name": "Live View Objects Per Group",
+            "desc": "How many objects to put in each group in the live view."
+        }
+    },
+    "Threads": {
+        "SigScannerNumThreads": {
+            "name": "Sig Scanner Num Threads",
+            "desc": "The number of threads that the sig scanner will use (not real cpu threads, can be over your physical & hyperthreading max)"
+        },
+        "SigScannerMultithreadingModuleSizeThreshold": {
+            "name": "Sig Scanner Multithreading Module Size Threshold",
+            "desc": "The minimum size that a module has to be in order for multi-threading to be enabled"
+        }
+    },
+    "Memory": {
+        "MaxMemoryUsageDuringAssetLoading": {
+            "name": "Max Memory Usage During Asset Loading",
+            "desc": "The maximum memory usage (in percentage, see Task Manager %) allowed before asset loading (when LoadAllAssetsBefore* is 1) cannot happen."
+        }
+    },
+    "Hooks": {
+        "HookProcessInternal": {
+            "name": "Hook Process Internal",
+            "desc": "Hook Process Internal"
+        },
+        "HookProcessLocalScriptFunction": {
+            "name": "Hook Process Local Script Function",
+            "desc": "Hook Process Local Script Function"
+        },
+        "HookInitGameState": {
+            "name": "Hook Init Game State",
+            "desc": "Hook Init Game State"
+        },
+        "HookCallFunctionByNameWithArguments": {
+            "name": "Hook Call Function By Name With Arguments",
+            "desc": "Hook Call Function By Name With Arguments"
+        },
+        "HookBeginPlay": {
+            "name": "Hook Begin Play",
+            "desc": "Hook Begin Play"
+        },
+        "HookLocalPlayerExec": {
+            "name": "Hook Local Player Exec",
+            "desc": "Hook Local Player Exec"
+        },
+        "FExecVTableOffsetInLocalPlayer": {
+            "name": "FExec VTable Offset In Local Player",
+            "desc": "FExec VTable Offset In Local Player"
+        }
+    },
+    "CrashDump": {
+        "EnableDumping": {
+            "name": "Enable Dumping",
+            "desc": "Enable Dumping"
+        },
+        "FullMemoryDump": {
+            "name": "Full Memory Dump",
+            "desc": "Full Memory Dump"
+        }
+    },
+    "ExperimentalFeatures": {
+        "GUIUFunctionCaller": {
+            "name": "GUI UFunction Caller",
+            "desc": "Only enable these features if you know what you are doing."
+        }
+    }
+}

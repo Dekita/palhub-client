@@ -17,6 +17,7 @@ import Footer from '@components/core/footer';
 import { PongSpinner } from 'react-spinners-kit';
 import useLocalization from '@hooks/useLocalization';
 import useDeepLinkListener from '@hooks/useDeepLinkListener';
+import useCommonChecks from '@hooks/useCommonChecks';
 import useAppLogger from '@hooks/useAppLogger';
 
 function GoogleTagManager() {
@@ -40,6 +41,7 @@ export default function DekAppLayoutWrapper({ children }) {
     const { ready } = useLocalization();
     const logger = useAppLogger("core/layout");
     const [deepLink, linkChanged, consumeDeepLink] = useDeepLinkListener();
+    const { requiredModulesLoaded, commonAppData } = useCommonChecks();
 
     if (linkChanged) {
         logger('info', `Consumed Deep Link: ${deepLink}`);
@@ -79,6 +81,8 @@ export default function DekAppLayoutWrapper({ children }) {
     // console.log({theme_id, bg_id, windowName});
 
     // ready = false;
+
+    // if (!requiredModulesLoaded) return null; // show loading screen
 
     return <React.Fragment>
         {/* <!-- Load theme style: not best practice --> */}

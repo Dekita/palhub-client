@@ -50,7 +50,7 @@ export default function useThemeSystem() {
         return new_id;
     };
 
-    const setBgID = (newbg) => {
+    const setBgID = (newbg, gameid) => {
         if (typeof window === 'undefined') return null;
         if (newbg < 0 || newbg >= 10) return null;
         localStorage.setItem('utheme-bg', newbg);

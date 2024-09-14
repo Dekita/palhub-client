@@ -19,10 +19,7 @@ import IconList from '@svgs/fa5/solid/list-ul.svg';
 
 function useOnClickOutside(ref, callback) {
     useEffect(() => {
-        /**
-         * Alert if clicked on outside of element
-         */
-        function handleClickOutside(event) {
+        const handleClickOutside = (event) => {
             if (ref.current && !ref.current.contains(event.target)) {
                 // alert("You clicked outside of me!");
                 if (callback) callback(event);
