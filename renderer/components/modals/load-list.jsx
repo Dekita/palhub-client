@@ -256,7 +256,7 @@ export default function LoadListModal({ show, setShow }) {
     const headerText = t('modals.load-mods.head');
     const modalOptions = {show, setShow, onCancel, headerText, showX: true};
     return <DekCommonAppModal {...modalOptions}>
-        <dekModalBody className="d-grid">
+        <div type="DekBody" className="d-grid">
             {/* add area for logs */}
             {shouldShowLogs && <div className="overflow-auto m-0 p-3" style={{ height }} ref={logRef}>
                 <pre className="m-0 p-2">{logMessages.join('\n')}</pre>
@@ -272,8 +272,8 @@ export default function LoadListModal({ show, setShow }) {
                     onChange={onTextAreaChange}
                 />
             </div>}
-        </dekModalBody>
-        {!shouldShowLogs && <dekModalFooter className='d-flex w-100 gap-3'>
+        </div>
+        {!shouldShowLogs && <div type="DekFoot" className='d-flex w-100 gap-3'>
             {mods && <Button variant="danger" className="col p-2 px-3" onClick={() => setMods(null)}>
                 <strong>{t('common.cancel')}</strong>
             </Button>}
@@ -283,6 +283,6 @@ export default function LoadListModal({ show, setShow }) {
             {!mods && <Button variant="secondary" className="col p-2 px-3" onClick={onClickedLoadFromFile}>
                 <strong>{t('modals.check-mods.load-json')}</strong>
             </Button>}
-        </dekModalFooter>}
+        </div>}
     </DekCommonAppModal>;
 }

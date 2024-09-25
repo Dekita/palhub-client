@@ -18,10 +18,10 @@ export default function DekCommonAppModal({show,setShow,onCancel=()=>{}, headerT
         onCancel();
     }
     const bodyChildren = React.Children.map(children, (child) => {
-        return child?.type === 'dekModalBody' ? child : null;
+        return child?.props.type === 'DekBody' ? child : null;
     }, this);
-    const footerChildren = React.Children.map(children, (child) => {
-        return child?.type === 'dekModalFooter' ? child : null;
+    const footChildren = React.Children.map(children, (child) => {
+        return child?.props.type === 'DekFoot' ? child : null;
     }, this);
     // return the actual envmodal
     return <Modal
@@ -41,6 +41,6 @@ export default function DekCommonAppModal({show,setShow,onCancel=()=>{}, headerT
             </Button>}
         </Modal.Header>
         {bodyChildren.length> 0 && <Modal.Body className="p-0">{bodyChildren}</Modal.Body>}
-        {footerChildren.length > 0 && <Modal.Footer className='justify-content-center'>{footerChildren}</Modal.Footer>}
+        {footChildren.length > 0 && <Modal.Footer className='justify-content-center'>{footChildren}</Modal.Footer>}
     </Modal>;
 }

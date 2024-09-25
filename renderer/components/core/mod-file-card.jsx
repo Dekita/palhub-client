@@ -13,10 +13,15 @@ import Tooltip from 'react-bootstrap/Tooltip';
 // import Popover from 'react-bootstrap/Popover';
 import * as CommonIcons from '@config/common-icons';
 import useLocalization from '@hooks/useLocalization';
-import useSelectedGame from '@hooks/useSelectedGame';
+import useCommonChecks from '@hooks/useCommonChecks';
 
 export default function ModFileCard({mod, file}) {
-    const game = useSelectedGame();
+    const { requiredModulesLoaded, commonAppData } = useCommonChecks();
+
+    const api_key = commonAppData?.apis?.nexus;
+    const cache_dir = commonAppData?.cache;
+    const game_path = commonAppData?.selectedGame.path;
+
     const { t, tA, language } = useLocalization();    
     const [filetree, setFiletree] = React.useState(null);
     const [showFileTree, setShowFileTree] = React.useState(false);
@@ -28,7 +33,7 @@ export default function ModFileCard({mod, file}) {
     const [downloadProgress, setDownloadProgress] = React.useState(0);
 
     React.useEffect(() => {
-        if (!window.ipc) return console.error('ipc not loaded');
+        if (!requiredModulesLoaded) return;
 
         const remove_dl_handler = window.ipc.on('download-mod-file', ({mod_id, file_id, percentage}) => {
             if (mod_id !== mod.mod_id || file_id !== file.file_id) return;
@@ -36,34 +41,18 @@ export default function ModFileCard({mod, file}) {
         });
 
         (async () => {
-            if (!window.uStore) return console.error('uStore not loaded');
-            if (!window.palhub) return console.error('palhub not loaded');
-            if (!window.nexus) return console.error('nexus not loaded');
-
             if (!showFileTree) return;
-
-            const api_key = await window.uStore.get('api_key');
             const filetree = await fetcher(file.content_preview_link);
-
             console.log({filetree});
             setFiletree(filetree);
         })();
 
-        return () => {
-            remove_dl_handler();
-        }
-
+        return () => remove_dl_handler();
     }, [showFileTree, mod, file]);
 
     React.useEffect(() => {
+        if (!requiredModulesLoaded) return;
         (async () => {
-            if (!window.uStore) return console.error('uStore not loaded');
-            if (!window.palhub) return console.error('palhub not loaded');
-            if (!window.nexus) return console.error('nexus not loaded');
-            const cache_dir = await window.uStore.get('cache_dir');
-            const game_path = await window.uStore.get('game_path');
-            const api_key = await window.uStore.get('api_key');
-
             if (!file || !mod) return;
 
             const is_downloaded = await window.palhub('checkModFileIsDownloaded', cache_dir, file);
@@ -79,12 +68,8 @@ export default function ModFileCard({mod, file}) {
 
 
     const onDownloadModZip = React.useCallback(async() => {
+        if (!requiredModulesLoaded) return;
         console.log('downloading mod:', mod);
-        if (!window.uStore) return console.error('uStore not loaded');
-        if (!window.palhub) return console.error('palhub not loaded');
-        if (!window.nexus) return console.error('nexus not loaded');
-        const api_key = await window.uStore.get('api_key');
-        const cache_dir = await window.uStore.get('cache_dir');
 
         try {
             setIsDownloading(true);
@@ -103,13 +88,8 @@ export default function ModFileCard({mod, file}) {
     }, [mod, file]);
 
     const onInstallModFiles = React.useCallback(async() => {
+        if (!requiredModulesLoaded) return;
         console.log('installing mod:', mod);
-        if (!window.uStore) return console.error('uStore not loaded');
-        if (!window.palhub) return console.error('palhub not loaded');
-        if (!window.nexus) return console.error('nexus not loaded');
-        const api_key = await window.uStore.get('api_key');
-        const game_path = await window.uStore.get('game_path');
-        const cache_dir = await window.uStore.get('cache_dir');
 
         try {
             const result = await window.palhub('installMod', cache_dir, game_path, mod, file);
@@ -122,11 +102,8 @@ export default function ModFileCard({mod, file}) {
     }, [mod, file]);
 
     const onUninstallModFiles = React.useCallback(async() => {
+        if (!requiredModulesLoaded) return;
         console.log('uninstalling mod:', mod);
-        if (!window.uStore) return console.error('uStore not loaded');
-        if (!window.palhub) return console.error('palhub not loaded');
-        if (!window.nexus) return console.error('nexus not loaded');
-        const game_path = await window.uStore.get('game_path');
 
         try {
             const result = await window.palhub('uninstallMod', game_path, mod);
@@ -139,12 +116,8 @@ export default function ModFileCard({mod, file}) {
     }, [mod, file]);
 
     const onUninstallModCache = React.useCallback(async() => {
+        if (!requiredModulesLoaded) return;
         console.log('uninstalling mod:', mod);
-        if (!window.uStore) return console.error('uStore not loaded');
-        if (!window.palhub) return console.error('palhub not loaded');
-        if (!window.nexus) return console.error('nexus not loaded');
-        const cache_dir = await window.uStore.get('cache_dir');
-        const game_path = await window.uStore.get('game_path');
         setDownloadProgress(0);
 
         try {
@@ -183,6 +156,8 @@ export default function ModFileCard({mod, file}) {
     const EyeIcon = showFileTree ? CommonIcons.eye_other : CommonIcons.eye;
 
     const buttonWidth = 54;
+
+    if (!requiredModulesLoaded) return null;
 
     return <div className='row' style={{minHeight:92}}>
         <div className={`col`}>

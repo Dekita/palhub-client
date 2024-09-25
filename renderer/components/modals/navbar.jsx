@@ -21,7 +21,7 @@ export default function NavbarModal({ show, setShow }) {
     const headerText = t('app.brandname');
     const modalOptions = {show, setShow, onCancel, headerText, showX: true};
     return <DekCommonAppModal {...modalOptions}>
-        <dekModalBody className="d-grid pt-4 pb-2 text-center">
+        <div type="DekBody" className="d-grid pt-4 pb-2 text-center">
         {navbar_items.map((element, index) => {
                 const delay = index * 0.1 + 0.25;
                 const onClick = () => { onCancel(); router.push(element.href) };
@@ -64,6 +64,6 @@ export default function NavbarModal({ show, setShow }) {
                     </motion.div>
                 </div>;
             })}
-        </dekModalBody>
+        </div>
     </DekCommonAppModal>;
 }

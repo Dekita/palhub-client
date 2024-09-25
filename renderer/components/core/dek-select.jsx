@@ -45,7 +45,10 @@ export default function DekSelect({
     const active = useMemo(()=>child_array.find((c, index) => {
         return c.props.active || active_id === index;
     }), [child_array, active_id]);
-    const selected_text = useMemo(()=>active?.props?.text || 'not-selected', [active]);
+    const selected_text = useMemo(()=>{
+        if (!active) return 'not-selected';
+        return active?.props?.children || active?.props?.text;
+    }, [active]);
     const [showUL, setShowUL] = useState(false);
 
     // const ref = useOnClickOutside((e)=>{
@@ -94,11 +97,8 @@ export default function DekSelect({
         </span>
         <ul className={showUL ? 'd-block thin-scroller' : 'd-none'}>
             {child_array.map((child) => {
-                const { text, id } = child.props;
-                const has_children = Children.toArray(child.props.children).length;
-                const thischild = has_children ? child.props.children : text;
-                return <li id={id} key={child.key || id} onClick={onClickItem}>
-                    {thischild}
+                return <li id={child.props.id} key={child.key || child.props.id} onClick={onClickItem}>
+                    {child.props.children ?? (child.props.text || child.key)}
                 </li>;
             })}
         </ul>

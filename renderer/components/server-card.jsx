@@ -120,7 +120,7 @@ export default function ServerCardComponent({ server, onClick=()=>{}, ad=false }
                         </div>
                     </div>}
                     {ad && <div className='modcard'>
-                        <IconComponent fill='currentColor' className='modiocn'/>
+                        <IconComponent fill='currentColor' className='modicon'/>
                     </div>}
                 </Card.Title>
 

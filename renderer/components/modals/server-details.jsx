@@ -325,7 +325,7 @@ export default function ServerDetailsModal({ show, setShow, server }) {
     const headerText = `${server.serverName} - ${server.gameVersion}`;
     const modalOptions = {show, setShow, onCancel, headerText, showX: !shouldShowLogs};
     return <DekCommonAppModal {...modalOptions}>
-        <dekModalBody className='d-block overflow-y-scroll' style={{height}}>
+        <div type="DekBody" className='d-block overflow-y-scroll' style={{height}}>
             <div className='p-3'>
                 {!shouldShowLogs && <React.Fragment>
                     <div className="ratio ratio-16x9">
@@ -446,6 +446,6 @@ export default function ServerDetailsModal({ show, setShow, server }) {
                     </Carousel.Item>
                 </Carousel>
             </div>
-        </dekModalBody>
+        </div>
     </DekCommonAppModal>;
 }

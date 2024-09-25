@@ -6,8 +6,8 @@
     },
 
     "common": {
-        "toggle": ["Enabled", "Disabled"],
         "loading": "Loading...",
+        "toggle": ["Enabled", "Disabled"],
         "warning": "WARNING",
         "error": "ERROR",
         "nexus": "Nexus Mods",
@@ -20,7 +20,11 @@
         "required": "Not On Disk",
         "confirm": "Confirm",
         "cancel": "Cancel",
-        "note": "NOTE:"
+        "note": "NOTE:",
+        "app-types": {
+            "game": "Game",
+            "server": "Server"
+        }
     },
     
     "games": {
@@ -33,12 +37,30 @@
             ],
             "theme-images": ["ThemeImageNameArray"]
         },
+        "hogwarts-legacy": {
+            "name": "Hogwarts Legacy",
+            "info": [
+                "Hogwarts Legacy is an immersive, open-world action RPG set in the magical world first introduced in the Harry Potter book series.",
+                "{{games.generic.info.1}}",
+                "{{games.generic.info.2}}"
+            ],
+            "theme-images": ["Hogwarts", "Hogwarts2", "Hogwarts3"]
+        },
+        "ff7r": {
+            "name": "Final Fantasy VII Remake Integrade",
+            "info": [
+                "Final Fantasy VII Remake Integrade is a modern reimagining of the iconic RPG that not only defined an entire genre, but also changed the way we tell stories in video games.",
+                "{{games.generic.info.1}}",
+                "{{games.generic.info.2}}"
+            ],
+            "theme-images": ["FF7R", "FF7R2", "FF7R3"]
+        },
         "palworld": {
             "name": "Palworld",
             "info": [
-                "Palworld is a game where you catch your own party based creatures, and have them build your base while you explore the world with your friends. But you already knew that!!",
-                "{{games.generic.info.line.1}}",
-                "{{games.generic.info.line.2}}"
+                "Palworld is a game where you can catch your own party of creatures, have them build and farm at your base, while you explore and enjoy the game world with your friends.",
+                "{{games.generic.info.1}}",
+                "{{games.generic.info.2}}"
             ],
             "theme-images": ["3pals", "Grizzbolt", "Lamball"]
         }
@@ -95,6 +117,14 @@
             "join-discord": "Join {{server.serverName}} Discord",
             "install-mods": "Install {{server.serverName}} Mod List",
             "install-note": "Note: alters your active mod list"
+        },
+        "game-config": {
+            "head": "Game & Modloader Settings",
+            "tabs": ["Game Setup", "UE4SS Config"],
+            "game-path": "Game Installation Path",
+            "game-path-desc": "The path to your local {{game.name}} installation.",
+            "ue4ss-path": "UE4SS Installation Path",
+            "ue4ss-path-desc": "The path to your UE4SS installation."
         },
         "modloader": {
             "installing-ue4ss": "Installing UE4SS.. Please Wait."
@@ -313,6 +343,11 @@
                 "head": "{{common.error}}",
                 "body": ["The path to your Palworld game installation is invalid.", "Please set a valid path to your Palworld game installation before continuing."]
             }
+        },
+        "manage-game": {
+            "head": "Add new games to {{app.brandname}}",
+            "info": "-- FEATURE COMING SOON",
+            "span": "Add new games to {{app.brandname}} to manage mods for them."
         }
     },
 

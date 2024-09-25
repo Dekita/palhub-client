@@ -17,6 +17,7 @@ import {https} from "follow-redirects";
 import ArchiveHandler from "./archive-handler.js";
 import EventEmitter from "events";
 
+import GAME_MAP from "./game-map.js";
 
 export const Emitter = new EventEmitter();
 
@@ -110,7 +111,7 @@ export class Client {
         return this._nexus;
     }
 
-    // use node js to validate the game installation seems to be a valid Palworld game path
+    // use node js to validate the game installation seems to be a valid game path
     // also determine if it is installeld for steam, xbox pass, or windows store.
     static async validateGamePath(game_path) {
         return new Promise(async (resolve, reject) => {
@@ -122,42 +123,102 @@ export class Client {
                 const fileExists = (filename) => files.some((file) => file.isFile() && file.name === filename);
                 // console.log({ files });
 
-                const content_path = path.join(game_path, "Pal/Content");
-                const pak_path = path.join(game_path, "Pal/Content/Paks");
+                // ue folder/project names
+                // Palworld - Pal
+                // HL - Phoenix
+                // FF7R - End
 
-                if (fileExists("Palworld.exe")) { // steam/windows
-                    const exe_path = path.join(game_path, "Palworld.exe");
-                    const ue4ss_root = path.join(game_path, "Pal/Binaries/Win64");
-                    const ue4ss_path = path.join(ue4ss_root, "dwmapi.dll");
-                    const has_ue4ss = await fs.access(ue4ss_path).then(()=>true).catch(()=>false);
-                    return resolve({
-                        type: "steam",
-                        has_exe: true,
-                        exe_path,
-                        pak_path,
-                        has_ue4ss,
-                        ue4ss_path,
-                        ue4ss_root,
-                        content_path,
-                    });
+                for (const [game_key, map_data] of Object.entries(GAME_MAP)) {
+                    if (game_key === 'generic') continue; // skip generic
+                    
+                    for (const platform of ["steam", "epic", "xbox"]) {
+                        for (const launch_type of ["game", "server"]) {
+                            // console.log("checking:", platform, launch_type, game_key);
+
+
+                            // platforms.game.steam.id = steam app id
+                            const data = map_data.platforms?.[launch_type]?.[platform];
+                            if (!data) continue; // skip if no data
+
+                            console.log(data);
+
+                            // {id: "7654321", root: "UEProjectRoot", app: "ServerExeName"}, 
+                            const {root, app} = data;
+                            if (!root || !app) continue; // skip if no id, root, or app data
+
+                            // TODO: TEST: steam://rungameid/STEAMGAMEID
+
+                            const app_name = `${app}.exe`;
+                            // console.log("checking for:", app_name);
+                            if (fileExists(app_name)) { // steam/windows
+                                console.log("found:", app_name);
+                                const exe_path = path.join(game_path, app_name);
+                                const content_path = path.join(game_path, `${root}/Content`);
+                                const pak_path = path.join(game_path, `${root}/Content/Paks`);
+                                const ue4ss_dir = platform === "xbox" ? "WinGDK" : "Win64";
+                                const ue4ss_root = path.join(game_path, `${root}/Binaries/${ue4ss_dir}`);
+                                const ue4ss_path = path.join(ue4ss_root, "dwmapi.dll");
+                                const has_ue4ss = await fs.access(ue4ss_path).then(()=>true).catch(()=>false);
+                                // const nexus_slug = map_data.providers.nexus
+
+                                // returns `game` object with all the data <3
+                                return resolve({
+                                    id: game_key,
+                                    type: platform,
+                                    path: game_path,
+                                    has_exe: true,
+                                    exe_path,
+                                    pak_path,
+                                    has_ue4ss,
+                                    ue4ss_path,
+                                    ue4ss_root,
+                                    content_path,
+                                    launch_type,
+                                    map_data,
+                                    unreal_root: root,
+                                    // nexus_slug,
+                                });
+                            }
+                        }
+                    }
                 }
-                if (fileExists("gamelaunchhelper.exe")) { // xbox gamepass
-                    const exe_path = path.join(game_path, "gamelaunchhelper.exe");
-                    const ue4ss_root = path.join(game_path, "Pal/Binaries/WinGDK");
-                    const ue4ss_path = path.join(ue4ss_root, "dwmapi.dll");
-                    const has_ue4ss = await fs.access(ue4ss_path).then(()=>true).catch(()=>false);
-                    // console.log({ exe_path, has_exe, ue4ss_path, has_ue4ss });
-                    return resolve({
-                        type: "xbox",
-                        has_exe: true,
-                        exe_path,
-                        pak_path,
-                        has_ue4ss,
-                        ue4ss_path,
-                        ue4ss_root,
-                        content_path,
-                    });
-                }
+
+                // const content_path = path.join(game_path, "Pal/Content");
+                // const pak_path = path.join(game_path, "Pal/Content/Paks");
+
+                // if (fileExists("Palworld.exe")) { // steam/windows
+                //     const exe_path = path.join(game_path, "Palworld.exe");
+                //     const ue4ss_root = path.join(game_path, "Pal/Binaries/Win64");
+                //     const ue4ss_path = path.join(ue4ss_root, "dwmapi.dll");
+                //     const has_ue4ss = await fs.access(ue4ss_path).then(()=>true).catch(()=>false);
+                //     return resolve({
+                //         type: "steam",
+                //         has_exe: true,
+                //         exe_path,
+                //         pak_path,
+                //         has_ue4ss,
+                //         ue4ss_path,
+                //         ue4ss_root,
+                //         content_path,
+                //     });
+                // }
+                // else if (fileExists("gamelaunchhelper.exe")) { // xbox gamepass
+                //     const exe_path = path.join(game_path, "gamelaunchhelper.exe");
+                //     const ue4ss_root = path.join(game_path, "Pal/Binaries/WinGDK");
+                //     const ue4ss_path = path.join(ue4ss_root, "dwmapi.dll");
+                //     const has_ue4ss = await fs.access(ue4ss_path).then(()=>true).catch(()=>false);
+                //     // console.log({ exe_path, has_exe, ue4ss_path, has_ue4ss });
+                //     return resolve({
+                //         type: "xbox",
+                //         has_exe: true,
+                //         exe_path,
+                //         pak_path,
+                //         has_ue4ss,
+                //         ue4ss_path,
+                //         ue4ss_root,
+                //         content_path,
+                //     });
+                // }
                 // cant seem to validate game.. unknown path
                 throw new Error("Unknown game path");
             } catch (error) {
@@ -166,8 +227,6 @@ export class Client {
             resolve({ type: "{UNKNOWN}" });
         });
     }
-
-    static downloadModFromNexus() {}
 
 
     static async downloadFile(cache_dir, download_url, callbacks={}) {
@@ -283,17 +342,21 @@ export class Client {
         });
     }
 
-    static determineInstallPath(game_path, entries) {
+    static async determineInstallPath(game_path, entries) {
         let install_path = game_path;
 
+        const game_data = await this.validateGamePath(game_path);
+        // console.log("determineInstallPath:");
+        // console.log({ game_path, game_data });
+
         // determine the actual first entry, ignoring any 'root' directories that may be present
-        const allowedRoots = ["Pal", "Binaries", "Content", "Win64", "WinGDK", "Mods", "Paks", "LogicMods", "~mods"];
+        const allowedRoots = [game_data.unreal_root, "Binaries", "Content", "Win64", "WinGDK", "Mods", "Paks", "LogicMods", "~mods"];
 
         let ignoredRoots = '';
         const firstFileEntry = entries.find((entry) => {
             const replaced = entry.entryName.replace(ignoredRoots, '');
             const root = replaced.split('/').shift();
-            console.log({ root, replaced });
+            // console.log({ root, replaced });
             if (allowedRoots.includes(root)) return true;
             if (entry.isDirectory) ignoredRoots = `${root}/`;
             return false;
@@ -307,41 +370,43 @@ export class Client {
         // if the entry is a file and not in the allowed roots, ignore it
         const part_checker = part => allowedRoots.includes(part);
         const ignored_files = entries.filter(({isDirectory=false, entryName=''}) => { 
+            const seemsUnreally = ['pak', 'ucas', 'utoc'].some(ext => entryName.endsWith(`.${ext}`));
+            if (!isDirectory && seemsUnreally) return false;
             return !isDirectory && !entryName.split('/').some(part_checker);
         }).map(({entryName}) => entryName);
 
-        console.log({ firstFileEntry, ignoredRoots, ignored_files });
+        console.log({ firstFileEntry, ignoredRoots, ignored_files, game_data });
 
         if (firstFileEntry.isDirectory) {
             switch (firstFileEntry.outputPath) {
-                case "Pal/":
+                case `${game_data.unreal_root}/`:
                     install_path = game_path;
                     break;
                 case "Binaries/":
                 case "Content/":
-                    install_path = path.join(game_path, "Pal");
+                    install_path = path.join(game_path, game_data.unreal_root);
                     break;
                 case "Win64/":
                 case "WinGDK/":
-                    install_path = path.join(game_path, "Pal/Binaries"); 
+                    install_path = path.join(game_path, game_data.unreal_root, "Binaries"); 
                     break;
                 case "Mods/":
-                    if (game_path.includes('XboxGames')) install_path = path.join(game_path, "Pal/Binaries/WinGDK");
-                    else install_path = path.join(game_path, "Pal/Binaries/Win64");
+                    if (game_path.includes('XboxGames')) install_path = path.join(game_path, game_data.unreal_root, "Binaries/WinGDK");
+                    else install_path = path.join(game_path, game_data.unreal_root, "Binaries/Win64");
                     break;
                 case "Paks/":
-                    install_path = path.join(game_path, "Pal/Content");
+                    install_path = path.join(game_path, game_data.unreal_root, "Content");
                     break;
                 case "LogicMods/":
-                    install_path = path.join(game_path, "Pal/Content/Paks");
+                    install_path = path.join(game_path, game_data.unreal_root, "Content/Paks");
                     break;
                 default: // ~mods/ or unknown mod type ~ assume regular .pak replacement
-                    install_path = path.join(game_path, "Pal/Content/Paks/~mods");
+                    install_path = path.join(game_path, game_data.unreal_root, "Content/Paks/~mods");
                     break;
             }
         } else {
             // unknown mod type ~ assume regular .pak replacement
-            install_path = path.join(game_path, "Pal/Content/Paks/~mods");
+            install_path = path.join(game_path, game_data.unreal_root, "Content/Paks/~mods");
         }
 
         return [install_path, ignored_files];
@@ -366,7 +431,7 @@ export class Client {
                 // }
 
                 // determine the root path to install this mods files to
-                const [install_path, ignored_files] = this.determineInstallPath(game_path, entries);
+                const [install_path, ignored_files] = await this.determineInstallPath(game_path, entries);
 
                 Emitter.emit("install-mod-file", {
                     install_path,
@@ -408,34 +473,36 @@ export class Client {
                 const entries = await this.removeModDataFromJSON(game_path, mod, config_override);
                 console.log("uninstalling mod entries:", entries);
 
+                const game_data = await this.validateGamePath(game_path);
+
                 // determine the root path to uninstall this mods files from
                 const firstEntry = entries[0];
                 let base_path = game_path;
                 switch (firstEntry) {
-                    case "Pal/":
+                    case `${game_data.unreal_root}/`:
                         base_path = game_path;
                         break;
                     case "Binaries/":
                     case "Content/":
-                        base_path = path.join(game_path, "Pal");
+                        base_path = path.join(game_path, game_data.unreal_root);
                         break;
                     case "Win64/":
                     case "WinGDK/":
-                        base_path = path.join(game_path, "Pal/Binaries");
+                        base_path = path.join(game_path, game_data.unreal_root, "Binaries");
                         break;
                     case "Mods/":
-                        if (game_path.includes('XboxGames')) base_path = path.join(game_path, "Pal/Binaries/WinGDK");
-                        else base_path = path.join(game_path, "Pal/Binaries/Win64");
+                        if (game_path.includes('XboxGames')) base_path = path.join(game_path, game_data.unreal_root, "Binaries/WinGDK");
+                        else base_path = path.join(game_path, game_data.unreal_root, "Binaries/Win64");
                         break;
 
                     case "Paks/":
-                        base_path = path.join(game_path, "Pal/Content");
+                        base_path = path.join(game_path, game_data.unreal_root, "Content");
                         break;
                     case "LogicMods/":
-                        base_path = path.join(game_path, "Pal/Content/Paks");
+                        base_path = path.join(game_path, game_data.unreal_root, "Content/Paks");
                         break;
                     default: // ~mods/ or unknown mod type ~ assume regular .pak replacement
-                        base_path = path.join(game_path, "Pal/Content/Paks/~mods");
+                        base_path = path.join(game_path, game_data.unreal_root, "Content/Paks/~mods");
                         break;
                 }
                 // remove the mod files from the game directory
@@ -474,19 +541,28 @@ export class Client {
     static validateModFiles(game_path, mod, file) {
         return new Promise(async (resolve, reject) => {
             try {
+
+                // console.log({ game_path, mod, file });
+                
                 // check if the mod is already installed
                 const installed = await this.checkModIsInstalled(game_path, mod, file);
                 if (!installed) return reject("Mod not installed");
+                
+                console.log('validating mod files:', game_path, mod.mod_id, file.file_name);
 
                 // iterate over the mod files and check if they exist
                 const config = await this.readJSON(game_path);
+                console.log('read json config:', config);
                 const mod_data = config.mods[mod.mod_id];
+                console.log('mod data:', mod_data);
                 const entries = mod_data.entries.map((entry) => ({ entryName: entry }));
-                const [base_path, ignored_files] = this.determineInstallPath(game_path, entries);
+                const [base_path, ignored_files] = await this.determineInstallPath(game_path, entries);
+
+                console.log("validating base path:", base_path);
 
                 const results = {};
                 for (const entry of entries) {
-                    const fileordir = path.join(base_path, entry);
+                    const fileordir = path.join(base_path, entry?.outputPath ?? entry.entryName);
                     results[entry] = await fs.access(fileordir).then(() => true).catch(() => false);
                 }
 
@@ -684,12 +760,11 @@ export class Client {
     // https://github.com/UE4SS-RE/RE-UE4SS/releases
     // https://github.com/UE4SS-RE/RE-UE4SS/releases/download/v3.0.1/UE4SS_v3.0.1.zip
     // https://github.com/UE4SS-RE/RE-UE4SS/releases/download/v3.0.1/UE4SS_v3.0.1.zip
-    static async downloadAndInstallUE4SS(cache_dir, game_path) {
+    static async downloadAndInstallUE4SS(cache_dir, game_path, options) {
         // get latest release download url:
-        const ue4ss_version = '3.0.1';
+        const ue4ss_version = options.version ?? '3.0.1';
         const release_url = 'https://github.com/UE4SS-RE/RE-UE4SS/releases';
         const url = `${release_url}/download/v${ue4ss_version}/UE4SS_v${ue4ss_version}.zip`;
-
 
         try {
             const path_data = await this.validateGamePath(game_path);
@@ -697,16 +772,15 @@ export class Client {
             // remove dll from path if it exists
             const ue4ss_install_dir = path_data.ue4ss_path.replace('dwmapi.dll', '');
 
-            if (!path_data.ue4ss_path) {
-                console.log("downloading UE4SS", url);
-            }
+            console.log("downloading UE4SS from", url);
+            console.log("installing to", ue4ss_install_dir);
 
             await this.downloadFile(cache_dir, url, {
                 onProgress: data => Emitter.emit("ue4ss-process", 'download', data),
             });
 
             // unzip and install
-            const archive = new ArchiveHandler(path.join(cache_dir, `UE4SS_v${ue4ss_version}.zip`));
+            const archive = new ArchiveHandler(path.join(cache_dir, url.split("/").pop()));
             // forward the extracting event to the renderer
             archive.on("extracting", (data) => {
                 Emitter.emit("ue4ss-process", 'extract', data);
@@ -714,6 +788,22 @@ export class Client {
             // extract the zip to the game directory
             await archive.extractAllTo(ue4ss_install_dir, true);
 
+            // patchdata example:
+            // { "Mods/BPModLoaderMod/Scripts/main.lua": "https://raw.githubusercontent.com/Okaetsu/RE-UE4SS/refs/heads/logicmod-temp-fix/assets/Mods/BPModLoaderMod/Scripts/main.lua" }
+            for (const patchdata of options.patches) {
+                for (const filetoreplace in patchdata) {
+                    if (!Object.prototype.hasOwnProperty.call(patchdata, filetoreplace)) continue;
+                    const url = patchdata[filetoreplace];
+                    await this.downloadFile(cache_dir, url, {
+                        onProgress: data => Emitter.emit("ue4ss-process", 'download', data),
+                    });
+                    const patchfile = path.join(cache_dir, url.split("/").pop());
+                    const patchpath = path.join(game_path, filetoreplace);
+                    console.log("patching file:", patchfile, patchpath);
+                    await fs.copyFile(patchfile, patchpath);
+                }
+            }
+            
             Emitter.emit("ue4ss-process", 'complete', { success: true });
 
             return true;
@@ -721,6 +811,44 @@ export class Client {
         } catch (error) {
             Emitter.emit("ue4ss-process", 'error', error);
             console.error("downloadAndInstallUE4SS error", error);
+        }
+        return false;
+    }
+
+    static async uninstallUE4SS(cache_dir, game_path, options) {
+        try {
+            const path_data = await this.validateGamePath(game_path);
+            const ue4ss_install_dir = path_data.ue4ss_root;
+            console.log("uninstalling UE4SS from", ue4ss_install_dir);
+
+            const archive = new ArchiveHandler(path.join(cache_dir, `UE4SS_v${options.version}.zip`));
+            const entries = await archive.getEntries();
+            // remove each entry
+            for (const entry of entries) {
+                const fileordir = path.join(ue4ss_install_dir, entry.entryName);
+                if (entry.isDirectory) {
+                    // await fs.rmdir(fileordir, { recursive: true });
+                } else {
+                    Emitter.emit("ue4ss-process", 'delete', fileordir);
+                    await fs.unlink(fileordir);
+                }
+            }
+            // remove any patches
+            for (const patchdata of options.patches) {
+                for (const filetoreplace in patchdata) {
+                    if (!Object.prototype.hasOwnProperty.call(patchdata, filetoreplace)) continue;
+                    const patchpath = path.join(game_path, filetoreplace);
+                    console.log("deleting patched file:", patchpath);
+                    Emitter.emit("ue4ss-process", 'delete', patchpath);
+                    await fs.unlink(patchpath);
+                }
+            }
+            
+            Emitter.emit("ue4ss-process", 'uninstalled', { success: true });
+            return true;
+        } catch (error) {
+            Emitter.emit("ue4ss-process", 'error', error);
+            console.error("uninstallUE4SS error", error);
         }
         return false;
     }

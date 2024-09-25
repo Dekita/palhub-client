@@ -38,7 +38,7 @@ function GoogleTagManager() {
 
 
 export default function DekAppLayoutWrapper({ children }) {
-    const { ready } = useLocalization();
+    const { ready, t } = useLocalization();
     const logger = useAppLogger("core/layout");
     const [deepLink, linkChanged, consumeDeepLink] = useDeepLinkListener();
     const { requiredModulesLoaded, commonAppData } = useCommonChecks();
@@ -120,7 +120,7 @@ export default function DekAppLayoutWrapper({ children }) {
                 <div className='h-100 d-flex justify-content-center align-items-center'>
                     <div className='d-grid text-center text-secondary'>
                         <PongSpinner color='currentColor' size={256} />
-                        <strong className='mt-3'>Loading</strong>
+                        <strong className='mt-3'><small>LOADING:..</small></strong>
                     </div>
                 </div>
             </div>}

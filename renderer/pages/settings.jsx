@@ -7,19 +7,20 @@ import React from 'react';
 import Link from 'next/link';
 import Carousel from 'react-bootstrap/Carousel';
 import DekChoice from '@components/core/dek-choice';
-// import DekSelect from '@components/core/dek-select';
+import DekSelect from '@components/core/dek-select';
 import DekCheckbox from '@components/core/dek-checkbox';
 import BrandHeader from '@components/core/brand-header';
 
 import { ENVEntry, ENVEntryLabel } from '@components/modals/common';
-import InstallUe4ssModal from '@components/modals/ue4ss-install';
-import Ue4ssSettingsModal from '@components/modals/ue4ss-settings';
+import GameConfigurationModal from '@components/modals/game-config';
 
 import useLocalization from '@hooks/useLocalization';
 import checkIsDevEnvironment from '@utils/isDevEnv';
 import useCommonChecks from '@hooks/useCommonChecks';
 import useAppLogger from '@hooks/useAppLogger';
 import wait from '@utils/wait';
+import GameCardComponent, {PlatformIcon} from '@components/game-card';
+import * as CommonIcons from '@config/common-icons';
 
 const COMMON_TIMEOUT_DURATION = 1000;
 
@@ -30,7 +31,9 @@ export default function SettingsPage({ modals, ThemeController }) {
     const { requiredModulesLoaded, commonAppData } = useCommonChecks();
     const [showUE4SSInstall, setShowUE4SSInstall] = React.useState(false);
     const [showUE4SSSettings, setShowUE4SSSettings] = React.useState(false);
+    const [showGameConfig, setShowGameConfig] = React.useState(false);
     const [settingsPageID, setSettingsPageID] = React.useState(0);
+    const [tempGame, setTempGame] = React.useState(null);
     const isDevEnvironment = checkIsDevEnvironment();
     const applog = useAppLogger("SettingsPage");
 
@@ -51,8 +54,7 @@ export default function SettingsPage({ modals, ThemeController }) {
 
     if (!requiredModulesLoaded) return null;
     return <React.Fragment>
-        <InstallUe4ssModal show={showUE4SSInstall} setShow={setShowUE4SSInstall} />
-        <Ue4ssSettingsModal show={showUE4SSSettings} setShow={setShowUE4SSSettings} />
+        <GameConfigurationModal show={showGameConfig} setShow={setShowGameConfig} tempGame={tempGame} setTempGame={setTempGame} />
         <BrandHeader 
             type="altsmall" 
             tagline={t('/settings.head')} 
@@ -113,7 +115,7 @@ export default function SettingsPage({ modals, ThemeController }) {
             <Carousel.Item className="">
                 <div className="col-12 col-md-10 offset-0 offset-md-1 col-lg-8 offset-lg-2">
                     <div className="mx-auto px-3">
-                        <SettingsPage_Game {...{showUE4SSSettings, setShowUE4SSSettings}} />
+                        <SettingsPage_Game {...{showGameConfig, setShowGameConfig, tempGame, setTempGame}} />
                     </div>
                 </div>
             </Carousel.Item>
@@ -158,8 +160,8 @@ function SettingsPage_SetupStep({showUE4SSInstall, setShowUE4SSInstall}) {
     const dangerCard = 'card bg-danger border-danger2 border my-4 p-3 text-center';
     const successCard = 'card bg-success border-success2 border my-4 p-3 text-center';
 
-    console.log(game)
-    console.log(t(`games.${game.id}.name`))
+    // console.log(game)
+    // console.log(t(`games.${game.id}.name`))
 
     switch (step) {
         case 0: return <div className={successCard}>
@@ -399,52 +401,96 @@ function SettingsPage_Theme({ThemeController}) {
     </React.Fragment>
 }
 
-function SettingsPage_Game({showUE4SSSettings, setShowUE4SSSettings}) {
-    const { requiredModulesLoaded, commonAppData, updateSelectedGamePath } = useCommonChecks();
+function SettingsPage_Game({showGameConfig, setShowGameConfig, tempGame, setTempGame}) {
+    const { requiredModulesLoaded, commonAppData, updateSelectedGamePath, updateSelectedGame } = useCommonChecks();
     const game = commonAppData?.selectedGame;
+    const api_key = commonAppData?.apis?.nexus;
 
-    const [knownGamePath, setKnownGamePath] = React.useState(game?.path);
+    // const [knownGamePath, setKnownGamePath] = React.useState(game?.path);
     const { t, tA } = useLocalization();
 
-    const handleGamePathChange = React.useCallback((name, new_value) => {
-        updateSelectedGamePath(game.id, new_value);
-        setKnownGamePath(new_value);
-    }, [game]);
+    // const handleGamePathChange = React.useCallback((name, new_value) => {
+    //     updateSelectedGamePath(game.id, new_value);
+    //     setKnownGamePath(new_value);
+    // }, [game]);
 
-    const install_types = tA('/settings.choices.install-type');
-    const installed_type = install_types.indexOf(game?.type);
+    const onClick = React.useCallback((game) => {
+        setTempGame(game);
+        setShowGameConfig(true);
+    }, []);
+
+
+    // const install_types = tA('/settings.choices.install-type');
+    // const installed_type = install_types.indexOf(game?.type);
+
+
+    const gamesArray = [];
+    for (const [id, data] of Object.entries(commonAppData?.games)) {
+        if (id === 'active') continue;
+        for (const [type, platform_data] of Object.entries(data)) {
+            for (const [launch_type, path] of Object.entries(platform_data)) {
+                // console.log('iterating:', game_id, platform_type, launch_type);
+                const active = game?.id === id && game?.type === type && game?.launch_type === launch_type;
+                gamesArray.push({id, type, launch_type, path, active});
+            }
+        }
+    }
+
+    const onChangeSelectedGame = React.useCallback(async(event, selected_text, target_text, index) => {
+        updateSelectedGame(gamesArray[index], async (game) => {
+            const slug = game.map_data.providers.nexus;
+            await window.nexus(api_key, 'setGame', slug);
+            await setTempGame(game);
+        });
+    }, [updateSelectedGame, gamesArray]);
+
+
+
+    const activeGame = gamesArray.find(g => g.active);
+    const selectedGameID = gamesArray.indexOf(activeGame);
+
+    const iconOptions = {height:'1.8rem', style:{marginTop:-4}};
 
     if (!requiredModulesLoaded) return null;
     return <React.Fragment>
-        <ENVEntry
-            value={knownGamePath}
-            updateSetting={handleGamePathChange}
-            name={t('/settings.inputs.game-path.name', { game })}
-            tooltip={t('/settings.inputs.game-path.desc', { game })}
-        />
-        <DekChoice
-            disabled={true}
-            className="pb-3"
-            active={installed_type}
-            choices={tA('/settings.choices.install-type')}
-            onClick={(i, value) => {}}
-        />
-        {game?.has_ue4ss && <div className='row'>
-            <div className='col'>
-                <div className="btn btn-dark px-3 w-100" onClick={() => setShowUE4SSSettings(true)}>
-                    <strong>{t('/settings.buttons.edit-ue4ss-settings')}</strong>
-                </div>
+
+        <div className="row mt-3">
+            {/* Game selection component */}
+            <div className='col-12 pb-3'>
+                <DekSelect active_id={selectedGameID} onChange={onChangeSelectedGame}>
+                    {gamesArray.map(({id, type, launch_type, path, active}) => {
+                        return <dekItem key={`${id} - ${type} - ${launch_type}`} text="hi">
+                            <PlatformIcon type={type} options={iconOptions} />
+                            {`${t(`games.${id}.name`)} `}
+                            {launch_type !== 'game' && t(`common.app-types.${launch_type}`)}
+                            {/* {` - ${path}`} */}
+                        </dekItem>
+                    })}
+                </DekSelect>
             </div>
-            <div className='col'>
-                <div className="btn btn-dark px-3 w-100" onClick={() => setShowUE4SSSettings(true)}>
-                    <strong>{t('/settings.buttons.check-ue4ss-update')}</strong>
+            {/* Add new game to be managed */}
+            <div className="col-12 col-md-6 col-lg-6 col-xl-4 mb-2">
+                <div className='card theme-border chartcard cursor-pointer' onClick={()=>onClick(null)}>
+                    <div className='card-body text-start p-0'>
+                        <div className='card-title p-1 mb-0 bg-warning'>
+                            <div className="ratio ratio-16x9 theme-bg rounded">
+                                <CommonIcons.plus fill='currentColor' className="bg-dark p-3" />
+                            </div>
+                        </div>
+                        <div className='anal-cavity px-2 mb-2 pt-2'>
+                            <strong className='text-warning'>{t('/settings.manage-game.head')}</strong>
+                            <small className='text-dark'>{t('/settings.manage-game.info')}</small>
+                            <span>{t('/settings.manage-game.span')}</span>
+                        </div>
+                    </div>
                 </div>
-            </div>
-            <div className='col'>
-                <div className="btn btn-dark px-3 w-100" onClick={() => setShowUE4SSSettings(true)}>
-                <strong>{t('/settings.buttons.uninstall-ue4ss')}</strong>
-                </div>
-            </div>
-        </div>}
+            </div>  
+            {/* list existing managed games */}
+            {gamesArray.map(({id, type, launch_type, path, active}) => {
+                // console.log('entry', {game_id, type, launch_type, path});
+                return <GameCardComponent {...{id, path, onClick, tempGame}} />
+            })}
+        </div>
+
     </React.Fragment>;
 }

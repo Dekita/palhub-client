@@ -374,6 +374,12 @@ small {
     text-overflow: ellipsis;
 }
 
+.anal-cavity.large div, .anal-cavity.large small {
+    -webkit-line-clamp: 6;
+}
+
+
+
 @keyframes svgRotate {
     0% {
         transform: rotate(0deg);
@@ -622,6 +628,11 @@ datalist {
     -webkit-app-region: drag;    
 }
 
+.full-dragbar {
+    -webkit-user-select: none;
+    -webkit-app-region: drag;    
+}
+
 .appbar-btn {
     margin: 0;
     opacity: 0.6;
@@ -680,6 +691,13 @@ a:hover {
     position: absolute;
     left: 6px;
     top: 6px;
+}
+
+.set-topleft {
+    position: absolute;
+    top: 0;
+    left: 0;
+    border-bottom-right-radius: 9px;
 }
 
 .modicon {

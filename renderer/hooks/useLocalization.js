@@ -91,7 +91,7 @@ export const LocalizationProvider = ({ children }) => {
         bundle_point = matches.reduce((acc, match) => {
             let data = replacers; //JSON.parse(JSON.stringify(replacers));
             for (const key of match.split('.')) {
-                if (data[key] !== undefined) data = data[key];
+                if (data?.[key] !== undefined) data = data[key];
             }
             return acc.replaceAll(`{{${match}}}`, data);
         }, bundle_point);
@@ -108,7 +108,7 @@ export const LocalizationProvider = ({ children }) => {
             try {
                 return bundle_point.map(innerT).map((e) => innerM(e, replacers, bundle_override));
             } catch (error) {
-                console.error(e);
+                console.error(error);
             }
             return [];
         }

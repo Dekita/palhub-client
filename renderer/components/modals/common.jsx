@@ -97,7 +97,7 @@ export function ENVEntryLabel({name, envdatas, tooltip}) {
 }
 
 
-export function ENVEntry_Input({name, value, onClick, updateSetting, defaults, envdatas, tooltip, type='text'}) {
+export function ENVEntry_Input({name, value, onClick, updateSetting, defaults, envdatas, tooltip, type='text', disabled=false}) {
     // const [knownValue, setKnownValue] = useState(value);
 
     const onKeyUp = (e) => {
@@ -123,7 +123,7 @@ export function ENVEntry_Input({name, value, onClick, updateSetting, defaults, e
             className='form-control form-secondary' 
             onChange={onChanged} 
             onClick={onClick}
-            // disabled={working}
+            disabled={disabled}
             autoComplete="off"
             // list="fruitsList"
             style={{ width: '100%' }}
@@ -152,7 +152,7 @@ export function ENVEntry_Bool({name, value, onClick, updateSetting, defaults, en
     </div>
 }
 
-export function ENVEntry({name=null, value=null, onClick=()=>{}, updateSetting=()=>{}, defaults={}, envdatas={}, tooltip='', type='', labels=null}) {
+export function ENVEntry({name=null, value="", onClick=()=>{}, updateSetting=()=>{}, defaults={}, envdatas={}, tooltip='', type='', labels=null, disabled=false}) {
     // value = ensureEntryValueType(value);
     // console.log(`entry for ${name}:`, typeof value, {name, value})
     const { t, tA } = useLocalization();
@@ -161,7 +161,7 @@ export function ENVEntry({name=null, value=null, onClick=()=>{}, updateSetting=(
     if (labels && labels.length === 1) labels.push(labels[0]);
 
     if (type === 'numbool') value = value === '1';
-    const passthrough = {name, value, onClick, updateSetting, defaults, envdatas, tooltip, type, labels};
+    const passthrough = {name, value, onClick, updateSetting, defaults, envdatas, tooltip, type, labels, disabled};
     if (type === 'numbool') return <ENVEntry_Bool {...passthrough} />
 
     switch (typeof value) {

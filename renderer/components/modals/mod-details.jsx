@@ -31,9 +31,10 @@ import Link from "next/link";
 import useLocalization from '@hooks/useLocalization';
 import useSelectedGame from '@hooks/useSelectedGame';
 import DekCommonAppModal from '@components/core/modal';
+import useCommonChecks from "@hooks/useCommonChecks";
 
 export default function ModDetailsModal({show,setShow,mod}) {
-    const game = useSelectedGame();
+    const { requiredModulesLoaded, commonAppData } = useCommonChecks();
     const { t, tA } = useLocalization();
     const {isDesktop} = useScreenSize();
     const fullscreen = !isDesktop;
@@ -59,7 +60,8 @@ export default function ModDetailsModal({show,setShow,mod}) {
 
             try {
                 const api_key = await window.uStore.get('api_key');
-                const {files, file_updates} = await window.nexus(api_key, 'getModFiles', mod.mod_id);
+                const game_slug = commonAppData?.selectedGame?.map_data.providers.nexus;
+                const {files, file_updates} = await window.nexus(api_key, 'getModFiles', mod.mod_id, game_slug);
                 files.sort((a,b) => b.uploaded_timestamp - a.uploaded_timestamp);
                 console.log({files, file_updates});
                 // const links = await window.nexus(api_key, 'getDownloadURLs', mod.mod_id);
@@ -77,9 +79,8 @@ export default function ModDetailsModal({show,setShow,mod}) {
     const headerText = `${mod.name} by ${mod.author}`;
     const modalOptions = {show, setShow, onCancel, headerText, showX: true};
     return <DekCommonAppModal {...modalOptions}>
-        <dekModalBody className='d-block overflow-y-scroll p-2' style={{height}}>
-            <div >
-
+        <div type="DekBody" className='d-block overflow-y-scroll p-2' style={{height}}>
+            <div>
                 <div className='ratio ratio-16x9'>
                     <img src={mod.picture_url} alt={mod.name} className='d-block w-100' />
                 </div>
@@ -111,6 +112,6 @@ export default function ModDetailsModal({show,setShow,mod}) {
                     </Link>
                 </div>
             </div>
-        </dekModalBody>
+        </div>
     </DekCommonAppModal>;
 }

@@ -77,6 +77,11 @@ export { default as terms } from '@svgs/fa5/regular/file-contract.svg';
 
 export { default as discord }  from '@svgs/fa6/brands/discord.svg';
 export { default as patreon }  from '@svgs/fa6/brands/patreon.svg';
+export { default as paypal }  from '@svgs/fa6/brands/paypal.svg';
+export { default as github }  from '@svgs/fa6/brands/github.svg';
+export { default as steam }  from '@svgs/fa6/brands/steam.svg';
+export { default as xbox }  from '@svgs/fa6/brands/xbox.svg';
+export { default as epic }  from '@svgs/epic-logo-text.svg';
 
 export { default as plus } from '@svgs/fa5/duotone/plus-square.svg';
 

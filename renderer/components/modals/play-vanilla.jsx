@@ -30,13 +30,13 @@ export default function PlayVanillaModal({show,setShow, onRunGameExe}) {
     const headerText = t('modals.play-vanilla.head', {game});
     const modalOptions = {show, setShow, onCancel, headerText, showX: true};
     return <DekCommonAppModal {...modalOptions}>
-        <dekModalBody className="d-grid p-3 px-4 text-center">
+        <div type="DekBody" className="d-grid p-3 px-4 text-center">
             <h3 className="">{t('common.warning')}</h3>
             <p className="lead text-warning mb-1">{t('modals.play-vanilla.info', {game})}</p>
             <p className="lead text-warning mb-1"></p>
             <strong className="lead text-warning">{t('modals.play-vanilla.warn')}</strong>
-        </dekModalBody>
-        <dekModalFooter className='d-flex w-100 gap-3'>
+        </div>
+        <div type="DekFoot" className='d-flex w-100 gap-3'>
             <Button
                 variant='danger'
                 className='col p-2 px-3'
@@ -51,6 +51,6 @@ export default function PlayVanillaModal({show,setShow, onRunGameExe}) {
                 onClick={onClickPlayVanillaPalworld}>
                 <strong>{t('common.confirm')}</strong>
             </Button>
-        </dekModalFooter>
+        </div>
     </DekCommonAppModal>;
 }

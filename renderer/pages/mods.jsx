@@ -75,6 +75,8 @@ export default function ModsPage() {
     const game_path = commonAppData?.selectedGame?.path;
     const game_data = commonAppData?.selectedGame;
     const api_key = commonAppData?.apis?.nexus;
+    const slug = game_data?.map_data.providers.nexus;
+
 
     const [showModDetails, setShowModDetails] = React.useState(false);
     const [showModList, setShowModList] = React.useState(false);
@@ -99,7 +101,7 @@ export default function ModsPage() {
         if (!config || !config.mods) return [];
         const mod_ids = Object.keys(config.mods);
         return await Promise.all(mod_ids.map(async mod_id => {
-            return await window.nexus(api_key, 'getModInfo', mod_id);
+            return await window.nexus(api_key, 'getModInfo', mod_id, slug);
         }));
     }
 
@@ -108,7 +110,7 @@ export default function ModsPage() {
         const config = await window.palhub('readJSON', cache_dir);
         const mod_ids = Object.keys(config.mods);
         return await Promise.all(mod_ids.map(async mod_id => {
-            return await window.nexus(api_key, 'getModInfo', mod_id);
+            return await window.nexus(api_key, 'getModInfo', mod_id, slug);
         }));
     }
 
@@ -128,9 +130,9 @@ export default function ModsPage() {
             switch (modlistID) { 
                 case 0: new_mods = await getInstalledMods(api_key, game_path); break;
                 case 1: new_mods = await getDownloadedMods(api_key, cache_dir); break;
-                case 2: new_mods = await window.nexus(api_key, 'getLatestAdded'); break;
-                case 3: new_mods = await window.nexus(api_key, 'getTrending'); break;
-                case 4: new_mods = await window.nexus(api_key, 'getLatestUpdated'); break;
+                case 2: new_mods = await window.nexus(api_key, 'getLatestAdded', slug); break;
+                case 3: new_mods = await window.nexus(api_key, 'getTrending', slug); break;
+                case 4: new_mods = await window.nexus(api_key, 'getLatestUpdated', slug); break;
                 case 5: new_mods = await window.nexus(api_key, 'getTrackedMods'); break;
             }
             if (new_mods) {

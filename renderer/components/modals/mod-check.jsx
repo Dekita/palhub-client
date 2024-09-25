@@ -12,20 +12,19 @@ import useScreenSize from '@hooks/useScreenSize';
 import ModTable from '@components/core/mod-table';
 
 import useLocalization from '@hooks/useLocalization';
-import useSelectedGame from '@hooks/useSelectedGame';
 import useCommonChecks from '@hooks/useCommonChecks';
 import DekCommonAppModal from '@components/core/modal';
 
 import wait from 'utils/wait';
 
 export default function CheckModsModal({ show, setShow }) {
-    const game = useSelectedGame();
     const { t, tA } = useLocalization();
     const { requiredModulesLoaded, commonAppData } = useCommonChecks();
     const cache_dir = commonAppData?.cache;
     const game_path = commonAppData?.selectedGame?.path;
     const game_data = commonAppData?.selectedGame;
     const api_key = commonAppData?.apis?.nexus;
+
 
     const onCancel = useCallback(() => setShow(false), []);
     const { isDesktop } = useScreenSize();
@@ -151,7 +150,7 @@ export default function CheckModsModal({ show, setShow }) {
 
         await wait(wait_between);
         setShouldShowLogs(false);
-    }, [mods, modConfig]);
+    }, [mods, modConfig, game_path]);
 
     const onValidateFiles = useCallback(async () => {
         resetLogMessages();
@@ -166,11 +165,13 @@ export default function CheckModsModal({ show, setShow }) {
 
         const total = mods.length;
 
+        console.log(game_path);
         for (const [index, mod] of mods.entries()) {
             addLogMessage(`Processing Mod... ${index + 1} / ${total}`);
+            console.log(`Processing Mod... ${index + 1} / ${total}`);
             try {
-                console.log(mod);
                 const file = modConfig.mods[mod.mod_id];
+                console.log({mod, file});
                 const result = await window.palhub('validateModFiles', game_path, mod, file);
                 addLogMessage(`Validation Successful: ${mod.name} - ${result}`);
             } catch (error) {
@@ -182,7 +183,7 @@ export default function CheckModsModal({ show, setShow }) {
 
         await wait(wait_between);
         setShouldShowLogs(false);
-    }, [mods, modConfig]);
+    }, [mods, modConfig, game_path]);
 
     const updateButtonEnabled = useMemo(() => {
         if (!mods || !modConfig) return false;
@@ -214,7 +215,7 @@ export default function CheckModsModal({ show, setShow }) {
     useEffect(() => {
         if (!requiredModulesLoaded) return;
         (async () => {
-            if (!mods) return;
+            if (!mods || !!!game_path) return;
 
             // const api_key = nexusApiKey;//await getApiKey();
             // const game_path = appGamePath;//await getGamePath();
@@ -228,15 +229,15 @@ export default function CheckModsModal({ show, setShow }) {
             })));
             setModConfig(config);
         })();
-    }, [shouldShowLogs, requiredModulesLoaded]);
+    }, [shouldShowLogs, requiredModulesLoaded, game_path]);
 
-    console.log({ mods, modConfig });
+    // console.log({ mods, modConfig });
 
     const height = fullscreen ? 'calc(100vh - 182px)' : 'calc(100vh / 4 * 2 + 26px)';
-    const headerText = t('modals.check-mods.head', {game});
+    const headerText = t('modals.check-mods.head', {game: commonAppData?.selectedGame});
     const modalOptions = {show, setShow, onCancel, headerText, showX: true};
     return <DekCommonAppModal {...modalOptions}>
-        <dekModalBody className="d-grid">
+        <div type="DekBody" className="d-grid">
             {/* map mods into a table */}
             {!shouldShowLogs && modConfig && <ModTable mods={mods.map((mod) => {
                 const modConfigEntry = modConfig?.mods[mod.mod_id];
@@ -257,8 +258,8 @@ export default function CheckModsModal({ show, setShow }) {
             {shouldShowLogs && <div className="overflow-auto m-0 p-3" style={{ height }} ref={logRef}>
                 <pre className="m-0 p-2">{logMessages.join('\n')}</pre>
             </div>}
-        </dekModalBody>
-        <dekModalFooter className='d-block w-100'>
+        </div>
+        <div type="DekFoot" className='d-block w-100'>
             <div className="row">
                 <div className="col-6 col-md-3 mb-2 mb-md-0 px-1">
                     <Button variant="primary" className="w-100" onClick={onCopyModList}>
@@ -281,6 +282,6 @@ export default function CheckModsModal({ show, setShow }) {
                     </Button>
                 </div>
             </div>
-        </dekModalFooter>
+        </div>
     </DekCommonAppModal>;
 }

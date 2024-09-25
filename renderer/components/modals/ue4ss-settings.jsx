@@ -124,7 +124,7 @@ export default function Ue4ssSettingsModal({ show, setShow }) {
     const headerText = t('modal.header');
     const modalOptions = {show, setShow, onCancel, headerText, showX: true};
     return <DekCommonAppModal {...modalOptions}>
-        <dekModalBody className='d-block overflow-y-auto p-3' style={{height}}>
+        <div type="DekBody" className='d-block overflow-y-auto p-3' style={{height}}>
             {hasChanges && <div className="mb-3">
                 <div className="btn btn-danger w-100 p-3" onClick={onApply}>
                     <strong>{t('modal.save-changes')}</strong>
@@ -188,6 +188,6 @@ export default function Ue4ssSettingsModal({ show, setShow }) {
                     })}
                 </div>
             </Collapse>
-        </dekModalBody>
+        </div>
     </DekCommonAppModal>;
 }
