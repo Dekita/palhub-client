@@ -402,7 +402,7 @@ function SettingsPage_Theme({ThemeController}) {
 }
 
 function SettingsPage_Game({showGameConfig, setShowGameConfig, tempGame, setTempGame}) {
-    const { requiredModulesLoaded, commonAppData, updateSelectedGamePath, updateSelectedGame } = useCommonChecks();
+    const { requiredModulesLoaded, commonAppData, updateSelectedGame, refreshCommonDataWithRedirect } = useCommonChecks();
     const game = commonAppData?.selectedGame;
     const api_key = commonAppData?.apis?.nexus;
 
@@ -424,17 +424,21 @@ function SettingsPage_Game({showGameConfig, setShowGameConfig, tempGame, setTemp
     // const installed_type = install_types.indexOf(game?.type);
 
 
-    const gamesArray = [];
-    for (const [id, data] of Object.entries(commonAppData?.games)) {
-        if (id === 'active') continue;
-        for (const [type, platform_data] of Object.entries(data)) {
-            for (const [launch_type, path] of Object.entries(platform_data)) {
-                // console.log('iterating:', game_id, platform_type, launch_type);
-                const active = game?.id === id && game?.type === type && game?.launch_type === launch_type;
-                gamesArray.push({id, type, launch_type, path, active});
+    const gamesArray = React.useMemo(()=> {
+        const gamesArray = [];
+        for (const [id, data] of Object.entries(commonAppData?.games)) {
+            if (id === 'active') continue;
+            for (const [type, platform_data] of Object.entries(data)) {
+                for (const [launch_type, path] of Object.entries(platform_data)) {
+                    // console.log('iterating:', game_id, platform_type, launch_type);
+                    const active = game?.id === id && game?.type === type && game?.launch_type === launch_type;
+                    gamesArray.push({id, type, launch_type, path, active});
+                }
             }
         }
-    }
+        console.log('refreshing memoized datas', gamesArray);
+        return gamesArray;
+    }, [game, commonAppData]);
 
     const onChangeSelectedGame = React.useCallback(async(event, selected_text, target_text, index) => {
         updateSelectedGame(gamesArray[index], async (game) => {

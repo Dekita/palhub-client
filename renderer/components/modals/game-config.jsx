@@ -33,8 +33,6 @@ export default function GameConfigurationModal({ show, setShow, tempGame, setTem
         setShow(false);
         setTimeout(() => {
             setSettingsPageID(0);
-            // setHasChanges(false);
-            // setShowAdvanced(false);
         }, 250);
     }, [setShow]);
 
@@ -112,7 +110,6 @@ export default function GameConfigurationModal({ show, setShow, tempGame, setTem
                     <UE4SSInstallProgress game={tempGame} onComplete={()=>setSettingsPageID(0)} />
                 </Carousel.Item>
             </Carousel>
-
         </div>
     </DekCommonAppModal>;
 }

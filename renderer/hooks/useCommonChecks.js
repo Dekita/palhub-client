@@ -40,8 +40,17 @@ export const CommonAppDataProvider = ({ children }) => {
         const games = await window.uStore.get('games');
         updateCommonAppData('games', games);
     }, [requiredModulesLoaded]);
+    
+    const getStoreID = React.useCallback((game_id, tempGame=null, prefixGames=true) => {
+        const prefix = prefixGames ? 'games.' : '';
+        let store_id = `${prefix}${game_id}`;
+        if (tempGame && game_id !== 'undefined') {
+            store_id = `${prefix}${tempGame.id}.${tempGame.type}.${tempGame.launch_type}`;
+        }
+        return store_id;
+    }, []);
 
-    const updateSelectedGame = React.useCallback(async (tempGame=null, callmemaybe=()=>{}) => {
+    const updateSelectedGame = React.useCallback(async (tempGame=null, callmemaybe=async()=>{}) => {
         const game_id = tempGame?.id ?? 'undefined';
         const store_id = getStoreID(game_id, tempGame);
         console.log('updating selected game:', store_id);
@@ -54,19 +63,10 @@ export const CommonAppDataProvider = ({ children }) => {
         const active_id = getStoreID(selectedGame.id, selectedGame, false);
         await window.uStore.set('games.active', active_id);
         // call the callback function when the game id is updated
-        callmemaybe(selectedGame);
+        await callmemaybe(selectedGame);
     }, [t]);
 
-    const getStoreID = React.useCallback((game_id, tempGame=null, prefixGames=true) => {
-        const prefix = prefixGames ? 'games.' : '';
-        let store_id = `${prefix}${game_id}`;
-        if (tempGame && game_id !== 'undefined') {
-            store_id = `${prefix}${tempGame.id}.${tempGame.type}.${tempGame.launch_type}`;
-        }
-        return store_id;
-    }, []);
-
-    const updateSelectedGamePath = React.useCallback(async (tempGame, new_path, callmemaybe=()=>{}) => {
+    const updateSelectedGamePath = React.useCallback(async (tempGame, new_path, callmemaybe=async()=>{}) => {
         const game_id = tempGame?.id ?? 'undefined';
 
         // update the game path stored in the uStore 
@@ -76,8 +76,7 @@ export const CommonAppDataProvider = ({ children }) => {
 
         // validate the new path and update the selected game data
         const data = await window.palhub('validateGamePath', new_path);
-        const idname = { id: game_id, name: t(`games.${data.id}.name`) };
-        const selectedGame = { ...idname, ...data };
+        const selectedGame = { ...data, name: t(`games.${data.id}.name`) };
         updateCommonAppData('selectedGame', selectedGame);
         // use selectedGame.id as id may change from data returned via 
         // validating the path. game_id is 'undefined' when a new/unknownn game is
@@ -93,8 +92,10 @@ export const CommonAppDataProvider = ({ children }) => {
             // remove the undefined datas
             await window.uStore.delete(`games.undefined`);
             // call the callback function when the game id is updated
-            callmemaybe(selectedGame);
+            await callmemaybe(selectedGame);
             console.log('updated selected game:', selectedGame);
+            // refresh the games list to include the new game
+            await refreshGames();
         }
     }, [t, commonAppData?.games?.active]); 
 
@@ -133,7 +134,7 @@ export const CommonAppDataProvider = ({ children }) => {
     // ensures that all required modules are fully loaded
     React.useEffect(() => {
         if (typeof window === 'undefined') return;
-        const REQUIRED_MODULES = ['uStore', 'palhub', 'logger', 'ipc'];
+        const REQUIRED_MODULES = ['uStore', 'palhub', 'nexus', 'logger', 'ipc'];
         if (REQUIRED_MODULES.some(module => !window[module])) return;
         refreshCommonDataWithRedirect();
     }, [ready]);
