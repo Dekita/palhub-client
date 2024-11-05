@@ -50,6 +50,20 @@ export const CommonAppDataProvider = ({ children }) => {
         return store_id;
     }, []);
 
+    const updateCachePath = React.useCallback(async (new_path, callmemaybe=async()=>{}) => {
+        const is_valid = await window.palhub('checkIsValidFolderPath', new_path);
+        await window.uStore.set('app-cache', new_path);
+        await refreshCache();
+        await callmemaybe(is_valid);
+    }, []);
+
+    const updateNexusApiKey = React.useCallback(async (new_key, callmemaybe=async()=>{}) => {
+        const key_user = await window.nexus(new_key, 'setKey', new_key);
+        await window.uStore.set('api-keys.nexus', new_key);
+        await refreshApis();
+        await callmemaybe(key_user);
+    }, []);
+
     const updateSelectedGame = React.useCallback(async (tempGame=null, callmemaybe=async()=>{}) => {
         const game_id = tempGame?.id ?? 'undefined';
         const store_id = getStoreID(game_id, tempGame);
@@ -145,6 +159,8 @@ export const CommonAppDataProvider = ({ children }) => {
         refreshApis,
         refreshCache,
         refreshGames,
+        updateCachePath,
+        updateNexusApiKey,
         updateSelectedGame,
         updateSelectedGamePath, 
         refreshCommonDataWithRedirect,

@@ -75,7 +75,7 @@ export default function ModsPage() {
     const game_path = commonAppData?.selectedGame?.path;
     const game_data = commonAppData?.selectedGame;
     const api_key = commonAppData?.apis?.nexus;
-    const slug = game_data?.map_data.providers.nexus;
+    const slug = game_data?.map_data?.providers?.nexus;
 
 
     const [showModDetails, setShowModDetails] = React.useState(false);

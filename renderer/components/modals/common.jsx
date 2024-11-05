@@ -11,8 +11,9 @@ import Popover from 'react-bootstrap/Popover';
 
 import DekSwitch from '@components/core/dek-switch'
 import useLocalization from "@hooks/useLocalization";
-// import DekSelect from '@components/core/dek-select';
-// import DekChoice from "@components/core/dek-choice";
+import DekSelect from '@components/core/dek-select';
+import DekChoice from "@components/core/dek-choice";
+import DekSlider from "@components/core/dek-slider";
 
 
 
@@ -97,7 +98,7 @@ export function ENVEntryLabel({name, envdatas, tooltip}) {
 }
 
 
-export function ENVEntry_Input({name, value, onClick, updateSetting, defaults, envdatas, tooltip, type='text', disabled=false}) {
+export function ENVEntry_Input({name, value, onClick, updateSetting, defaults, envdatas, tooltip, type='text', noLabel, disabled=false}) {
     // const [knownValue, setKnownValue] = useState(value);
 
     const onKeyUp = (e) => {
@@ -113,14 +114,14 @@ export function ENVEntry_Input({name, value, onClick, updateSetting, defaults, e
 
     // console.log(name, envdatas[name])
 
-    return <div className="py-2">
-        <ENVEntryLabel {...{name,envdatas,tooltip}} />
+    return <div className={noLabel ? '' : 'py-2'}>
+        {!noLabel && <ENVEntryLabel {...{name,envdatas,tooltip}} />}
         <input 
             type={type}
             placeholder={name} 
             id={name + "-input"} 
             name={name + "-input"} 
-            className='form-control form-secondary' 
+            className='form-control form-secondary w-100' 
             onChange={onChanged} 
             onClick={onClick}
             disabled={disabled}
@@ -135,12 +136,13 @@ export function ENVEntry_Input({name, value, onClick, updateSetting, defaults, e
 
 
 
-export function ENVEntry_Bool({name, value, onClick, updateSetting, defaults, envdatas, tooltip, labels}) {
+export function ENVEntry_Bool({name, value, onClick, updateSetting, defaults, envdatas, tooltip, noLabel, labels}) {
     // const [knownValue, setKnownValue] = useState(value);
     // updateSetting(name)
-    return <div className="py-2">
-        <ENVEntryLabel {...{name,envdatas,tooltip}} />
+    return <div className={noLabel ? '' : 'py-2'}>
+        {!noLabel && <ENVEntryLabel {...{name,envdatas,tooltip}} />}
         <DekSwitch
+            className='w-100'
             maxIconWidth={64}
             labels={labels}
             // icons={NSFWIcons}
@@ -152,7 +154,27 @@ export function ENVEntry_Bool({name, value, onClick, updateSetting, defaults, en
     </div>
 }
 
-export function ENVEntry({name=null, value="", onClick=()=>{}, updateSetting=()=>{}, defaults={}, envdatas={}, tooltip='', type='', labels=null, disabled=false}) {
+export function ENVEntry_Range({name, value, onClick, updateSetting, defaults, envdatas, tooltip, noLabel, disabled, limits}) {
+    // const [knownValue, setKnownValue] = useState(value);
+    // updateSetting(name)
+    return <div className={noLabel ? '' : 'py-2'}>
+        {!noLabel && <ENVEntryLabel {...{name: `${name}: ${value}`,envdatas,tooltip}} />}
+        <DekSlider
+            // label={name}
+            disabled={disabled}
+            min={limits.min}
+            max={limits.max}
+            step={limits.step ?? 1}
+            value={value}
+            onChange={e=>{
+                console.log(e.target.value)
+                updateSetting(name, parseInt(e.target.value))
+            }}
+        />
+    </div>
+}
+
+export function ENVEntry({name=null, value="", onClick=()=>{}, updateSetting=()=>{}, defaults={}, envdatas={}, tooltip='', type='', labels=null, noLabel=false, disabled=false, limits=null}) {
     // value = ensureEntryValueType(value);
     // console.log(`entry for ${name}:`, typeof value, {name, value})
     const { t, tA } = useLocalization();
@@ -161,13 +183,13 @@ export function ENVEntry({name=null, value="", onClick=()=>{}, updateSetting=()=
     if (labels && labels.length === 1) labels.push(labels[0]);
 
     if (type === 'numbool') value = value === '1';
-    const passthrough = {name, value, onClick, updateSetting, defaults, envdatas, tooltip, type, labels, disabled};
+    const passthrough = {name, value, onClick, updateSetting, defaults, envdatas, tooltip, type, noLabel, labels, disabled, limits};
     if (type === 'numbool') return <ENVEntry_Bool {...passthrough} />
 
     switch (typeof value) {
         case 'string': return <ENVEntry_Input {...passthrough} />
-        case 'number': return <ENVEntry_Input {...passthrough} type='number' />
         case 'boolean': return <ENVEntry_Bool {...passthrough} />
+        case 'number': return limits ? <ENVEntry_Range {...passthrough} /> : <ENVEntry_Input {...passthrough} type='number' />;
         default: return <ENVEntry_Input {...passthrough} />
     }
 }

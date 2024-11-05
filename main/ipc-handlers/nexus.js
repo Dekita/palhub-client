@@ -71,8 +71,9 @@ export default async (event, api_key, functionName, ...functionArgs) => {
         nexusApiModDataStore.set(cache_key, result);
     } else {
         // get the cached value or get the uncached value then set the cache and return the result
-        applog.info(`Getting ${functionName} result from cache with key ${cache_key}`);
-        result = await nexusApiCache.get(cache_key, getUncachedValue);
+        applog.info(`Calling ${cache_key}`);
+        // result = await nexusApiCache.get(cache_key, getUncachedValue);
+        result = getUncachedValue();
     }
 
     return result;

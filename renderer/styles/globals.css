@@ -552,6 +552,9 @@ datalist {
 .radius9 {
     border-radius: 9px;
 }
+.radius-card-border {
+    border-radius: 13px;
+}
 .noverflow {
     overflow: hidden;
 }

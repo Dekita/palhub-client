@@ -88,8 +88,7 @@ const CONFIG = {
         "windows": {},
         // handles game specific path data
         "games": {
-            "active": "palworld", //! make null to force game selection for release
-            "custom": {}, // custom games not pre-defined
+            "active": null, // the active game id            
         },
     },
 

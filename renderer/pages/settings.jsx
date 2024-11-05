@@ -64,8 +64,7 @@ export default function SettingsPage({ modals, ThemeController }) {
         <div className="container-fluid">
             <div className="col-12 col-md-10 offset-0 offset-md-1 col-lg-8 offset-lg-2">
                 <div className="mx-auto px-3">
-                    <SettingsPage_SetupStep {...{showUE4SSInstall, setShowUE4SSInstall}} />
-                    <div className='row pb-2'>
+                    <div className='row py-2'>
                         <div className='col'>
                             <DekChoice
                                 className="pb-1"
@@ -88,6 +87,8 @@ export default function SettingsPage({ modals, ThemeController }) {
             <Carousel.Item className="">
                 <div className="col-12 col-md-10 offset-0 offset-md-1 col-lg-8 offset-lg-2">
                     <div className="mx-auto px-3">
+                        <SettingsPage_SetupStep {...{showUE4SSInstall, setShowUE4SSInstall}} />
+
                         <SettingsPage_ApplicationRequirements />
                         {isDevEnvironment && <React.Fragment>
                             <ENVEntryLabel
@@ -127,10 +128,13 @@ export default function SettingsPage({ modals, ThemeController }) {
 function SettingsPage_SetupStep({showUE4SSInstall, setShowUE4SSInstall}) {
     const { t, tA } = useLocalization();
     const { requiredModulesLoaded, commonAppData } = useCommonChecks();
-    const cache_dir = commonAppData?.cache;
-    const game_path = commonAppData?.selectedGame?.path;
-    const api_key = commonAppData?.apis?.nexus;
-    const game = commonAppData?.selectedGame;
+    const cache_dir = React.useMemo(()=> commonAppData?.cache, [commonAppData]);
+    const game_path = React.useMemo(()=> commonAppData?.selectedGame?.path, [commonAppData]);
+    const api_key = React.useMemo(()=> {
+        console.log('api_key', commonAppData?.apis?.nexus);  
+        return commonAppData?.apis?.nexus
+    }, [commonAppData]);
+    const game = React.useMemo(()=> commonAppData?.selectedGame, [commonAppData]);
 
     const handleUE4SSInstall = React.useCallback(async () => {
         if (!requiredModulesLoaded) return;
@@ -149,21 +153,37 @@ function SettingsPage_SetupStep({showUE4SSInstall, setShowUE4SSInstall}) {
     }, [requiredModulesLoaded]);
 
     // determine the current setup step
-    let step = 0;
-    if (!game_path) step = 1;
-    if (!api_key) step = 2;
-    if (!cache_dir) step = 3;
-    if (game_path && !game?.has_exe) step = 4;
-    if (game?.has_exe && !game?.has_ue4ss) step = 5;
 
     const pClasses = 'px-3 px-xl-5 mb-0';
     const dangerCard = 'card bg-danger border-danger2 border my-4 p-3 text-center';
     const successCard = 'card bg-success border-success2 border my-4 p-3 text-center';
 
+    const [step, setStep] = React.useState(0);
+
+    React.useEffect(() => {
+        (async()=>{
+            let step = 0;
+            if (!game_path) step = 1;
+            if (!api_key) step = 2;
+            if (!cache_dir) step = 3;
+            if (game_path && !game?.has_exe) step = 4;
+            if (game?.has_exe && !game?.has_ue4ss) step = 5;
+
+            if (!await window.nexus(api_key, 'validateKey', api_key)) {
+                step = 2;
+            }
+            if (!await window.palhub('checkIsValidFolderPath', cache_dir)) {
+                step = 3;
+            }
+            setStep(step);
+        })();
+    }, [game, game_path, api_key, cache_dir]);
+
     // console.log(game)
     // console.log(t(`games.${game.id}.name`))
 
     switch (step) {
+        case 0: return null;
         case 0: return <div className={successCard}>
             <h4 className="mb-0">
                 <strong>{t('/settings.setup.ready.head', { game })}</strong>
@@ -228,21 +248,17 @@ function SettingsPage_SetupStep({showUE4SSInstall, setShowUE4SSInstall}) {
 };
 
 function SettingsPage_ApplicationRequirements() {
-    const { requiredModulesLoaded, commonAppData } = useCommonChecks();
+    const { requiredModulesLoaded, commonAppData, updateCachePath, updateNexusApiKey } = useCommonChecks();
     const [cacheDirectory, setCacheDirectory] = React.useState(commonAppData?.cache);
+    const [cacheIsValid, setCacheIsValid] = React.useState(false);
     const [nexusApiKey, setNexusApiKey] = React.useState(commonAppData?.apis?.nexus);
+    const [nexusKeyIsValid, setNexusKeyIsValid] = React.useState(false);
     const [showNexusKey, setShowNexusKey] = React.useState(false);
     const { t } = useLocalization();
 
-    // cache directory related handlers
-    let cacheDirectoryTimeoutHandler = null;
-    // updates the cache directory when the input changes and sets a timeout to save it
-    const onUpdateCacheDirectory = React.useCallback((name, new_value) => {
-        if (cacheDirectoryTimeoutHandler) clearTimeout(cacheDirectoryTimeoutHandler);
-        cacheDirectoryTimeoutHandler = setTimeout(() => {
-            window.uStore.set('app-cache', new_value);
-        }, COMMON_TIMEOUT_DURATION);
-        setCacheDirectory(new_value);
+    const onUpdateCacheDirectory = React.useCallback(async (name, new_value) => {
+        await updateCachePath(new_value);
+        await setCacheDirectory(new_value);
     }, []);
     // open file dialog to select cache directory
     const onClickPathInput = React.useCallback(async (name, value) => {
@@ -251,21 +267,21 @@ function SettingsPage_ApplicationRequirements() {
             properties: ['openDirectory'],
         });
         if (!result.cancelled && !!result.filePaths[0]) {
-            onUpdateCacheDirectory(null, result.filePaths[0]);
+            await onUpdateCacheDirectory(null, result.filePaths[0]);
         }
     }, []);
 
     // nexus api key related handlers
     let nexusApiKeyHandler = null;
     // updates the nexus api key when the input changes and sets a timeout to save it
-    const onUpdateNexusApiKey = React.useCallback((name, new_value) => {
-        if (nexusApiKeyHandler) clearTimeout(nexusApiKeyHandler);
-        nexusApiKeyHandler = setTimeout(() => {
-            window.uStore.set('api-keys.nexus', new_value);
-            setShowNexusKey(false);
-        }, COMMON_TIMEOUT_DURATION);
+    const onUpdateNexusApiKey = React.useCallback(async (name, new_value) => {
+        await updateNexusApiKey(new_value, valid_key_user=>{
+            setNexusKeyIsValid(valid_key_user !== null); 
+        });
         setNexusApiKey(new_value);
         setShowNexusKey(true);
+        if (nexusApiKeyHandler) clearTimeout(nexusApiKeyHandler);
+        nexusApiKeyHandler = setTimeout(() => setShowNexusKey(false), COMMON_TIMEOUT_DURATION);
     }, []);
     // toggles the visibility of the nexus api key
     const onToggleShowNexusKey = React.useCallback(() => {
@@ -288,6 +304,8 @@ function SettingsPage_ApplicationRequirements() {
             name={t('/settings.inputs.nexus-api-key.name')}
             tooltip={t('/settings.inputs.nexus-api-key.desc')}
         />
+        <SimpleCheckbox checked={nexusKeyIsValid} text={"nexusKeyIsValid"} />
+
         <div className="row mb-2">
             <div className="col px-3">
                 <DekCheckbox
@@ -403,7 +421,6 @@ function SettingsPage_Theme({ThemeController}) {
 
 function SettingsPage_Game({showGameConfig, setShowGameConfig, tempGame, setTempGame}) {
     const { requiredModulesLoaded, commonAppData, updateSelectedGame, refreshCommonDataWithRedirect } = useCommonChecks();
-    const game = commonAppData?.selectedGame;
     const api_key = commonAppData?.apis?.nexus;
 
     // const [knownGamePath, setKnownGamePath] = React.useState(game?.path);
@@ -426,11 +443,12 @@ function SettingsPage_Game({showGameConfig, setShowGameConfig, tempGame, setTemp
 
     const gamesArray = React.useMemo(()=> {
         const gamesArray = [];
+        const game = commonAppData?.selectedGame;
         for (const [id, data] of Object.entries(commonAppData?.games)) {
             if (id === 'active') continue;
             for (const [type, platform_data] of Object.entries(data)) {
                 for (const [launch_type, path] of Object.entries(platform_data)) {
-                    // console.log('iterating:', game_id, platform_type, launch_type);
+                    console.log('iterating:', game);
                     const active = game?.id === id && game?.type === type && game?.launch_type === launch_type;
                     gamesArray.push({id, type, launch_type, path, active});
                 }
@@ -438,7 +456,7 @@ function SettingsPage_Game({showGameConfig, setShowGameConfig, tempGame, setTemp
         }
         console.log('refreshing memoized datas', gamesArray);
         return gamesArray;
-    }, [game, commonAppData]);
+    }, [commonAppData]);
 
     const onChangeSelectedGame = React.useCallback(async(event, selected_text, target_text, index) => {
         updateSelectedGame(gamesArray[index], async (game) => {
@@ -453,6 +471,8 @@ function SettingsPage_Game({showGameConfig, setShowGameConfig, tempGame, setTemp
     const activeGame = gamesArray.find(g => g.active);
     const selectedGameID = gamesArray.indexOf(activeGame);
 
+    console.log({gamesArray, selectedGameID, activeGame, commonAppData});
+
     const iconOptions = {height:'1.8rem', style:{marginTop:-4}};
 
     if (!requiredModulesLoaded) return null;
@@ -460,10 +480,10 @@ function SettingsPage_Game({showGameConfig, setShowGameConfig, tempGame, setTemp
 
         <div className="row mt-3">
             {/* Game selection component */}
-            <div className='col-12 pb-3'>
+            {selectedGameID >= 0 && <div className='col-12 pb-3'>
                 <DekSelect active_id={selectedGameID} onChange={onChangeSelectedGame}>
                     {gamesArray.map(({id, type, launch_type, path, active}) => {
-                        return <dekItem key={`${id} - ${type} - ${launch_type}`} text="hi">
+                        return <dekItem key={`selector-${id}-${type}-${launch_type}`} text="hi">
                             <PlatformIcon type={type} options={iconOptions} />
                             {`${t(`games.${id}.name`)} `}
                             {launch_type !== 'game' && t(`common.app-types.${launch_type}`)}
@@ -471,7 +491,7 @@ function SettingsPage_Game({showGameConfig, setShowGameConfig, tempGame, setTemp
                         </dekItem>
                     })}
                 </DekSelect>
-            </div>
+            </div>}
             {/* Add new game to be managed */}
             <div className="col-12 col-md-6 col-lg-6 col-xl-4 mb-2">
                 <div className='card theme-border chartcard cursor-pointer' onClick={()=>onClick(null)}>
@@ -492,9 +512,20 @@ function SettingsPage_Game({showGameConfig, setShowGameConfig, tempGame, setTemp
             {/* list existing managed games */}
             {gamesArray.map(({id, type, launch_type, path, active}) => {
                 // console.log('entry', {game_id, type, launch_type, path});
-                return <GameCardComponent {...{id, path, onClick, tempGame}} />
+                const key = `card-${id}-${type}-${launch_type}`;
+                return <GameCardComponent key={key} {...{id, path, onClick, tempGame}} />
             })}
         </div>
 
     </React.Fragment>;
+}
+
+
+function SimpleCheckbox({checked=false, text='Checkbox'}) {
+    const common = {fill:'currentColor', height:'1rem'};
+    return <div className='px-1 text-dark'>
+        {checked && <CommonIcons.check_square {...common} />}
+        {!checked && <CommonIcons.close {...common} />}
+        <small className='px-2'>{text}</small>
+    </div>;
 }

@@ -127,5 +127,17 @@ export default {
                 modloader: {ue4ss: KNOWN_MODLOADERS.optional_ue4ss}
             }
         },
-    }
+    },
+    "tekken8": {
+        is_hidden: true, 
+        providers: {
+            nexus: "tekken8"
+        },
+        platforms: {
+            game: {
+                steam: {id: "2385860", root: "Polaris", app: "Polaris-Win64-Shipping"},
+                modloader: {ue4ss: KNOWN_MODLOADERS.optional_ue4ss}
+            }
+        },
+    },
 }

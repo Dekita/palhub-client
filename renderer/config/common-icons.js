@@ -85,6 +85,9 @@ export { default as epic }  from '@svgs/epic-logo-text.svg';
 
 export { default as plus } from '@svgs/fa5/duotone/plus-square.svg';
 
+export { default as terminal } from '@svgs/font-awesome/fa5/duotone/terminal.svg';
+export { default as brackets } from '@svgs/font-awesome/fa5/duotone/brackets-curly.svg';
+
 
 // export {default as IconPreview} from '@svgs/fa5/duotone/file-image.svg';
 // export {default as IconSliders} from '@svgs/fa5/duotone/tasks-alt.svg';

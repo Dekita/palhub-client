@@ -188,6 +188,8 @@ export default function CheckModsModal({ show, setShow }) {
     const updateButtonEnabled = useMemo(() => {
         if (!mods || !modConfig) return false;
         return mods.some((mod) => {
+            if (!mod) return false;
+            console.log({ mod });
             const latest = mod.version;
             const installed = modConfig.mods[mod.mod_id].version;
             return checkLatestIsNewer(installed, latest);
@@ -217,19 +219,19 @@ export default function CheckModsModal({ show, setShow }) {
         (async () => {
             if (!mods || !!!game_path) return;
 
-            // const api_key = nexusApiKey;//await getApiKey();
-            // const game_path = appGamePath;//await getGamePath();
-            // const cache_dir = appCacheDir;//await getCacheDir();
-
             const config = await window.palhub('readJSON', game_path);
             if (!config) return console.error('config not loaded');
+
             const mod_ids = Object.keys(config?.mods || []);
-            setMods(await Promise.all(mod_ids.map(async (mod_id) => {
-                return await window.nexus(api_key, 'getModInfo', mod_id);
-            })));
+            const nexus_id = game_data.map_data.providers.nexus;
+            const newMods = await Promise.all(mod_ids.map(async (mod_id) => {
+                return await window.nexus(api_key, 'getModInfo', mod_id, nexus_id);
+            }));
+            // console.log({ newMods });
+            setMods(newMods);
             setModConfig(config);
         })();
-    }, [shouldShowLogs, requiredModulesLoaded, game_path]);
+    }, [shouldShowLogs, requiredModulesLoaded, game_path, game_data]);
 
     // console.log({ mods, modConfig });
 

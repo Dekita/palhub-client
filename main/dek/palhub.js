@@ -67,19 +67,19 @@ export class API {
 }
 
 
-class DekNexus extends Nexus {
+// class DekNexus extends Nexus {
 
-    //! doesnt work - rip lol
-    //todo: ask for help on this one
-    async getRequiredMods(modId) {
-        await this.mQuota.wait();
-        let urlPath = '/games/{gameId}/mods/{modId}/requirements';
-        return this.request(this.mBaseURL + urlPath, this.args({ 
-            path: this.filter({ modId, gameId }) 
-        }));
-    }
+//     //! doesnt work - rip lol
+//     //todo: ask for help on this one
+//     async getRequiredMods(modId) {
+//         await this.mQuota.wait();
+//         let urlPath = '/games/{gameId}/mods/{modId}/requirements';
+//         return this.request(this.mBaseURL + urlPath, this.args({ 
+//             path: this.filter({ modId, gameId }) 
+//         }));
+//     }
 
-}
+// }
 
 
 
@@ -97,17 +97,11 @@ export class Client {
 
     static async ensureNexusLink(api_key) {
         if (this._nexus) return this._nexus;
-        const appName = this.appName ?? "PalHUB";
-        const appVersion = this.appVersion ?? "0.0.1";
-        const defaultGame = "palworld";
-        const nexus = new DekNexus({
-            defaultGame,
-            appVersion,
-            appName,
+        this._nexus = new Nexus({
+            appVersion: this.appVersion ?? "0.0.1",
+            appName: this.appName ?? "PalHUB"
         });
-        nexus.setGame(defaultGame);
-        await nexus.setKey(api_key);
-        this._nexus = nexus;
+        await this._nexus.setKey(api_key);
         return this._nexus;
     }
 
@@ -223,6 +217,7 @@ export class Client {
                 throw new Error("Unknown game path");
             } catch (error) {
                 console.error("validateGamePath error", error);
+                return reject({ type: "{UNKNOWN}" });
             }
             resolve({ type: "{UNKNOWN}" });
         });
@@ -624,11 +619,20 @@ export class Client {
         return false;
     }
 
-    static get json_filename() {
-        return "palhub.config.json";
+    static async checkIsValidFolderPath(path) {
+        try {
+            await fs.access(path);
+            return true;
+        } catch (error) {
+            return false;
+        }
     }
 
 
+
+    static get json_filename() {
+        return "palhub.config.json";
+    }
     static joinPath(...args) {
         return path.join(...args);
     }

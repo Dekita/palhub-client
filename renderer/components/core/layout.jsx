@@ -64,7 +64,8 @@ export default function DekAppLayoutWrapper({ children }) {
     };
 
     const isbasepath = active_route !== '/';
-    const bodystyle = isbasepath ? {overflowY: 'scroll'} : {};
+    // const bodystyle = isbasepath ? {overflowY: 'scroll'} : {};
+    const bodystyle = isbasepath ? {overflowY: 'auto'} : {};
     const commonTitle = "PalHUB Client";
 
     const ThemeController = useMemo(() => {
