@@ -54,6 +54,10 @@ export default async (event, api_key, functionName, ...functionArgs) => {
     // if the function is getModData, check if we are force updating data
     if (functionName === 'getModInfo') forced = functionArgs[1] === true;
 
+    let canPrintLogInfo = true;
+    if (functionName === 'setKey') canPrintLogInfo = false;
+    if (functionName === 'validateKey') canPrintLogInfo = false;
+
     if (nexusFunctionsToCache[functionName]) {
         const cached = nexusApiModDataStore.get(cache_key, null);
         // if the cache is not forced and the cache duration is not expired, return the cached value
@@ -66,12 +70,12 @@ export default async (event, api_key, functionName, ...functionArgs) => {
         // else, get the uncached value and set
         result = await nexusApiCache.get(cache_key, getUncachedValue);
         if (result) result.cache_time = Date.now(); // add cache time to the result
-        applog.info(`Caching ${functionName} with key ${cache_key}`);
-        applog.info(result);
+        if (canPrintLogInfo) applog.info(`Caching ${functionName} with key ${cache_key}`);
+        if (canPrintLogInfo) applog.info(result);
         nexusApiModDataStore.set(cache_key, result);
     } else {
         // get the cached value or get the uncached value then set the cache and return the result
-        applog.info(`Calling ${cache_key}`);
+        if (canPrintLogInfo) applog.info(`Calling ${cache_key}`);
         // result = await nexusApiCache.get(cache_key, getUncachedValue);
         result = getUncachedValue();
     }
