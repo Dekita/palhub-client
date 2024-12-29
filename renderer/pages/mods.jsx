@@ -25,7 +25,6 @@ import { useRouter } from 'next/router';
 
 import * as CommonIcons from '@config/common-icons';
 import useLocalization from '@hooks/useLocalization';
-import useSelectedGame from '@hooks/useSelectedGame';
 import useCommonChecks from '@hooks/useCommonChecks';
 
 
@@ -66,9 +65,16 @@ import useCommonChecks from '@hooks/useCommonChecks';
 
 const BANNED_MODS = [];
 
+function determineAdvertizedMods(slug) {
+    switch (slug) {
+        case 'palworld': return [577, 1204, 146, 489];//1650, 487, 577, 489]//, 1204];//, 1314, 1650, 1640];
+        case 'hogwarts-legacy': return [1260, 1261, 1275, 1179];
+    }
+    return [];
+}
+
 export default function ModsPage() {
     const router = useRouter();
-    const game = useSelectedGame();
     const { t, tA } = useLocalization();
     const { requiredModulesLoaded, commonAppData } = useCommonChecks();
     const cache_dir = commonAppData?.cache;
@@ -89,7 +95,7 @@ export default function ModsPage() {
     
     const showSaveModList = modlistID === 0;
     // https://www.nexusmods.com/palworld/mods/1204
-    const advertised_mods = [577, 1204, 146, 489];//1650, 487, 577, 489]//, 1204];//, 1314, 1650, 1640];
+    const advertised_mods = determineAdvertizedMods(commonAppData?.selectedGame?.id);
 
     // React.useEffect(() => {
     //     if (!requiredModulesLoaded) return;
@@ -105,14 +111,14 @@ export default function ModsPage() {
         }));
     }
 
-    const getDownloadedMods = async (api_key, cache_dir) => {
-        console.log('cache_dir:', cache_dir);
+    const getDownloadedMods = React.useCallback(async (api_key, cache_dir) => {
+        console.log('cache_dir:', cache_dir, slug);
         const config = await window.palhub('readJSON', cache_dir);
-        const mod_ids = Object.keys(config.mods);
+        const mod_ids = Object.keys(config[slug] ?? {});
         return await Promise.all(mod_ids.map(async mod_id => {
             return await window.nexus(api_key, 'getModInfo', mod_id, slug);
         }));
-    }
+    }, [cache_dir, commonAppData?.selectedGame?.id]);
 
     // load initial settings from store
     React.useEffect(() => {
@@ -138,7 +144,7 @@ export default function ModsPage() {
             if (new_mods) {
 
                 let new_ads = await Promise.all(advertised_mods.map(async mod_id => {
-                    return await window.nexus(api_key, 'getModInfo', mod_id);
+                    return await window.nexus(api_key, 'getModInfo', mod_id, slug);
                 }));
 
                 const validation_filter = (mod) => {
@@ -189,7 +195,7 @@ export default function ModsPage() {
         // const api_key = commonAppData?.apis?.nexus;
 
         // const api_key = await getApiKey();
-        const mod = await window.nexus(api_key, 'getModInfo', mod_id);
+        const mod = await window.nexus(api_key, 'getModInfo', mod_id, slug);
         onClickModCard(mod);
     }
 
@@ -210,19 +216,21 @@ export default function ModsPage() {
         <ModDetailsModal mod={activeMod} show={showModDetails} setShow={setShowModDetails} />
         <div className="container">
             <div className="mx-auto px-3 py-5">
-                <div className='position-relative'>
+                
+                {ads && ads.length > 0 && <div className='position-relative'>
                     {/* main gradient background elements */}
-                    <div className='row mb-4'  style={{height: banner_height}}>
+                    <div className='row mb-2'  style={{height: banner_height}}>
                         <div className={`col transition-all border border-4 border-end-0 p-5 radius9 no-radius-end ${gradient_a}`}></div>
                         <div className={`col transition-all border border-4 border-start-0 border-end-0 p-5 ${gradient_b}`}></div>
                         <div className={`col transition-all border border-4 border-start-0 p-5 radius9 no-radius-start ${gradient_c}`}></div>
                     </div>
                     {/* actual content elements */}
                     <div className='position-absolute top-0 w-100 pt-3'>
+                        
                         <div className='d-flex text-center'>
                             {/* create carousel with each ad as the items */}
                             <Carousel interval={6900} className='w-100' indicators={true} style={{height: 234}}>
-                                {ads && ads.map((mod, i) => {
+                                {ads.map((mod, i) => {
                                     return <Carousel.Item key={i} className=''>
                                         <div className='container-fluid'>
                                             <div className='row mx-auto bg-dark cursor-pointer radius6' style={{maxWidth: 800}} onClick={()=>onClickModCard(mod)}>
@@ -246,13 +254,15 @@ export default function ModsPage() {
                                 })}
                             </Carousel>
                         </div>
-                        <div className='row'>
-                            <div className='col text-end d-flex flex-column p-3'>
-                                <small>
-                                    {t('/mods.powered')} <Link href="https://nexusmods.com" target='_blank' className='hover-dark text-warning'>{t('common.nexus')}</Link>
-                                </small>
-                            </div>
-                        </div>
+
+                    </div>
+                </div>}
+
+                <div className='row'>
+                    <div className='col text-end d-flex flex-column px-3'>
+                        <small>
+                            {t('/mods.powered')} <Link href="https://nexusmods.com" target='_blank' className='hover-dark text-warning'>{t('common.nexus')}</Link>
+                        </small>
                     </div>
                 </div>
 

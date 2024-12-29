@@ -39,12 +39,12 @@ export default function GameConfiguration({tempGame, setTempGame, runModloaderTa
             </div>
         </div>}
 
-        <ENVEntry
+        <ENVEntry 
             disabled={tempGame?.id}
             value={tempGame?.path ?? knownGamePath}
             updateSetting={handleGamePathChange}
-            name={t('/settings.inputs.game-path.name', { game: tempGame })}
-            tooltip={t('/settings.inputs.game-path.desc', { game: tempGame })}
+            name={t('/settings.inputs.game-path.name', { game: tempGame ?? {name: ''}})}
+            tooltip={t('/settings.inputs.game-path.desc', { game: tempGame ?? {name: 'game'} })}
         />
 
         {tempGame?.id && <div className='row'>

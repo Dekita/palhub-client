@@ -9,12 +9,18 @@ import CheckModsModal from '@components/modals/mod-check';
 import LoadListModal from '@components/modals/load-list';
 import PlayVanillaModal from '@components/modals/play-vanilla';
 import useLocalization from '@hooks/useLocalization';
-import useSelectedGame from '@hooks/useSelectedGame';
 import useCommonChecks from '@hooks/useCommonChecks';
 import useAppLogger from '@hooks/useAppLogger';
 
+
+import useActiveGame from '@hooks/useActiveGame';
+import ActiveGameSelector from '@components/active-game-selector';
+// import GradientBanner from '@components/core/gradient-banner';
+import ColorfulGameSelector from '@components/colorful-game-selector';
+
+
+
 export default function PlayPage() {
-    const game = useSelectedGame();
     const { t, tA } = useLocalization();
     const applog = useAppLogger("pages/play");
     const { requiredModulesLoaded, commonAppData } = useCommonChecks();
@@ -22,10 +28,12 @@ export default function PlayPage() {
     const game_path = commonAppData?.selectedGame?.path;
     const game_data = commonAppData?.selectedGame;
     const api_key = commonAppData?.apis?.nexus;
-
+    
     const [showLoadListModal, setShowLoadListModal] = React.useState(false);
     const [showCheckModsModal, setShowCheckModsModal] = React.useState(false);
     const [showPlayVanillaModal, setShowPlayVanillaModal] = React.useState(false);
+    const {gamesArray, activeGame, selectedGameID} = useActiveGame();
+    const game = activeGame;
     
     const onClickCheckMods = React.useCallback(async () => {
         if (!requiredModulesLoaded) return;
@@ -64,19 +72,22 @@ export default function PlayPage() {
 
         <div className="container">
             <div className="mx-auto px-3 pt-5 pb-4">
-                <div className='row'>
+
+                <ColorfulGameSelector />
+
+                <div className='row mt-4'>
                     <div className='col-12 card px-1'>
                         <div className='card-body py-2 px-1'>
                             <div className='row'>
                                 <div className='d-lg-none col-lg-7'>
-                                    <Image src="/img/3Pals.png" alt="Game Image 1" className='px-0' rounded fluid />
+                                    <Image src={`/img/${game?.id}/game-logo.jpg`} alt="Game Logo Image" rounded fluid />
                                 </div>
                                 <div className='col-12 col-lg-5 pt-4 px-5 pe-lg-2'>
                                     <h1 className="font-bold mb-4">{t('/play.head', {game})}</h1>
-                                    {tA(`games.${game.id}.info`).map((line, idx) => <p key={idx} className="mb-4">{line}</p>)}
+                                    {tA(`games.${game?.id}.info`).map((line, idx) => <p key={idx} className="mb-4">{line}</p>)}
                                 </div>
                                 <div className='d-none d-lg-block col-lg-7'>
-                                    <Image src="/img/Lamball.png" alt="Game Image 2" rounded fluid />
+                                    <Image src={`/img/${game?.id}/game-logo.jpg`} alt="Game Logo Image" rounded fluid />
                                 </div>
                             </div>
 

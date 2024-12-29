@@ -97,12 +97,10 @@ import DOMPurify from 'dompurify';
 
 import * as CommonIcons from '@config/common-icons';
 import useLocalization from '@hooks/useLocalization';
-import useSelectedGame from '@hooks/useSelectedGame';
 
 export default function ServerCardComponent({ server, onClick=()=>{}, ad=false }) {
     if (!server) server = DEFAULT_EXAMPLE_SERVER_LISTING;
     
-    const game = useSelectedGame();
     const { t, tA } = useLocalization();    
     const IconComponent = CommonIcons.star;
     const realOnClick = () => onClick(server);

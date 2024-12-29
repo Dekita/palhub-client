@@ -104,7 +104,7 @@ const CONFIG = {
             // size for window
             size: {
                 w: 1280,
-                h: 834,
+                h: 830,
                 min_w: 420,
                 min_h: 360,
             },

@@ -217,7 +217,7 @@ export class Client {
                 throw new Error("Unknown game path");
             } catch (error) {
                 console.error("validateGamePath error", error);
-                return reject({ type: "{UNKNOWN}" });
+                // return reject({ type: "{UNKNOWN}" });
             }
             resolve({ type: "{UNKNOWN}" });
         });
@@ -700,10 +700,13 @@ export class Client {
 
     static async addModDataToCacheJSON(cache_path, mod, file) {
         const config = await this.readJSON(cache_path);
-        console.log("adding mod data to cache json", {cache_path, mod, file});
-        config.mods = config.mods || {};
-        config.mods[mod.mod_id] = {};
-        config.mods[mod.mod_id][file.file_id] = {
+        const gameID = this._nexus.mBaseData.path.gameId;
+
+        console.log("adding mod data to cache json", {cache_path, mod, file, gameID});
+        config[gameID] = config[gameID] || {};
+        // config.mods = config.mods || {};
+        config[gameID][mod.mod_id] = {};
+        config[gameID][mod.mod_id][file.file_id] = {
             ver: file.version,
             zip: file.file_name,
         };
@@ -712,19 +715,20 @@ export class Client {
 
     static async removeModDataFromCacheJSON(cache_path, mod, file) {
         const config = await this.readJSON(cache_path);
+        const gameID = this._nexus.mBaseData.path.gameId;
 
         console.log("removing mod data from cache json", {cache_path, mod, file});
-        if (!config.mods || !config.mods[mod.mod_id]) return [];
+        if (!config[gameID] || !config[gameID][mod.mod_id]) return [];
 
         let entries = [];
         if (file) {
-            if (!config.mods[mod.mod_id][file.file_id]) return [];
-            config.mods[mod.mod_id][file.file_id] = null;
-            delete config.mods[mod.mod_id][file.file_id];
+            if (!config[gameID][mod.mod_id][file.file_id]) return [];
+            config[gameID][mod.mod_id][file.file_id] = null;
+            delete config[gameID][mod.mod_id][file.file_id];
         } else {
-            entries = Object.values(config.mods[mod.mod_id]).map((entry) => entry.zip);
-            config.mods[mod.mod_id] = null;
-            delete config.mods[mod.mod_id];
+            entries = Object.values(config[mod.mod_id]).map((entry) => entry.zip);
+            config[gameID][mod.mod_id] = null;
+            delete config[gameID][mod.mod_id];
         }
 
         await this.writeJSON(cache_path, config);

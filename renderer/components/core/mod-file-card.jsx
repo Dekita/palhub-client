@@ -19,8 +19,8 @@ export default function ModFileCard({mod, file}) {
     const { requiredModulesLoaded, commonAppData } = useCommonChecks();
 
     const api_key = commonAppData?.apis?.nexus;
-    const cache_dir = commonAppData?.cache;
     const game_path = commonAppData?.selectedGame.path;
+    const [cache_dir, setCacheDir] = React.useState(commonAppData?.cache);
 
     const { t, tA, language } = useLocalization();    
     const [filetree, setFiletree] = React.useState(null);
@@ -31,6 +31,8 @@ export default function ModFileCard({mod, file}) {
     const [isInstalling, setIsInstalling] = React.useState(false);
     const [isUninstalling, setIsUninstalling] = React.useState(false);
     const [downloadProgress, setDownloadProgress] = React.useState(0);
+
+    console.log({cache_dir})
 
     React.useEffect(() => {
         if (!requiredModulesLoaded) return;
@@ -55,25 +57,28 @@ export default function ModFileCard({mod, file}) {
         (async () => {
             if (!file || !mod) return;
 
-            const is_downloaded = await window.palhub('checkModFileIsDownloaded', cache_dir, file);
+            // const cache = await window.palhub('joinPath', commonAppData?.cache, commonAppData?.selectedGame.id);
+
+            const is_downloaded = await window.palhub('checkModFileIsDownloaded', cache_dir, file);//cache_dir, file);
             setIsDownloaded(is_downloaded);
 
             const is_installed = await window.palhub('checkModIsInstalled', game_path, mod, file);
             setIsInstalled(is_installed);
 
-            console.log({is_downloaded, is_installed, cache_dir, game_path, name: mod?.name, file: file?.file_name});
+            // setCacheDir(cache);
         })();
-    }, [mod, file]);
+    }, [mod, file, commonAppData?.selectedGame.id]);
 
 
 
     const onDownloadModZip = React.useCallback(async() => {
         if (!requiredModulesLoaded) return;
-        console.log('downloading mod:', mod);
+        console.log('downloading mod:', {api_key, mod, file});
 
         try {
             setIsDownloading(true);
-            const file_links = await window.nexus(api_key, 'getDownloadURLs', mod.mod_id, file.file_id);
+            const file_links = await window.nexus(api_key, 'getDownloadURLs', mod.mod_id, file.file_id);//, null, null, mod.game_id);
+            console.log({file_links});
             const download_url = file_links.find(link => !!link.URI)?.URI;
             console.log({file_links, download_url});
     
@@ -85,7 +90,7 @@ export default function ModFileCard({mod, file}) {
             console.error('error downloading mod:', error);
         }            
         // handleCancel();
-    }, [mod, file]);
+    }, [mod, file, cache_dir]);
 
     const onInstallModFiles = React.useCallback(async() => {
         if (!requiredModulesLoaded) return;
@@ -99,7 +104,7 @@ export default function ModFileCard({mod, file}) {
             console.error('error installing mod:', error);
         }
         // handleCancel();
-    }, [mod, file]);
+    }, [mod, file, cache_dir]);
 
     const onUninstallModFiles = React.useCallback(async() => {
         if (!requiredModulesLoaded) return;

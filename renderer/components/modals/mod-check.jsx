@@ -112,7 +112,10 @@ export default function CheckModsModal({ show, setShow }) {
 
             try {
                 addLogMessage(`Getting Latest Version: ${mod.name}`);
-                const { files } = await window.nexus(api_key, 'getModFiles', mod.mod_id);
+                const result = await window.nexus(api_key, 'getModFiles', mod.mod_id);
+                console.log('getModFiles:', result);
+
+                const { files } = result ?? {files:[]};
                 files.sort((a, b) => b.uploaded_timestamp - a.uploaded_timestamp);
                 const latest_file = files.find((file) => file.version === latest);
 

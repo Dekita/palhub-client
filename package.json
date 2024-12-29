@@ -1,6 +1,6 @@
 {
     "private": false,
-    "version": "0.5.87",
+    "version": "0.6.10",
     "name": "dekita-palhub-client",
     "productName": "PalHUB Client",
     "description": "PalHUB Client written by DekitaRPG",
@@ -76,7 +76,7 @@
         "bbcode-to-react/react": "18.3.1"
     },
     "release": {
-        "date": "11/5/2024",
-        "time": "3:37:35 AM"
+        "date": "12/28/2024",
+        "time": "11:12:50 PM"
     }
 }

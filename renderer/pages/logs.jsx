@@ -9,7 +9,6 @@ import Container from 'react-bootstrap/Container';
 import DekChoice from '@components/core/dek-choice';
 import useCommonChecks from '@hooks/useCommonChecks';
 import useLocalization from '@hooks/useLocalization';
-import useSelectedGame from '@hooks/useSelectedGame';
 import * as CommonIcons from '@config/common-icons';
 import useAppLogger from '@hooks/useAppLogger';
 
@@ -108,7 +107,11 @@ export default function LogsPage(props) {
     }, []);  // The empty dependency array ensures this effect runs once when the component mounts
 
     // Scroll to the bottom of the logs when they change
-    React.useEffect(scrollToBottom, [appLogs, ue4ssLogs, logPageID]);
+    // React.useEffect(scrollToBottom, [appLogs, ue4ssLogs, logPageID]);
+    React.useEffect(()=>{
+        if (scrollPosition < 0.9) return;
+        scrollToBottom();
+    }, [appLogs, ue4ssLogs, logPageID]);
     
     const logString = [appLogs, ue4ssLogs][logPageID];
 

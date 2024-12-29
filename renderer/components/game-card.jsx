@@ -16,7 +16,6 @@ import DOMPurify from 'dompurify';
 
 import * as CommonIcons from '@config/common-icons';
 import useLocalization from '@hooks/useLocalization';
-import useSelectedGame from '@hooks/useSelectedGame';
 import useCommonChecks from '@hooks/useCommonChecks';
 import isDevEnvironment from '@utils/isDevEnv';
 

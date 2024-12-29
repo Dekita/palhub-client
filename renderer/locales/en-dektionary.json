@@ -11,6 +11,8 @@
         "warning": "WARNING",
         "error": "ERROR",
         "nexus": "Nexus Mods",
+        "nexusKeyIsValid": "Is Nexus API Key Valid?", 
+        "select-game": "Select Active Game",
         "open-link": "opens in your default browser",
         "no-info": "No Information Available",
         "can-update": "Can Update",
@@ -230,12 +232,6 @@
             },
             {   "q": "How to set Local Palworld Game Installation Path?",
                 "a": "To set the local Palworld game installation path, click on the settings icon in the top right corner of the application, and then click on the 'Game Installation Path' option. You can then enter the path to your Palworld game installation folder. For steam users this might look like `C:/Program Files (x86)/Steam/steamapps/common/Palworld`. For Xbox Gamepass users: `C:/XboxGames/Palworld/Content`"
-            },
-            {   "q": "",
-                "a": ""
-            },
-            {   "q": "",
-                "a": ""
             }
         ]
     },
@@ -275,7 +271,7 @@
                 "desc": "The API key used to authenticate with {{common.nexus}}. This is required to download mods."
             },
             "game-path": {
-                "name": "Local {{game.name}} Game Installation Path",
+                "name": "{{game.name}} Game Installation Path",
                 "desc": "The path to your local {{game.name}} installation."
             }
         },
@@ -333,7 +329,7 @@
             },
             "need-game": {
                 "head": "{{common.warning}}",
-                "body": ["It appears you have not set your Palworld game installation path.", "Please set the path to your Palworld game installation before continuing."]
+                "body": ["It appears you have not set any valid unreal engine game installation path.", "Please set the path to your game installation before continuing."]
             },
             "need-apik": {
                 "head": "{{common.warning}}",

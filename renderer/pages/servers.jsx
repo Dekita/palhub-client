@@ -32,7 +32,6 @@ import useSwrJSON from '@hooks/useSwrJSON';
 
 import * as CommonIcons from '@config/common-icons';
 import useLocalization from '@hooks/useLocalization';
-import useSelectedGame from '@hooks/useSelectedGame';
 import useCommonChecks from '@hooks/useCommonChecks';
 
 /**
@@ -123,7 +122,6 @@ const BANNED_MODS = [];
 
 export default function ServersPage() {
     const router = useRouter();
-    const game = useSelectedGame();
     const { t, tA } = useLocalization();
     const { requiredModulesLoaded, commonAppData } = useCommonChecks();
     const cache_dir = commonAppData?.cache;

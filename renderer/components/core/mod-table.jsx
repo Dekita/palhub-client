@@ -5,10 +5,8 @@
 */
 import useScreenSize from '@hooks/useScreenSize';
 import useLocalization from '@hooks/useLocalization';
-import useSelectedGame from '@hooks/useSelectedGame';
 
 export default function ModTable({show,setShow, mods, showStatus=false}) {
-    const game = useSelectedGame();
     const { t, tA } = useLocalization();
     const {isDesktop} = useScreenSize();
     const fullscreen = !isDesktop;

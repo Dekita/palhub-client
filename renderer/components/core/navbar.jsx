@@ -7,19 +7,14 @@ import { motion } from 'framer-motion';
 import { useEffect } from 'react';
 import { useRouter } from 'next/router';
 import Link from 'next/link';
-
 import Nav from 'react-bootstrap/Nav';
 import Navbar from 'react-bootstrap/Navbar';
 import Container from 'react-bootstrap/Container';
-
 import AutoUpdater from '@components/core/autoupdater';
 import useLocalization from '@hooks/useLocalization';
-
 import * as CommonIcons from '@config/common-icons';
 import navbar_items from '@config/navbar-items';
 // import useAppLogger from '@hooks/useAppLogger';
-
-
 
 export default function MainNavbar({modals: {onClickHamburger,onClickGemStore}}) {
     // const logger = useAppLogger('components/core/navbar');
@@ -51,12 +46,15 @@ export default function MainNavbar({modals: {onClickHamburger,onClickGemStore}})
             <Nav className='d-none d-md-flex me-auto' activeKey={active_route}>
                 {navbar_items.map((element) => {
                     const is_this_route = element.href === active_route;
+                    const is_route_servers = element.href === '/servers';
+                    if (is_route_servers) return null;
                     const route_color = is_this_route ? 'text-warning' : 'hover-dark hover-secondary ';
                     return <Link href={element.href} key={element.href} className={`btn px-3 no-shadow ${route_color}`}>
                         <strong>{t(element.text)}</strong>
                     </Link>;
                 })}
             </Nav>
+
             {/* Area to display the update progress & settings cog */}
             <Nav className='text-end'>
                 <div className='row'>

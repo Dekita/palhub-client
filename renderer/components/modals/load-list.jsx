@@ -13,7 +13,6 @@ import ModTable from '@components/core/mod-table';
 import useAppLogger from '@hooks/useAppLogger';
 import useModalResizer from '@hooks/useModalResizer';
 import useLocalization from '@hooks/useLocalization';
-import useSelectedGame from '@hooks/useSelectedGame';
 import useCommonChecks from '@hooks/useCommonChecks';
 import DekCommonAppModal from '@components/core/modal';
 import wait from 'utils/wait';
@@ -52,7 +51,6 @@ Expected structure:
 
 export default function LoadListModal({ show, setShow }) {
     const applog = useAppLogger('LoadListModal');
-    const game = useSelectedGame();
     const { t } = useLocalization();
     const { height } = useModalResizer();
     const { requiredModulesLoaded, commonAppData } = useCommonChecks();

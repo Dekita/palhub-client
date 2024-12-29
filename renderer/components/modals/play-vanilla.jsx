@@ -7,12 +7,13 @@
 import React from "react";
 import Button from 'react-bootstrap/Button';
 import useLocalization from '@hooks/useLocalization';
-import useSelectedGame from '@hooks/useSelectedGame';
+import useActiveGame from "@hooks/useActiveGame";
 import DekCommonAppModal from '@components/core/modal';
 
 export default function PlayVanillaModal({show,setShow, onRunGameExe}) {
     const onCancel = React.useCallback(() => setShow(false), []);
-    const game = useSelectedGame();
+    const { activeGame } = useActiveGame();
+    const game = activeGame;
     const { t } = useLocalization();
 
     const onClickPlayVanillaPalworld = async () => {

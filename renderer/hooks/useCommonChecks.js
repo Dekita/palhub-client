@@ -135,10 +135,13 @@ export const CommonAppDataProvider = ({ children }) => {
                 // const game = games[games.active];
                 const data = await window.palhub('validateGamePath', game_path);
                 selectedGame = { ...data, name: t(`games.${games.active}.name`) };
+                // initialize the nexus api with the selected game's slug
+                const slug = selectedGame.map_data.providers.nexus;
+                await window.nexus(apis.nexus, 'setGame', slug);
             } catch (error) {
                 console.error(error);
-            }
-        }
+            }    
+        }    
         
         // set the commonly used app datas
         setCommonAppData(prev => ({apis, cache, games, selectedGame}));

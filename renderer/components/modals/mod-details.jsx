@@ -29,7 +29,6 @@ import ModFileCard from '@components/core/mod-file-card';
 import Link from "next/link";
 
 import useLocalization from '@hooks/useLocalization';
-import useSelectedGame from '@hooks/useSelectedGame';
 import DekCommonAppModal from '@components/core/modal';
 import useCommonChecks from "@hooks/useCommonChecks";
 

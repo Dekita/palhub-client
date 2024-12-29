@@ -9,7 +9,6 @@ import { useTypewriter } from 'react-simple-typewriter';
 import useMediaQuery from '@hooks/useMediaQuery';
 import * as CommonIcons from '@config/common-icons';
 import useLocalization from '@hooks/useLocalization';
-import useSelectedGame from '@hooks/useSelectedGame';
 
 export default function BrandHeader({ words, tagline, type, showImage=true }) {
     const isDesktop = useMediaQuery('(min-width: 960px)');
