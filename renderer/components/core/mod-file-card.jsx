@@ -15,7 +15,7 @@ import * as CommonIcons from '@config/common-icons';
 import useLocalization from '@hooks/useLocalization';
 import useCommonChecks from '@hooks/useCommonChecks';
 
-export default function ModFileCard({mod, file}) {
+export default function ModFileCard({mod, file, triggers=null, showHR=true}) {
     const { requiredModulesLoaded, commonAppData } = useCommonChecks();
 
     const api_key = commonAppData?.apis?.nexus;
@@ -77,8 +77,11 @@ export default function ModFileCard({mod, file}) {
 
         try {
             setIsDownloading(true);
-            const file_links = await window.nexus(api_key, 'getDownloadURLs', mod.mod_id, file.file_id);//, null, null, mod.game_id);
-            console.log({file_links});
+
+            const key = triggers?.key ?? undefined;
+            const expires = triggers?.expires ?? undefined;
+            const file_links = await window.nexus(api_key, 'getDownloadURLs', mod.mod_id, file.file_id, key, expires);//, null, null, mod.game_id);
+            console.log({file_links, mod, file, key, expires});
             const download_url = file_links.find(link => !!link.URI)?.URI;
             console.log({file_links, download_url});
     
@@ -90,7 +93,7 @@ export default function ModFileCard({mod, file}) {
             console.error('error downloading mod:', error);
         }            
         // handleCancel();
-    }, [mod, file, cache_dir]);
+    }, [mod, file, cache_dir, triggers]);
 
     const onInstallModFiles = React.useCallback(async() => {
         if (!requiredModulesLoaded) return;
@@ -161,6 +164,13 @@ export default function ModFileCard({mod, file}) {
     const EyeIcon = showFileTree ? CommonIcons.eye_other : CommonIcons.eye;
 
     const buttonWidth = 54;
+
+
+    React.useEffect(()=>{
+        if (triggers?.autoDownload) {
+            onDownloadModZip();
+        }
+    }, [triggers]);
 
     if (!requiredModulesLoaded) return null;
 
@@ -289,6 +299,6 @@ export default function ModFileCard({mod, file}) {
 
         {/* <iframe src={file.content_preview_link} className='w-100' style={{height: '50vh'}}></iframe> */}
 
-        <hr className='mt-2' />
+        {showHR && <hr className='mt-2' />}
     </div>
 }

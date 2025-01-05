@@ -20,6 +20,7 @@ export default function Footer() {
     const { t, ready } = useLocalization();
     const [userCount, setUserCount] = React.useState('??');
     const [rateLimits, setRateLimits] = React.useState('??');
+    const [validation, setValidation] = React.useState(null);
     const delay = { show: 100, hide: 250 };
 
     React.useEffect(() => {
@@ -44,6 +45,8 @@ export default function Footer() {
 
             const rate_result = await window.nexus(api_key, 'getRateLimits');
             const readable_rate = `${rate_result.hourly} / ${rate_result.daily}`;
+            const validation_result = await window.nexus(api_key, 'getValidationResult');
+            setValidation(validation_result);
             setRateLimits(readable_rate);
         }
         callback(); // run once on load
@@ -57,10 +60,13 @@ export default function Footer() {
         <div className='row position-absolute w-100 text-dark'>
             <div className='col text-start'>
                 <OverlayTrigger placement='top' delay={delay} overlay={<Tooltip className="text-end">{t('#footer.hover-nexus-api')}</Tooltip>}>
-                    <small className='px-5'>{rateLimits}</small>
+                    <div className='d-inline-block px-3'>
+                        <Image src={validation?.profile_url} alt='avatar' fluid width={42}/>
+                        <small className='ps-2'>{rateLimits} {validation?.is_premium && <small>p</small>}                        </small>
+                    </div>
                 </OverlayTrigger>
             </div>
-            <div className='col text-end'>
+            <div className='col d-flex align-items-center justify-content-end'>
                 <OverlayTrigger placement='top' delay={delay} overlay={<Tooltip className="text-end">{t('#footer.hover-users-api')}</Tooltip>}>
                     <span className=''>
                         <CommonIcons.account height='1rem' fill='currentColor' />

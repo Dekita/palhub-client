@@ -111,7 +111,15 @@ export const CommonAppDataProvider = ({ children }) => {
             // refresh the games list to include the new game
             await refreshGames();
         }
-    }, [t, commonAppData?.games?.active]); 
+    }, [t, commonAppData?.games?.active, refreshGames]); 
+
+    const forgetGame = React.useCallback(async (tempGame, callmemaybe=async()=>{}) => {
+        const game_id = tempGame?.id ?? 'undefined';
+        const store_id = getStoreID(game_id, tempGame);
+        await window.uStore.delete(store_id);
+        await callmemaybe();
+        await refreshGames();
+    }, [refreshGames]);
 
     // 
     // function to redirect to settings if required modules are loaded
@@ -166,6 +174,7 @@ export const CommonAppDataProvider = ({ children }) => {
         updateNexusApiKey,
         updateSelectedGame,
         updateSelectedGamePath, 
+        forgetGame,
         refreshCommonDataWithRedirect,
     }}>{children}</CommonAppDataContext.Provider>;
 };

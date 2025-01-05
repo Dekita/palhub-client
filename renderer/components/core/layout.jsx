@@ -9,6 +9,7 @@ import React, { useState, cloneElement, Children, useMemo } from 'react';
 import { useRouter } from 'next/router';
 import useThemeSystem, { THEMES } from '@hooks/useThemeSystem';
 import useWindowNameFromDEAP from '@hooks/useWindowNameFromDEAP';
+import NxmLinkModal from '@components/modals/nxm-link';
 import NavbarModal from '@components/modals/navbar';
 import MetaHead from '@components/core/metahead';
 import Appbar from '@components/core/appbar';
@@ -42,17 +43,10 @@ export default function DekAppLayoutWrapper({ children }) {
     const logger = useAppLogger("core/layout");
     const [deepLink, linkChanged, consumeDeepLink] = useDeepLinkListener();
     const { requiredModulesLoaded, commonAppData } = useCommonChecks();
-
-    if (linkChanged) {
-        logger('info', `Consumed Deep Link: ${deepLink}`);
-        const { segments, params } = consumeDeepLink();
-        logger('info', `AFTER Consumed Deep Link: ${segments.join('/')}`);
-        logger('info', `AFTER Consumed Deep Query: ${JSON.stringify(params)}`);
-    }
-
-    // const [showSettingsModal, setShowSettingsModal] = useState(false);
+    const [deepLinkData, setDeepLinkData] = useState(null);
     const [theme_id, setThemeID, bg_id, setBgID] = useThemeSystem();
     const [showNavbarModal, setShowNavbarModal] = useState(false);
+    const [showNxmModal, setShowNxmModal] = useState(false);
     const windowName = useWindowNameFromDEAP();
     const theme = `/themes/${THEMES[theme_id]}.css`;
     const active_route = useRouter().pathname;
@@ -79,11 +73,18 @@ export default function DekAppLayoutWrapper({ children }) {
 
     const can_show_navbar = windowName && !['help'].includes(windowName);
     const nonav_page = can_show_navbar ? '' : 'game-bg-full';
-    // console.log({theme_id, bg_id, windowName});
 
-    // ready = false;
+    React.useEffect(() => {
+        if (linkChanged) {
+            logger('info', `Consumed Deep Link: ${deepLink}`);
+            const newDeepLink = consumeDeepLink();
+            setDeepLinkData(newDeepLink);
+            // { game_slug, mod_id, file_id, key, expires, user_id }
+            logger('info', `DEEP LINK: ${JSON.stringify(newDeepLink, null, 2)}`);
+            setShowNxmModal(true);
+        }
+    }, [linkChanged]);
 
-    // if (!requiredModulesLoaded) return null; // show loading screen
 
     return <React.Fragment>
         {/* <!-- Load theme style: not best practice --> */}
@@ -112,6 +113,8 @@ export default function DekAppLayoutWrapper({ children }) {
                 </div>
                 {/* Add the navbar modal (shown when click hamburger menu on sm viewport) */}
                 <NavbarModal show={showNavbarModal} setShow={setShowNavbarModal} />
+                {/* Add the nxm-link modal (shown when deep link is detected) */}
+                <NxmLinkModal show={showNxmModal} setShow={setShowNxmModal} deepLinkData={deepLinkData} />
                 {/* Add the footer to the page */}
                 {can_show_navbar && <Footer />}
             </React.Fragment>}

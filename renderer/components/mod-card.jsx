@@ -54,6 +54,30 @@ export default function ModCardComponent({ mod, onClick=()=>{}, ad=false }) {
     const IconComponent = CommonIcons.star;
     const realOnClick = () => onClick(mod);
 
+    if (mod.local) {
+        return <Col xs={12} md={6} lg={4} xl={3} className='mb-2' onClick={realOnClick}>
+            <Card className='theme-border chartcard cursor-pointer'>
+                <Card.Body className='text-start p-0'>
+                    <Card.Title className='p-1'>
+                        <div className="ratio ratio-16x9">
+                            <Image src={mod.thumbnail} alt={mod.name} fluid thumbnail />
+                        </div>
+                        {ad && <div className='modcard'>
+                            <IconComponent fill='currentColor' className='modicon'/>
+                        </div>}
+                    </Card.Title>
+    
+    
+                    <div className='anal-cavity px-2'>
+                        <p className='text-secondary mb-0 truncate font-bold'>{mod.file_name ?? 'n/a'}</p>
+                        <small><small className='text-dark'>{mod.author ?? '??'}</small></small>
+                        <div className='text-white' dangerouslySetInnerHTML={{__html:DOMPurify.sanitize(mod.description)}}></div>
+                    </div>
+                </Card.Body>
+            </Card>
+        </Col>
+    }
+
     return <Col xs={12} md={6} lg={4} xl={3} className='mb-2' onClick={realOnClick}>
         <Card className='theme-border chartcard cursor-pointer'>
             <Card.Body className='text-start p-0'>

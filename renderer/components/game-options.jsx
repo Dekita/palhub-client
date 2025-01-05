@@ -10,8 +10,8 @@ import useAppLogger from '@hooks/useAppLogger';
 // import wait from '@utils/wait';
 
 
-export default function GameConfiguration({tempGame, setTempGame, runModloaderTask}) {
-    const { requiredModulesLoaded, updateSelectedGamePath, commonAppData, refreshGames } = useCommonChecks();
+export default function GameConfiguration({tempGame, setTempGame, runModloaderTask, setShow}) {
+    const { requiredModulesLoaded, updateSelectedGamePath, forgetGame } = useCommonChecks();
     const [knownGamePath, setKnownGamePath] = React.useState(tempGame?.path);
     const { t, tA } = useLocalization();
 
@@ -26,6 +26,11 @@ export default function GameConfiguration({tempGame, setTempGame, runModloaderTa
     const pClasses = 'px-3 px-xl-5 mb-0';
     const dangerCard = 'col card bg-danger border-danger2 border p-3 text-center';
     const successCard = 'card bg-success border-success2 border p-3 text-center';
+
+    const onForgetGame = React.useCallback(() => {
+        forgetGame(tempGame);
+        setShow(false);
+    }, []);
 
     if (!requiredModulesLoaded) return null;
     return <React.Fragment>
@@ -92,6 +97,13 @@ export default function GameConfiguration({tempGame, setTempGame, runModloaderTa
                         <strong>{t('/settings.buttons.download-ue4ss', { game: tempGame })}</strong>
                     </button>
                 </div>}
+
+                <div className='col'>
+                    <div className="col btn btn-danger px-3 w-100" onClick={onForgetGame}>
+                        <strong>{t('/settings.buttons.unmanage-game')}</strong>
+                    </div>
+                </div>
+
             </div>
         </div>}
 

@@ -2,10 +2,29 @@
 # yarn lockfile v1
 
 
+"7z-wasm@^1.1.0":
+  version "1.1.0"
+  resolved "https://registry.yarnpkg.com/7z-wasm/-/7z-wasm-1.1.0.tgz#091441153b4ba5d31d3d16f4f143c6614c7e246e"
+  integrity sha512-qxbUWxty2II+8GV+lbqpQ8Vdi0hvq4aoVKX/iAGNQsHLpwhyXKS81/5nba3P87K0IQlfle3IQBf+D1H391Ar5w==
+  dependencies:
+    readline-sync "^1.4.10"
+
+"7zip-bin@5.1.1":
+  version "5.1.1"
+  resolved "https://registry.yarnpkg.com/7zip-bin/-/7zip-bin-5.1.1.tgz#9274ec7460652f9c632c59addf24efb1684ef876"
+  integrity sha512-sAP4LldeWNz0lNzmTird3uWfFDWWTeg6V/MsmyyLR9X1idwKBWIgt/ZvinqQldJm3LecKEs1emkbquO6PCiLVQ==
+
 "7zip-bin@~5.2.0":
   version "5.2.0"
   resolved "https://registry.yarnpkg.com/7zip-bin/-/7zip-bin-5.2.0.tgz#7a03314684dd6572b7dfa89e68ce31d60286854d"
   integrity sha512-ukTPVhqG4jNzMro2qA9HSCSSVJN3aN7tlb+hfqYCt3ER0yWroeA2VR38MNrOHLQ/cVj+DaIMad0kFCtWWowh/A==
+
+"7zip-min@^1.4.5":
+  version "1.4.5"
+  resolved "https://registry.yarnpkg.com/7zip-min/-/7zip-min-1.4.5.tgz#5d6962ae5f3539fbdf8083a0a9ea2ac353b9ef6d"
+  integrity sha512-S+FzNwJFKF5LgQYs+hPQo+qeffdi+259Ak63rWEfkHP9arsU8gbe5K+4HscuWN1ih1lP1gTjDNPddbU0qhPtHQ==
+  dependencies:
+    "7zip-bin" "5.1.1"
 
 "@alloc/quick-lru@^5.2.0":
   version "5.2.0"
@@ -6664,6 +6683,11 @@ readdirp@~3.6.0:
   integrity sha512-hOS089on8RduqdbhvQ5Z37A0ESjsqz6qnRcffsMU3495FuTdqSm+7bhJ29JvIOsBDEEnan5DPu9t3To9VRlMzA==
   dependencies:
     picomatch "^2.2.1"
+
+readline-sync@^1.4.10:
+  version "1.4.10"
+  resolved "https://registry.yarnpkg.com/readline-sync/-/readline-sync-1.4.10.tgz#41df7fbb4b6312d673011594145705bf56d8873b"
+  integrity sha512-gNva8/6UAe8QYepIQH/jQ2qn91Qj0B9sYjMBBs3QOB8F2CXcKgLxQaJRP76sWVRQt+QU+8fAkCbCvjjMFu7Ycw==
 
 reflect.getprototypeof@^1.0.4:
   version "1.0.6"

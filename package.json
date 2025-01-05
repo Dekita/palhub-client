@@ -1,6 +1,6 @@
 {
     "private": false,
-    "version": "0.6.15",
+    "version": "0.6.80",
     "name": "dekita-palhub-client",
     "productName": "PalHUB Client",
     "description": "PalHUB Client written by DekitaRPG",
@@ -23,6 +23,8 @@
         "publish": "nextron build --publish always"
     },
     "dependencies": {
+        "7z-wasm": "^1.1.0",
+        "7zip-min": "^1.4.5",
         "@bbob/preset-react": "^4.1.1",
         "@bbob/react": "^4.1.1",
         "@nexusmods/nexus-api": "^1.1.5",
@@ -76,7 +78,7 @@
         "bbcode-to-react/react": "18.3.1"
     },
     "release": {
-        "date": "12/29/2024",
-        "time": "5:23:08 PM"
+        "date": "1/5/2025",
+        "time": "10:50:49 AM"
     }
 }

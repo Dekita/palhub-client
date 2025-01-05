@@ -3,7 +3,7 @@
 # PalHUB::Client by dekitarpg@gmail.com
 ########################################
 */
-import { contextBridge, ipcRenderer} from 'electron';
+import { contextBridge, ipcRenderer, webUtils} from 'electron';
 
 // expose the user data (electron-store) API to the renderer process
 contextBridge.exposeInMainWorld('uStore', {
@@ -50,4 +50,7 @@ contextBridge.exposeInMainWorld('ipc', {
         ipcRenderer.on(channel, subscription);
         return () => ipcRenderer.removeListener(channel, subscription);
     },
+
+    // Expose the webUtils API to getPathForFile in the renderer process
+    getPathForFile(path) { return webUtils.getPathForFile(path) },
 });

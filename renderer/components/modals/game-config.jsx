@@ -101,7 +101,7 @@ export default function GameConfigurationModal({ show, setShow, tempGame, setTem
             />}
             <Carousel {...carouselOptions}>
                 <Carousel.Item className="container-fluid px-3">
-                    <GameConfiguration {...{tempGame, setTempGame, runModloaderTask}} />
+                    <GameConfiguration {...{tempGame, setTempGame, runModloaderTask, setShow}} />
                 </Carousel.Item>
                 <Carousel.Item className="container-fluid px-3">
                     <Ue4ssConfigurator game={tempGame} />

@@ -12,6 +12,7 @@
         "error": "ERROR",
         "nexus": "Nexus Mods",
         "nexusKeyIsValid": "Is Nexus API Key Valid?", 
+        "nexusKeyIsPremium": "Is Nexus Premium?",
         "select-game": "Select Active Game",
         "open-link": "opens in your default browser",
         "no-info": "No Information Available",
@@ -23,6 +24,7 @@
         "confirm": "Confirm",
         "cancel": "Cancel",
         "note": "NOTE:",
+        "filetree": "File Tree: {{droppedFile.name}}",
         "app-types": {
             "game": "Game",
             "server": "Server"
@@ -69,6 +71,11 @@
     },
     
     "modals": {
+        "nxm-link": {
+            "head": "Nexus Mods Link",
+            "info": "Clicking the confirm button below will download {{mod.name}} from {{common.nexus}}. You can later install this mod to the game from the 'Downloaded' tab on the 'Mods' page.",
+            "warn": "Are you sure you want to continue?"
+        },
         "check-mods": {
             "head": "Check Installed Mods",
             "update": "Update Mods",
@@ -130,6 +137,12 @@
         },
         "modloader": {
             "installing-ue4ss": "Installing UE4SS.. Please Wait."
+        },
+        "local-mod": {
+            "head": "Install Mod From Rar/Zip File",
+            "info": "Select a zip or rar file containing the mod you wish to add to your mod list.",
+            "select": "Select Zip/Rar File",
+            "install": "Install Mod"
         }
     },
 
@@ -139,7 +152,7 @@
         "current": "No updates available!",
         "available": "Update Available!",
         "preparing": "Preparing Update:..",
-        "downloading": "UPDATING @ {{mbsp}} - {{perc}}%",
+        "downloading": "UPDATING @ {{mbps}} - {{perc}}%",
         "error": "Error updating: {{error}}",
         "install": "INSTALL UPDATE"
     },
@@ -172,6 +185,18 @@
         "powered": "mod listing powered by",
         "search-placeholder": "Enter a {{common.nexus}} url or mod id to view a specific mod",
         "search-button": "Find",
+        "add-local": "Add Mod From Zip",
+        "drop-zip": "Drop Rar/Zip File Here",
+        "install-zip": "Install mod from zip file",
+        "manual-mods": "Manually Installed Mods",
+        "mod_id": "Mod ID",
+        "mod_type": "Mod Install Location",
+        "mod_name": "Mod Name",
+        "mod_author": "Author",
+        "mod_version": "Version",
+        "mod_desc": "Description",
+        "thumbnail": "Thumbnail URL",
+        "file_id": "File ID",
         "curr-list": "Current Mod List",
         "save-list": "Save Mod List"
     },
@@ -230,8 +255,41 @@
             {   "q": "What is {{app.brandname}}?",
                 "a": "{{app.brandname}} is a mod management application designed to make it easy for users to not only modify their game, but also list modified servers, and make downloading their required mods and joining them, considerably easier."
             },
-            {   "q": "How to set Local Palworld Game Installation Path?",
-                "a": "To set the local Palworld game installation path, click on the settings icon in the top right corner of the application, and then click on the 'Game Installation Path' option. You can then enter the path to your Palworld game installation folder. For steam users this might look like `C:/Program Files (x86)/Steam/steamapps/common/Palworld`. For Xbox Gamepass users: `C:/XboxGames/Palworld/Content`"
+            {
+                "q": "How do I setup {{app.brandname}}?",
+                "a": "To setup {{app.brandname}}, you will need to configure the application settings. This includes setting the cache directory for mods to be stored after download, the game installation path where mods are installed to, and your {{common.nexus}} API key. Once these settings are configured, you can start using the application to manage your mods."
+            },
+            {
+                "q": "How do I install mods using {{app.brandname}}?",
+                "a": "To install mods using {{app.brandname}}, you can either search for mods directly from the application, or paste a {{common.nexus}} URL or mod ID into the search bar. Once you have found the mod you want to install, you can click the 'Download' button to download the mod files to your cache directory. You can then click the 'Install' button to install the mod files to your game directory."
+            },
+            {
+                "q": "How do I join a modified server using {{app.brandname}}?",
+                "a": "To join a modified server using {{app.brandname}}, you will need to have the required mods installed. You can check the server details to see which mods are required, and then install them using the application. Once you have the required mods installed, you can click the 'Join Server' button to connect to the server."
+            },
+            {   
+                "q": "How to set my games installation path?",
+                "a": "To set your games installation path, click on the settings icon in the top right corner of the application, and then click on the 'Manage Games' option, followed by the 'Add Game' button. You can then enter the path to your games installation folder. For steam users this might look like `C:/Program Files (x86)/Steam/steamapps/common/Palworld`. For Xbox Gamepass users: `C:/XboxGames/Palworld/Content`"
+            },
+            {
+                "q": "How do I get a {{common.nexus}} API key?",
+                "a": "To get a {{common.nexus}} API key, you will need to create an account on the {{common.nexus}} website. Once you have created an account, you can generate an API key from your account settings. This key is used to authenticate with the {{common.nexus}} API and is required to download mods using the application."
+            },
+            {
+                "q": "Why are my downloads failing?",
+                "a": "If your downloads are failing, it could be due to a number of reasons. The most common cause is an invalid {{common.nexus}} API key. Make sure you have entered the correct key in the application settings. It could also be due to network issues, or the mod files being unavailable on the {{common.nexus}} servers. If you continue to experience issues, please contact support for assistance. Note: Premium users of {{common.nexus}} may have different download limits, and additional features available due to their premium status; without premium status, users will need to eithr install mods manually from zip/rar files using {{app.brandname}} or initiate mod downloads from {{common.nexus}} directly by pressing the 'Download With Manager' button."
+            },
+            {
+                "q": "How do I update {{app.brandname}}?",
+                "a": "{{app.brandname}} will automatically download updates when they are available, and the app is running. They can be installed when the download finishes by pressing {{#updater.install}}, or by restarting the application. To update it manually, you can simply download the latest version of the application from the website and install it over the top of your existing installation. This will update the application to the latest version and preserve your settings and mod library."
+            },
+            {
+                "q": "How do I report a bug or issue?",
+                "a": "To report a bug or issue with {{app.brandname}}, you can contact support using the Discord Support Server link in the application footer. Please provide as much detail as possible about the issue you are experiencing, including any error messages or steps to reproduce the problem. This will help to investigate and resolve the issue as quickly as possible."
+            },
+            {
+                "q": "How do I uninstall {{app.brandname}}?",
+                "a": "To uninstall {{app.brandname}}, you can simply delete the application folder from your computer. This will remove all files associated with the application, including the cache directory where mods are stored. If you want to keep your mods, you should move them to a different location before uninstalling the application."
             }
         ]
     },
@@ -281,6 +339,7 @@
             "check-ue4ss-update": "Check For UE4SS Update",
             "uninstall-ue4ss": "Uninstall UE4SS",
             "download-ue4ss": "Click here to download & install UE4SS",
+            "unmanage-game": "Unmanage Game",
             "play-game": "Play Game",
             "add-mods": "Add Mods"
         },
@@ -312,6 +371,10 @@
             "language": {
                 "name": "Change Language [alpha]",
                 "desc": "Select from a range of supported languages"
+            },
+            "nxm-links": {
+                "name": "Open {{common.nexus}} Links",
+                "desc": "Open 'Download With Manager' links from {{common.nexus}} in {{app.brandname}}. Requires app restart."
             }
         },
         "setup": {
@@ -341,9 +404,9 @@
             }
         },
         "manage-game": {
-            "head": "Add new games to {{app.brandname}}",
-            "info": "-- FEATURE COMING SOON",
-            "span": "Add new games to {{app.brandname}} to manage mods for them."
+            "head": "Add Game To {{app.brandname}}",
+            "info": "-- CLICK HERE",
+            "span": "To setup a specific game, and enable {{app.brandname}} to manage mods for it."
         }
     },
 

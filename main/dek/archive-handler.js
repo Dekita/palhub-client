@@ -4,11 +4,16 @@
 ########################################
 * Handles zip/rar archives
 */
+// import { app } from "electron";
+import DEAP from "./deap";
 
 import path from 'path';
 import fs from 'fs/promises';
 import AdmZip from 'adm-zip'; // for de-zip
 import { createExtractorFromData } from 'node-unrar-js'; // for de-rar
+// import SevenZip from '7zip-min'; 
+import SevenZip from './7zip-min-override'; 
+
 import EventEmitter from "events";
 
 class ArchiveHandler extends EventEmitter {
@@ -25,6 +30,8 @@ class ArchiveHandler extends EventEmitter {
                 this._loadZipEntries();
             } else if (this.extension === '.rar') {
                 await this._loadRarEntries();
+            } else if (this.extension === '.7z') {
+                await this._load7zEntries();
             } else {
                 throw new Error('Unsupported file format');
             }
@@ -60,6 +67,51 @@ class ArchiveHandler extends EventEmitter {
             size: entry.fileHeader.unpSize,
             getData: () => entry.extraction,
         }));
+    }
+
+
+    async _load7zEntries() {
+        return new Promise((resolve, reject) => {
+            const entries = [];
+            SevenZip.list(this.filePath, (err, result) => {
+                if (err) return reject(err);
+    
+                result.forEach((entry) => {
+                    entries.push({
+                        entryName: entry.name,
+                        isDirectory: entry.attr.includes('D'),
+                        size: entry.size,
+                        getData: async () => await this._extract7zEntry(entry.name),
+                    });
+                });
+    
+                this.entries = entries;
+                resolve();
+            });
+        });
+    }
+    
+    async _extract7zEntry(entryName) {
+        return new Promise((resolve, reject) => {
+            const tempOutputDir = path.join(DEAP.app.getPath('userData'), 'TempExtract');
+            const tempFilePath = path.join(tempOutputDir, entryName);
+    
+            SevenZip.unpack(this.filePath, tempOutputDir, (err) => {
+                if (err) {
+                    DEAP.logger.error('Error extracting 7z entry:', err);
+                    return reject(err);
+                }
+    
+                fs.readFile(tempFilePath)
+                    .then((buffer) => {
+                        resolve(buffer);
+                        // Optionally clean up temp files here if needed
+                        fs.unlink(tempFilePath);
+                    })
+                    .catch(reject);
+            });
+
+        });
     }
 
     async getEntries() {

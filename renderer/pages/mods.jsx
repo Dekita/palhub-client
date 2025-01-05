@@ -17,6 +17,7 @@ import DekChoice from "@components/core/dek-choice";
 
 import CheckModsModal from '@components/modals/mod-check';
 import ModDetailsModal from '@components/modals/mod-details';
+import AddLocalModModal from '@components/modals/local-mod';
 // import ModListModal from '@components/modals/mod-list';
 import Image from 'react-bootstrap/Image';
 import Carousel from 'react-bootstrap/Carousel';
@@ -84,11 +85,14 @@ export default function ModsPage() {
     const slug = game_data?.map_data?.providers?.nexus;
 
 
+    const [showAddLocalMod, setShowAddLocalMod] = React.useState(false);
     const [showModDetails, setShowModDetails] = React.useState(false);
     const [showModList, setShowModList] = React.useState(false);
     const [activeMod, setActiveMod] = React.useState(null);
+    const [localMod, setLocalMod] = React.useState(null);
     const [modlistID, setModlistID] = React.useState(0);
     const [mods, setMods] = React.useState([]);
+    const [localMods, setLocalMods] = React.useState([]);
     const [ads, setAds] = React.useState([]);
     const modlistTypes = tA('/mods.tabs', 5) ?? [];
     const modSearchRef = React.useRef(null);
@@ -106,9 +110,13 @@ export default function ModsPage() {
         const config = await window.palhub('readJSON', game_path);
         if (!config || !config.mods) return [];
         const mod_ids = Object.keys(config.mods);
-        return await Promise.all(mod_ids.map(async mod_id => {
+        const mods_from_nexus = await Promise.all(mod_ids.map(async mod_id => {
             return await window.nexus(api_key, 'getModInfo', mod_id, slug);
         }));
+
+        const local_mods = Object.values(config.local_mods).filter(mod => mod.local);
+        console.log('local_mods:', local_mods);
+        return mods_from_nexus.concat(local_mods);
     }
 
     const getDownloadedMods = React.useCallback(async (api_key, cache_dir) => {
@@ -147,17 +155,18 @@ export default function ModsPage() {
                     return await window.nexus(api_key, 'getModInfo', mod_id, slug);
                 }));
 
-                const validation_filter = (mod) => {
+                const nexusValidationFilter = (mod) => {
                     if (!mod || !mod.status) return false;
                     return mod.status === 'published' && mod.available;
                 }
                 
-                new_ads = new_ads.filter(validation_filter).map(mod => {
+                new_ads = new_ads.filter(nexusValidationFilter).map(mod => {
                     mod.ad = true;
                     return mod;
                 });
 
-                new_mods = new_mods.filter(validation_filter)
+                const new_locals = new_mods.filter(mod => mod.local);
+                new_mods = new_mods.filter(nexusValidationFilter)
 
                 if (![0, 1].includes(modlistID)) {
                     if (new_mods.length > 8) new_mods = new_mods.slice(0, 8);
@@ -165,6 +174,7 @@ export default function ModsPage() {
                 }
                 setAds(new_ads);
                 setMods(new_mods);
+                setLocalMods(new_locals);
             }
         })();
     }, [modlistID]);
@@ -173,6 +183,18 @@ export default function ModsPage() {
         console.log('clicked mod:', mod);
         setActiveMod(mod);
         setShowModDetails(true);
+    }
+    const onClickLocalModCard = (mod) => {
+        console.log('clicked local mod:', mod);
+        setLocalMod(mod);
+        setShowAddLocalMod(true);
+    }
+    const onToggleShowLocalModCard = (show) => {
+        setShowAddLocalMod(show);
+        if (show) return;
+        setTimeout(() => {
+            setLocalMod(null);
+        }, 500);
     }
 
     const onFindSpecificMod = async () => {
@@ -199,8 +221,6 @@ export default function ModsPage() {
         onClickModCard(mod);
     }
 
-    console.log({commonAppData})
-
     
     const gold_mod = false;
     const banner_height = 256;
@@ -214,6 +234,8 @@ export default function ModsPage() {
         <CheckModsModal show={showModList} setShow={setShowModList} />
         {/* <ModListModal show={showModList} setShow={setShowModList} mods={mods} /> */}
         <ModDetailsModal mod={activeMod} show={showModDetails} setShow={setShowModDetails} />
+        <AddLocalModModal show={showAddLocalMod} setShow={onToggleShowLocalModCard} initialModData={localMod} />
+
         <div className="container">
             <div className="mx-auto px-3 py-5">
                 
@@ -267,15 +289,21 @@ export default function ModsPage() {
                 </div>
 
                 <div className='row pt-2'>
-                    {showSaveModList && <div className='col-4'>
+                    {showSaveModList && <div className='col-3 pe-0'>
                         <button 
                             className='btn btn-primary w-100'
                             onClick={() => setShowModList(true)}>
                             {t('/mods.save-list')}
                         </button>
                     </div>}
-
-                    <div className='col'>
+                    <div className='col-3'>
+                        <button 
+                            className='btn btn-info w-100'
+                            onClick={() => setShowAddLocalMod(true)}>
+                            {t('/mods.add-local')}
+                        </button>
+                    </div>
+                    <div className='col ps-0'>
                         {/* <ENVEntryLabel name="View mod by id or url" tooltip="Enter a nexus mods url or nexus mod id to view a specific mod." /> */}
                         <div className="input-group">
                             <input 
@@ -308,6 +336,10 @@ export default function ModsPage() {
                 <div className="row mt-3">
                     {mods && mods.map((mod, i) => <ModCardComponent key={i} mod={mod} onClick={onClickModCard} />)}
                 </div>
+                {localMods.length > 0 && <div className="row mt-3">
+                    <h4 className='text-start'>{t('/mods.manual-mods')}</h4>
+                    {localMods.map((mod, i) => <ModCardComponent key={i} mod={mod} onClick={onClickLocalModCard} local={true} />)}
+                </div>}
             </div>
         </div>
     </React.Fragment>

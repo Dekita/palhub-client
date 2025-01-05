@@ -258,6 +258,7 @@ function SettingsPage_ApplicationRequirements({setSettingsPageID}) {
     const [cacheIsValid, setCacheIsValid] = React.useState(false);
     const [nexusApiKey, setNexusApiKey] = React.useState(commonAppData?.apis?.nexus);
     const [nexusKeyIsValid, setNexusKeyIsValid] = React.useState(false);
+    const [nexusKeyIsPremium, setNexusKeyIsPremium] = React.useState(false);
     const [showNexusKey, setShowNexusKey] = React.useState(false);
     const { t } = useLocalization();
 
@@ -292,6 +293,8 @@ function SettingsPage_ApplicationRequirements({setSettingsPageID}) {
         setShowNexusKey(true);
         if (nexusApiKeyHandler) clearTimeout(nexusApiKeyHandler);
         nexusApiKeyHandler = setTimeout(() => setShowNexusKey(false), COMMON_TIMEOUT_DURATION);
+        const validation_result = await window.nexus(new_value, 'getValidationResult');
+        setNexusKeyIsPremium(validation_result?.is_premium ?? false);
     }, []);
     // toggles the visibility of the nexus api key
     const onToggleShowNexusKey = React.useCallback(() => {
@@ -303,13 +306,25 @@ function SettingsPage_ApplicationRequirements({setSettingsPageID}) {
         if (!nexusApiKey) return;
         // setCacheDirectory(commonAppData?.cache);
         // setNexusApiKey(commonAppData?.apis?.nexus);
-        updateNexusApiKey(nexusApiKey, valid_key_user=>{
+        updateNexusApiKey(nexusApiKey, async valid_key_user=>{
             setNexusKeyIsValid(valid_key_user !== null); 
+            const validation_result = await window.nexus(nexusApiKey, 'getValidationResult');
+            setNexusKeyIsPremium(validation_result?.is_premium ?? false);
         });
     }, [nexusApiKey]);
 
+    React.useEffect(() => {
+        if (cacheDirectory) return;
+        (async() => {
+            const path = await window.ipc.invoke('get-path', 'userData');
+            const newpath = await window.palhub('joinPath', path, 'ModCache');
+            onUpdateCacheDirectory(null, newpath);
+        })();
+    }, [cacheDirectory]);
+
     if (!requiredModulesLoaded) return null;
     return <React.Fragment>
+
         <ENVEntry
             value={cacheDirectory}
             onClick={onClickPathInput}
@@ -325,7 +340,7 @@ function SettingsPage_ApplicationRequirements({setSettingsPageID}) {
             tooltip={t('/settings.inputs.nexus-api-key.desc')}
         />
 
-        <div className="row mb-2">
+        <div className="row mb-1">
             <div className="col-auto px-3">
                 <DekCheckbox
                     inline={true}
@@ -338,6 +353,9 @@ function SettingsPage_ApplicationRequirements({setSettingsPageID}) {
             <div className="col-auto px-3">
                 <SimpleCheckbox checked={nexusKeyIsValid} text={t("common.nexusKeyIsValid")} />
             </div>
+            <div className="col-auto px-3">
+                <SimpleCheckbox checked={nexusKeyIsPremium} text={t("common.nexusKeyIsPremium")} />
+            </div>
 
             <div className="col text-end px-3">
                 <Link
@@ -349,8 +367,46 @@ function SettingsPage_ApplicationRequirements({setSettingsPageID}) {
                 </Link>
             </div>
         </div>
+
+        <SettingsPage_UseNexusDeepLinks />
+
     </React.Fragment>;
 }
+
+
+
+function SettingsPage_UseNexusDeepLinks() {
+    const { t } = useLocalization();
+    const { requiredModulesLoaded } = useCommonChecks();
+
+    // app options implemented by DEAP <3
+    const [settings, setSettings] = React.useState({
+        'nxm-links': false,
+    });
+    const updateConfig = React.useCallback(async (key, value) => {
+        if (!requiredModulesLoaded) return;
+        console.log('updating config', key, value);
+        await window.ipc.invoke('set-config', key, value);
+        setSettings((current) => ({ ...current, [key]: value }));
+    }, [requiredModulesLoaded]);
+
+   // load initial settings from store
+   React.useEffect(() => {
+        if (!requiredModulesLoaded) return;
+        (async () => { setSettings({
+            'nxm-links': await window.uStore.get('nxm-links', false),
+        })})();
+    }, [requiredModulesLoaded]);
+
+    return <ENVEntry
+        value={settings['nxm-links']}
+        updateSetting={(n, v) => updateConfig('nxm-links', v)}
+        name={t('/settings.options.nxm-links.name')}
+        tooltip={t('/settings.options.nxm-links.desc')}
+    />
+}
+
+
 
 function SettingsPage_ApplicationCustomize() {
     const { t } = useLocalization();

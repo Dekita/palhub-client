@@ -307,6 +307,10 @@ class DEAP {
                 event.preventDefault();
             }
         });
+        this._windows[id].on('will-prevent-default', (event) => {
+            event.preventDefault();
+        });
+
         this.loadFileToWindow(id, windoe_config);
     }
     // creates a system tray icon and defines its options
@@ -379,7 +383,12 @@ class DEAP {
                 extra_args = [process.execPath, [path.resolve(process.argv[1])]];
                 this.logger.info(`deep-linking: ${extra_args.join(" --- ")}`);
             }
-            app.setAsDefaultProtocolClient('dek-ue', ...extra_args);
+            // app.setAsDefaultProtocolClient('dek-ue', ...extra_args);
+
+            // nxm://palworld/mods/2017/files/8213?key=KWVYopKUGVMi42jyp9mt_Q&expires=1735734581&user_id=51283421
+            if (this._datastore.get('nxm-links', false)) {
+                app.setAsDefaultProtocolClient('nxm', ...extra_args);
+            }
         }
         this.createWindow("main"); // create main window when electron has initialized.
         if (callbacks.onAppReady) callbacks.onAppReady(this);

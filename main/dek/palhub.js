@@ -337,7 +337,7 @@ export class Client {
         });
     }
 
-    static async determineInstallPath(game_path, entries) {
+    static async determineInstallPath(game_path, entries, forcedRoot=null) {
         let install_path = game_path;
 
         const game_data = await this.validateGamePath(game_path);
@@ -348,32 +348,73 @@ export class Client {
         const allowedRoots = [game_data.unreal_root, "Binaries", "Content", "Win64", "WinGDK", "Mods", "Paks", "LogicMods", "~mods"];
 
         let ignoredRoots = '';
-        const firstFileEntry = entries.find((entry) => {
+
+        const getFirstFileEntry = () => entries.find((entry) => {
             const replaced = entry.entryName.replace(ignoredRoots, '');
-            const root = replaced.split('/').shift();
+            const root = replaced.split(/[\\/]/).shift();
+            console.log('checking root:', root);
             // console.log({ root, replaced });
             if (allowedRoots.includes(root)) return true;
             if (entry.isDirectory) ignoredRoots = `${root}/`;
             return false;
         }) ?? entries[0];
 
-        // set the output path for each entry based on the ignored roots
-        for (const entry of entries) {
-            entry.outputPath = entry.entryName.replace(ignoredRoots, '');
+        let firstFileEntry = getFirstFileEntry();
+
+        if (ignoredRoots === 'Scripts/') { // seems to be a lua mod with a dumb zip structure
+            // set the output path for each entry, assuming it is a poorly packaged lua mod
+            for (const entry of entries) {
+                entry.outputPath = `Mods/${entry.entryName}`
+            }
+            // add fake first entry: 
+            entries.unshift({ entryName: 'Mods/', isDirectory: true, outputPath: 'Mods/' });
+            firstFileEntry = getFirstFileEntry(); // replace the first entry with fake 'Mods/' entry
+        } else {
+            // set the output path for each entry based on the ignored roots
+            for (const entry of entries) {
+                entry.outputPath = entry.entryName.replace(ignoredRoots, '');
+            }
         }
 
         // if the entry is a file and not in the allowed roots, ignore it
         const part_checker = part => allowedRoots.includes(part);
-        const ignored_files = entries.filter(({isDirectory=false, entryName=''}) => { 
-            const seemsUnreally = ['pak', 'ucas', 'utoc'].some(ext => entryName.endsWith(`.${ext}`));
-            if (!isDirectory && seemsUnreally) return false;
+        const VALID_FILETYPES = ['pak', 'ucas', 'utoc', 'txt', 'json', 'lua', 'md'];
+        const ignored_files = entries.filter(({isDirectory=false, entryName='', size=0}) => { 
+            const seemsValid = VALID_FILETYPES.some(ext => entryName.endsWith(`.${ext}`));
+            if (!isDirectory && seemsValid) return false;
+            if (!isDirectory && size === 0) return true;
             return !isDirectory && !entryName.split('/').some(part_checker);
         }).map(({entryName}) => entryName);
 
         console.log({ firstFileEntry, ignoredRoots, ignored_files, game_data });
 
-        if (firstFileEntry.isDirectory) {
-            switch (firstFileEntry.outputPath) {
+        if (forcedRoot !== null) {
+            switch (forcedRoot) {
+                case `${game_data.unreal_root}/`:
+                    install_path = game_path;
+                    break;
+                case "Binaries/":
+                    install_path = path.join(game_path, game_data.unreal_root, 'Binaries');
+                    break;
+                case "Content/":
+                    install_path = path.join(game_path, game_data.unreal_root, 'Content');
+                    break;
+                case "Mods/":
+                    if (game_path.includes('XboxGames')) install_path = path.join(game_path, game_data.unreal_root, "Binaries/WinGDK");
+                    else install_path = path.join(game_path, game_data.unreal_root, "Binaries/Win64");
+                    break;
+                case "Paks/":
+                    install_path = path.join(game_path, game_data.unreal_root, "Content/Paks");
+                    break;
+                case "LogicMods/":
+                    install_path = path.join(game_path, game_data.unreal_root, "Content/Paks/LogicMods");
+                    break;
+                default: // ~mods/ or unknown mod type ~ assume regular .pak replacement
+                    install_path = path.join(game_path, game_data.unreal_root, "Content/Paks/~mods");
+                    break;
+            }
+        } else if (firstFileEntry.isDirectory) {
+            switch (forcedRoot ?? firstFileEntry.outputPath) {
                 case `${game_data.unreal_root}/`:
                     install_path = game_path;
                     break;
@@ -400,19 +441,20 @@ export class Client {
                     break;
             }
         } else {
+            console.log('unknown install type assuming ~mods');
             // unknown mod type ~ assume regular .pak replacement
             install_path = path.join(game_path, game_data.unreal_root, "Content/Paks/~mods");
         }
 
-        return [install_path, ignored_files];
+        return [install_path, ignored_files, entries];
     }
 
 
-    static installMod(cache_path, game_path, mod, file) {
+    static installMod(cache_path, game_path, mod, file, isLocal=false, forcedRoot=null, extraJsonProps={}) {
         return new Promise(async (resolve, reject) => {
             try {
                 // check if the mod is already downloaded
-                const downloaded = await this.checkModFileIsDownloaded(cache_path, file);
+                const downloaded = isLocal || await this.checkModFileIsDownloaded(cache_path, file);
                 if (!downloaded) return reject("Mod file not downloaded");
                 // check if the mod is already installed
                 const installed = await this.checkModIsInstalled(game_path, mod, file);
@@ -426,7 +468,7 @@ export class Client {
                 // }
 
                 // determine the root path to install this mods files to
-                const [install_path, ignored_files] = await this.determineInstallPath(game_path, entries);
+                const [install_path, ignored_files] = await this.determineInstallPath(game_path, entries, forcedRoot);
 
                 Emitter.emit("install-mod-file", {
                     install_path,
@@ -447,7 +489,8 @@ export class Client {
                 await archive.extractAllTo(install_path, true, ignored_files);
 
                 // add mod data to the config file
-                await this.addModDataToJSON(game_path, mod, file, entries, ignored_files);
+                const propName = isLocal ? 'local_mods' : 'mods';
+                await this.addModDataToJSON(game_path, mod, file, entries, ignored_files, propName, forcedRoot, extraJsonProps);
 
 
                 return resolve(true);
@@ -457,15 +500,15 @@ export class Client {
         });
     }
 
-    static uninstallMod(game_path, mod, config_override=null) {
+    static uninstallMod(game_path, mod, config_override=null, local=false) {
         console.log("uninstalling mod:", mod.name);
         return new Promise(async (resolve, reject) => {
             try {
                 // check if the mod is already installed
                 const installed = config_override || await this.checkModIsInstalled(game_path, mod);
-                if (!installed) return reject("Mod not installed");
+                if (!local && !installed) return reject("Mod not installed");
                 // remove the mod from the config file
-                const entries = await this.removeModDataFromJSON(game_path, mod, config_override);
+                const entries = await this.removeModDataFromJSON(game_path, mod, config_override, local);
                 console.log("uninstalling mod entries:", entries);
 
                 const game_data = await this.validateGamePath(game_path);
@@ -607,6 +650,8 @@ export class Client {
         try {
             // check if the mod is already installed
             const config = await this.readJSON(game_path);
+            if (config.local_mods && config.local_mods[mod.mod_id]) return true;
+
             if (!config.mods || !config.mods[mod.mod_id]) return false;
             const mod_data = config.mods[mod.mod_id];
             if (!mod_data) return false;
@@ -663,34 +708,36 @@ export class Client {
 
 
 
-    static async addModDataToJSON(game_path, mod, file, entries, ignored_files) {
+    static async addModDataToJSON(game_path, mod, file, entries, ignored_files, configPropName='mods', forcedRoot=null, extraProps={}) {
         const filter = entry => entry.outputPath && !ignored_files.includes(entry.entryName);
         const mapper = entry => entry.outputPath ?? entry.entryName;
         const config = await this.readJSON(game_path);
-        config.mods = config.mods || {};
-        config.mods[mod.mod_id] = {
+        config[configPropName] = config[configPropName] || {};
+        config[configPropName][mod.mod_id] = {
+            root: forcedRoot,
             version: file.version,
             file_id: file.file_id,
             file_name: file.file_name,
             entries: entries.filter(filter).map(mapper),
+            ...extraProps,
         };
         return await this.writeJSON(game_path, config);
     }
 
 
-    static async removeModDataFromJSON(game_path, mod, config_override=null) {
+    static async removeModDataFromJSON(game_path, mod, config_override=null, local=false) {
         const config = config_override ?? await this.readJSON(game_path);
+        const modsprop = local ? 'local_mods' : 'mods';
+        const idprop = local ? 'file_name' : 'mod_id';
 
-        if (!config.mods || !config.mods[mod.mod_id]) return [];
-
-        console.log("removing mod", mod.mod_id, config.mods[mod.mod_id]);
+        if (!config[modsprop] || !config[modsprop][mod[idprop]]) return [];
+        console.log("removing mod", modsprop, idprop, mod[idprop], config[modsprop][mod[idprop]]);
 
         const clone = (d) => JSON.parse(JSON.stringify(d));
-        const entries = clone(config.mods[mod.mod_id].entries);
+        const entries = clone(config[modsprop][mod[idprop]].entries);
         console.log('removing entries:', entries);
-
-        config.mods[mod.mod_id] = null;
-        delete config.mods[mod.mod_id];
+        config[modsprop][mod[idprop]] = null;
+        delete config[modsprop][mod[idprop]];
 
         if (!config_override) await this.writeJSON(game_path, config);
 
@@ -872,6 +919,12 @@ export class Client {
     }
     static unwatchFileChanges(file_path) {
         unwatchFile(file_path);
+    }
+
+
+    static async getArchiveEntriesAsJSON(fullFilePath) {
+        const archive = new ArchiveHandler(fullFilePath);
+        return JSON.stringify(await archive.getEntries());
     }
 
 
