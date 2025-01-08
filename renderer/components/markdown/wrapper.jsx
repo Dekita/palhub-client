@@ -9,7 +9,7 @@ import Container from 'react-bootstrap/Container';
 import MarkdownRenderer from '@components/markdown/renderer';
 import useLocalization from '@hooks/useLocalization';
 
-export default function MarkdownPageWrapper({ tagline, filename }) {
+export default function MarkdownPageWrapper({ tagline, filename, header=true }) {
     const [content, setContent] = React.useState('');
     const { t, language } = useLocalization();
 
@@ -28,7 +28,7 @@ export default function MarkdownPageWrapper({ tagline, filename }) {
     }, [filename, language]); // Re-run effect if `markdownFile` changes
 
     return <React.Fragment>
-        <BrandHeader type='altsmall' tagline={t(tagline)}/>
+        {header && <BrandHeader type='altsmall' tagline={t(tagline)}/>}
         <Container className='noverflow'>
             <div className="col-12 col-md-10 offset-0 offset-md-1 col-lg-8 offset-lg-2">
                 <div className="mx-auto px-3 pt-5 pb-4">

@@ -259,14 +259,6 @@
                 "q": "How do I setup {{app.brandname}}?",
                 "a": "To setup {{app.brandname}}, you will need to configure the application settings. This includes setting the cache directory for mods to be stored after download, the game installation path where mods are installed to, and your {{common.nexus}} API key. Once these settings are configured, you can start using the application to manage your mods."
             },
-            {
-                "q": "How do I install mods using {{app.brandname}}?",
-                "a": "To install mods using {{app.brandname}}, you can either search for mods directly from the application, or paste a {{common.nexus}} URL or mod ID into the search bar. Once you have found the mod you want to install, you can click the 'Download' button to download the mod files to your cache directory. You can then click the 'Install' button to install the mod files to your game directory."
-            },
-            {
-                "q": "How do I join a modified server using {{app.brandname}}?",
-                "a": "To join a modified server using {{app.brandname}}, you will need to have the required mods installed. You can check the server details to see which mods are required, and then install them using the application. Once you have the required mods installed, you can click the 'Join Server' button to connect to the server."
-            },
             {   
                 "q": "How to set my games installation path?",
                 "a": "To set your games installation path, click on the settings icon in the top right corner of the application, and then click on the 'Manage Games' option, followed by the 'Add Game' button. You can then enter the path to your games installation folder. For steam users this might look like `C:/Program Files (x86)/Steam/steamapps/common/Palworld`. For Xbox Gamepass users: `C:/XboxGames/Palworld/Content`"
@@ -276,8 +268,20 @@
                 "a": "To get a {{common.nexus}} API key, you will need to create an account on the {{common.nexus}} website. Once you have created an account, you can generate an API key from your account settings. This key is used to authenticate with the {{common.nexus}} API and is required to download mods using the application."
             },
             {
+                "q": "How do I install mods using {{app.brandname}}?",
+                "a": "To install mods using {{app.brandname}}, you can either search for mods directly from the application, or paste a {{common.nexus}} URL or mod ID into the search bar. Once you have found the mod you want to install, you can click the 'Download' button to download the mod files to your cache directory. You can then click the 'Install' button to install the mod files to your game directory."
+            },
+            {
+                "q": "How do I join a modified server using {{app.brandname}}?",
+                "a": "To join a modified server using {{app.brandname}}, you will need to have the required mods installed. You can check the server details to see which mods are required, and then install them using the application. Once you have the required mods installed, you can click the 'Join Server' button to connect to the server."
+            },
+            {
+                "q": "How do I list my own modified server in {{app.brandname}}?",
+                "a": "To list your own modified server using {{app.brandname}}, you will need to have the required mods installed on a UE4SS capable server. To get an api key for listing your server, you will need to join the Discord support server to interact with our API bot. Once you have the required mods installed and an api key, start your server to have it be automatically be listed within the application."
+            },
+            {
                 "q": "Why are my downloads failing?",
-                "a": "If your downloads are failing, it could be due to a number of reasons. The most common cause is an invalid {{common.nexus}} API key. Make sure you have entered the correct key in the application settings. It could also be due to network issues, or the mod files being unavailable on the {{common.nexus}} servers. If you continue to experience issues, please contact support for assistance. Note: Premium users of {{common.nexus}} may have different download limits, and additional features available due to their premium status; without premium status, users will need to eithr install mods manually from zip/rar files using {{app.brandname}} or initiate mod downloads from {{common.nexus}} directly by pressing the 'Download With Manager' button."
+                "a": "If your downloads are failing, it could be due to a number of reasons. The most common cause is an invalid {{common.nexus}} API key. Make sure you have entered the correct key in the application settings. It could also be due to network issues, or the mod files being unavailable on the {{common.nexus}} servers. If you continue to experience issues, please contact support for assistance. Note: Premium users of {{common.nexus}} may have different download limits, and additional features available due to their premium status; without premium status, users will need to either install mods manually from zip/rar files using {{app.brandname}} or initiate mod downloads from {{common.nexus}} directly by pressing the 'Download With Manager' button."
             },
             {
                 "q": "How do I update {{app.brandname}}?",
@@ -289,7 +293,7 @@
             },
             {
                 "q": "How do I uninstall {{app.brandname}}?",
-                "a": "To uninstall {{app.brandname}}, you can simply delete the application folder from your computer. This will remove all files associated with the application, including the cache directory where mods are stored. If you want to keep your mods, you should move them to a different location before uninstalling the application."
+                "a": "To uninstall {{app.brandname}}, right click the application launcher, and select uninstall. This will remove all files associated with the application, but notthe cache directory where mods are stored."
             }
         ]
     },
@@ -412,6 +416,10 @@
 
     "ue4ss-settings": {
         
+    },
+
+    "/setup": {
+        "name": "Setup Help"
     }
 }
 

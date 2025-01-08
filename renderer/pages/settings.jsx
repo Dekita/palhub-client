@@ -50,6 +50,11 @@ export default function SettingsPage({ modals, ThemeController }) {
         window.ipc.invoke('open-child-window', 'help');
     }, []);
 
+    const onClickSetup = React.useCallback(() => {
+        if (!window.ipc) return console.error('ipc not loaded');
+        window.ipc.invoke('open-child-window', 'setup');
+    }, []);
+
     const carouselOptions = React.useMemo(() => ({
         interval: null,
         controls: false,
@@ -80,9 +85,18 @@ export default function SettingsPage({ modals, ThemeController }) {
                                 onClick={(i, value) => setSettingsPageID(i)}
                             />
                         </div>
-                        <div className='col-12 col-md-2'>
-                            <div className="btn btn-dark w-100" onClick={onClickHelp}>
-                                <strong>{t('/faq.name')}</strong>
+                        <div className='col-12 col-md-5'>
+                            <div className='row'>
+                                <div className='col pe-1'>
+                                    <div className="btn btn-dark w-100" onClick={onClickHelp}>
+                                        <strong>{t('/faq.name')}</strong>
+                                    </div>
+                                </div>
+                                <div className='col ps-1'>
+                                    <div className="btn btn-dark w-100" onClick={onClickSetup}>
+                                        <strong>{t('/setup.name')}</strong>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
