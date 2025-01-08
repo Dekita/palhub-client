@@ -78,33 +78,31 @@ export default function GameConfiguration({tempGame, setTempGame, runModloaderTa
                 name={"Modloader Setup"}
                 tooltip={"Modloader Setup Tooltip"}
             />
-            <div className='row'>
-                {tempGame?.has_ue4ss && <React.Fragment>
-                    <div className='col'>
-                        <div className="col btn btn-danger px-3 w-100" onClick={() => runModloaderTask('uninstall')}>
-                            <strong>{t('/settings.buttons.uninstall-ue4ss')}</strong>
-                        </div>
-                    </div>
-                </React.Fragment>}
-                {!tempGame.has_ue4ss && <div className={dangerCard}>
-                    <h4 className="mb-0 text-warning">
-                        <strong>{t('/settings.setup.need-ue4ss.head', { game: tempGame })}</strong>
-                    </h4>
-                    {tA('/settings.setup.need-ue4ss.body', { game: tempGame }).map((text, i) => (
-                        <p key={i} className={pClasses}>{text}</p>
-                    ))}
-                    <button className="btn btn-warning p-3 w-100 mt-3" onClick={()=>runModloaderTask('install')}>
-                        <strong>{t('/settings.buttons.download-ue4ss', { game: tempGame })}</strong>
-                    </button>
-                </div>}
+            {tempGame?.has_ue4ss && <div className='col'>
+                <div className="col btn btn-danger px-3 w-100" onClick={() => runModloaderTask('uninstall')}>
+                    <strong>{t('/settings.buttons.uninstall-ue4ss')}</strong>
+                </div>
+            </div>}
+            {!tempGame.has_ue4ss && <div className={dangerCard}>
+                <h4 className="mb-0 text-warning">
+                    <strong>{t('/settings.setup.need-ue4ss.head', { game: tempGame })}</strong>
+                </h4>
+                {tA('/settings.setup.need-ue4ss.body', { game: tempGame }).map((text, i) => (
+                    <p key={i} className={pClasses}>{text}</p>
+                ))}
+                <button className="btn btn-warning p-3 w-100 mt-3" onClick={()=>runModloaderTask('install')}>
+                    <strong>{t('/settings.buttons.download-ue4ss', { game: tempGame })}</strong>
+                </button>
+            </div>}
 
+            <div className='row pt-2'>
                 <div className='col'>
                     <div className="col btn btn-danger px-3 w-100" onClick={onForgetGame}>
                         <strong>{t('/settings.buttons.unmanage-game')}</strong>
                     </div>
                 </div>
-
             </div>
+
         </div>}
 
     </React.Fragment>;

@@ -16,6 +16,8 @@ files:
 extraFiles:
   - from: node_modules/regedit/vbs
     to: resources/vbs
+  - from: resources/app-mods
+    to: resources/app-mods
 
 publish:
   provider: github

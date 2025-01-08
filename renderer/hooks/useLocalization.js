@@ -36,7 +36,7 @@ import React from 'react';
 import wait from 'utils/wait';
 
 const VALID_LANGUAGES = ['dev', 'en']; //, 'es', 'fr', 'de', 'it', 'ja', 'ko', 'pt', 'ru', 'zh'];
-const ARTIFICIAL_LOAD_DELAY = 2500;
+const ARTIFICIAL_LOAD_DELAY = 1000;
 
 const DEFAULT_NAMESPACE = 'dektionary';
 
@@ -57,6 +57,7 @@ export const LocalizationProvider = ({ children }) => {
     const hasWindow = typeof window !== 'undefined';
     const [bundle, setBundle] = React.useState(null);
     const [ready, setReady] = React.useState(false);
+    const [loadDelay, setLoadDelay] = React.useState(undefined);
     const [language, setLanguage] = React.useState(null);
 
     // translate to string (inner function ~ not directly exposed)
@@ -134,14 +135,15 @@ export const LocalizationProvider = ({ children }) => {
     },[innerT]);
 
     // try to load the language bundle for the selected locale
-    const tryLoadBundle = React.useCallback(async (locale, namespace = DEFAULT_NAMESPACE) => {
+    const tryLoadBundle = React.useCallback(async (locale, namespace = DEFAULT_NAMESPACE, loadDelay = ARTIFICIAL_LOAD_DELAY) => {
         try {
+            setLoadDelay(loadDelay);
             return (await import(`../locales/${locale}-${namespace}.json`)).default;
         } catch (e) {
             console.error(e);
         }
         return null;
-    }, []);
+    }, [setLoadDelay]);
 
     // updates selected language bundle with fallback to english
     const onUpdateLanguage = React.useCallback(async (locale, namespace = undefined) => {
@@ -162,26 +164,27 @@ export const LocalizationProvider = ({ children }) => {
     // setup the language bundle on mount
     React.useEffect(() => {
         if (!hasWindow || !window.ipc) return;
+        // if (loadDelay === undefined) return;
         if (!language) (async () => {
             const locale = await ipc.invoke('get-config', 'locale', 'en');
-            await wait(ARTIFICIAL_LOAD_DELAY); // artificial delay to show load screen
+            await wait(loadDelay); // artificial delay to show load screen
             await onUpdateLanguage(locale);
         })();
-    }, [hasWindow]);
+    }, [hasWindow, loadDelay]);
 
-    const exposed = { ready, t, tA, tO, language, changeLanguage, VALID_LANGUAGES, tryLoadBundle };
+    const exposed = { ready, t, tA, tO, language, changeLanguage, VALID_LANGUAGES, tryLoadBundle, setLoadDelay };
     return <LocalizationContext.Provider value={exposed}>{children}</LocalizationContext.Provider>;
 };
 
 // Export actual hook to useLocalization
-export default function useLocalization(namespace = null) {
+export default function useLocalization(namespace = null, loadDelay = ARTIFICIAL_LOAD_DELAY) {
     const context = React.useContext(LocalizationContext);
     // bundle override for namespace specific translations
     const [bundle, setBundle] = React.useState(null);
 
     React.useEffect(() => {
         if (namespace) (async () => {
-            setBundle(await context.tryLoadBundle(context.language, namespace));
+            setBundle(await context.tryLoadBundle(context.language, namespace, loadDelay));
         })();
     }, [context, namespace]);
 

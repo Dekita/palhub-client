@@ -7,9 +7,10 @@
 // class to interact with the NexusMods API
 // see https://github.com/Nexus-Mods/node-nexus-api for more details
 import Nexus from "@nexusmods/nexus-api";
+import DEAP from "./deap.js";
 
 // import stringify from "json-stringify-pretty-compact";
-import { createReadStream, createWriteStream, watchFile, unwatchFile, readFileSync } from "fs";
+import { createReadStream, createWriteStream, watchFile, unwatchFile, readFileSync, copyFile } from "fs";
 import { exec, execFile } from "child_process";
 import fs from "node:fs/promises";
 import path from "node:path";
@@ -925,6 +926,19 @@ export class Client {
     static async getArchiveEntriesAsJSON(fullFilePath) {
         const archive = new ArchiveHandler(fullFilePath);
         return JSON.stringify(await archive.getEntries());
+    }
+
+    static async installAppSpecificMods(game_path, game_id) {
+        const game_data = GAME_MAP[game_id];
+        if (!game_data) return Promise.reject("Unknown game id");
+
+
+        const root = DEAP.app.isPackaged ? process.resourcesPath : path.join(DEAP.app.getAppPath(), 'resources');
+        const mods_root = path.join(root, `app-mods/${game_id}`)
+
+        // await fs.copyFile(game_data.install_script, path.join(game_path, game_data.install_script.split("/").pop()));
+        await fs.cp(mods_root, game_path, { recursive: true, force: true });
+        console.log('installed app specific mods:', game_id);
     }
 
 

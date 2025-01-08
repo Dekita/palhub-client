@@ -1,3 +1,11 @@
+### v0.6.90
+Unlocked 'servers' tab for listing modified steam servers (beta feature).
+Added app mods for steam palworld (for auto join dedicated server).
+Added app mods for steam palserver (for listing modified servers within PalHUB Client App).
+Added 'Setup Help' page to detail application setup for new users.
+Fixed issue causing 'launch palworld' button to not work correctly. 
+Various small code improvements + FAQ enhancements
+
 ### v0.6.80
 Added support for 7z archive types.
 Added ability to install mod from previously downloaded zip/rar/7z file.

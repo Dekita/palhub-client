@@ -39,7 +39,6 @@ function GoogleTagManager() {
 
 
 export default function DekAppLayoutWrapper({ children }) {
-    const { ready, t } = useLocalization();
     const logger = useAppLogger("core/layout");
     const [deepLink, linkChanged, consumeDeepLink] = useDeepLinkListener();
     const { requiredModulesLoaded, commonAppData } = useCommonChecks();
@@ -51,6 +50,12 @@ export default function DekAppLayoutWrapper({ children }) {
     const theme = `/themes/${THEMES[theme_id]}.css`;
     const active_route = useRouter().pathname;
     const bg = `game-bg-palworld${bg_id+1}`;
+    const can_show_navbar = windowName && !['help', 'setup'].includes(windowName);
+    const nonav_page = can_show_navbar ? '' : 'game-bg-full';
+    const loadDelay = can_show_navbar ? 10000 : 0;
+    const { ready, t } = useLocalization(null, loadDelay);
+
+    console.log({loadDelay})
 
     const modals = {
         // onClickSettings: () => setShowSettingsModal(true),
@@ -70,9 +75,6 @@ export default function DekAppLayoutWrapper({ children }) {
             bg_id, setBgID,
         }
     }, [theme_id, bg_id]);
-
-    const can_show_navbar = windowName && !['help'].includes(windowName);
-    const nonav_page = can_show_navbar ? '' : 'game-bg-full';
 
     React.useEffect(() => {
         if (linkChanged) {
