@@ -25,6 +25,7 @@ import useLocalization from '@hooks/useLocalization';
 import DekCommonAppModal from '@components/core/modal';
 import useScreenSize from '@hooks/useScreenSize';
 import wait from '@utils/wait';
+import useCommonChecks from '@hooks/useCommonChecks';
 
 // HIDDEN either because should not be shown to end user, 
 // or because the information is shown in a different way <3
@@ -58,6 +59,8 @@ const HIDDEN_SERVER_DATA_KEYS = [
 
 
 export default function ServerDetailsModal({ show, setShow, server }) {
+    const { requiredModulesLoaded, commonAppData } = useCommonChecks();
+
     const { t, tA } = useLocalization();
     const { isDesktop } = useScreenSize();
     const fullscreen = !isDesktop;
@@ -105,7 +108,8 @@ export default function ServerDetailsModal({ show, setShow, server }) {
             if (!window.nexus) return console.error('nexus not loaded');
             if (!server) return;
 
-            const game_path = await window.uStore.get('game_path');
+            // const game_path = await window.uStore.get('game_path');
+            const game_path = commonAppData?.selectedGame.path;
             if (!game_path) return console.error('game_path not found');
 
             const game_data = await window.palhub('validateGamePath', game_path);
@@ -113,6 +117,8 @@ export default function ServerDetailsModal({ show, setShow, server }) {
 
             // const api_key = await window.uStore.get('api_key');
             const cache_dir = await window.uStore.get('cache_dir');
+
+            await window.palhub('installAppSpecificMods', game_path, game_data.id);
 
             // check all required mods are installed:
             for (const [index, { mod, file }] of servermodFiles.entries()) {
@@ -143,7 +149,7 @@ export default function ServerDetailsModal({ show, setShow, server }) {
             setHasGotPassword(passwordRef?.current?.value?.length);
             setHasGotMods(false);
         }
-    }, [server, servermodFiles, passwordRef, rememberPassword]);
+    }, [server, servermodFiles, passwordRef, rememberPassword, commonAppData]);
 
     const onInstallServerModList = React.useCallback(async () => {
         console.log('onInstallServerModList');
@@ -439,7 +445,7 @@ export default function ServerDetailsModal({ show, setShow, server }) {
                                 <button className="btn btn-success p-2 px-4" onClick={onInstallServerModList}>
                                     <strong>{t('modals.server-details.install-mods', { server })}</strong>
                                     <br />
-                                    <small>{t('modals.install-note')}</small>
+                                    <small>{t('modals.server-details.install-note')}</small>
                                 </button>
                             </div>
                         </React.Fragment>}

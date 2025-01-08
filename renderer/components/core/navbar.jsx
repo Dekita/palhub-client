@@ -47,7 +47,7 @@ export default function MainNavbar({modals: {onClickHamburger,onClickGemStore}})
                 {navbar_items.map((element) => {
                     const is_this_route = element.href === active_route;
                     const is_route_servers = element.href === '/servers';
-                    if (is_route_servers) return null;
+                    // if (is_route_servers) return null;
 
                     const route_color = is_this_route ? 'text-warning' : 'hover-dark hover-secondary ';
                     return <Link href={element.href} key={element.href} className={`btn px-3 no-shadow ${route_color}`}>
