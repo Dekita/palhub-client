@@ -9,24 +9,28 @@ import Button from 'react-bootstrap/Button';
 import useLocalization from '@hooks/useLocalization';
 import useActiveGame from "@hooks/useActiveGame";
 import DekCommonAppModal from '@components/core/modal';
+import useCommonChecks from "@hooks/useCommonChecks";
 
 export default function PlayVanillaModal({show,setShow, onRunGameExe}) {
+    const { requiredModulesLoaded, commonAppData } = useCommonChecks();
     const onCancel = React.useCallback(() => setShow(false), []);
     const { activeGame } = useActiveGame();
     const game = activeGame;
     const { t } = useLocalization();
 
-    const onClickPlayVanillaPalworld = async () => {
+    const onClickPlayVanillaPalworld = React.useCallback(async () => {
         if (!window.uStore) return console.error('uStore not loaded');
         if (!window.palhub) return console.error('palhub not loaded');
         if (!window.nexus) return console.error('nexus not loaded');
-        const game_path = await window.uStore.get('game_path');
+        // const game_path = await window.uStore.get('game_path');
+        const game_path = commonAppData?.selectedGame.path;
         if (!game_path) return console.error('game_path not found');
+        
         const result = await window.palhub('uninstallAllMods', game_path);
         // console.log({game_path, result});
         await onRunGameExe();
         onCancel();
-    }
+    }, [onRunGameExe, commonAppData]);
 
     const headerText = t('modals.play-vanilla.head', {game});
     const modalOptions = {show, setShow, onCancel, headerText, showX: true};
