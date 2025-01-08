@@ -1,0 +1,18 @@
+{
+    "auth": "API KEY FROM PALHUB API BOT GOES HERE",
+    "logo": "https://staticdelivery.nexusmods.com/mods/6063/images/1313/1313-1712300471-2085536369.jpeg",
+    "chat": "WyTdramBkm",
+    "mods": {
+        "required": {
+            "1204": "6790",
+            "577": "6185",
+            "487": "6179"
+        },
+        "optional": {
+            "489": "7711"
+        },
+        "blocked": {
+    
+        }
+    }
+}
