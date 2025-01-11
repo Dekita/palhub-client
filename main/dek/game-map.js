@@ -140,4 +140,16 @@ export default {
             }
         },
     },
+    "orcs-must-die-deathtrap": {
+        is_hidden: true, 
+        providers: {
+            nexus: "orcsmustdiedeathtrap"
+        },
+        platforms: {
+            game: {
+                steam: {id: "2273980", root: "OMD", app: "OMD-Win64-Shipping"},
+                modloader: {ue4ss: KNOWN_MODLOADERS.optional_ue4ss}
+            }
+        },
+    },
 }
