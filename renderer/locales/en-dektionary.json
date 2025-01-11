@@ -39,7 +39,8 @@
                 "You can play this game with mods to enhance your experience, and even play with friends on modified servers.",
                 "Or.. You could choose to play plain old vanilla without any mods at all, but that's super boring."
             ],
-            "theme-images": ["ThemeImageNameArray"]
+            "theme-images": ["ThemeImageNameArray"],
+            "theme-opacities": ["Low", "Medium", "High"]
         },
         "hogwarts-legacy": {
             "name": "Hogwarts Legacy",
@@ -50,14 +51,14 @@
             ],
             "theme-images": ["Hogwarts", "Hogwarts2", "Hogwarts3"]
         },
-        "ff7r": {
+        "ff7remake": {
             "name": "Final Fantasy VII Remake Integrade",
             "info": [
                 "Final Fantasy VII Remake Integrade is a modern reimagining of the iconic RPG that not only defined an entire genre, but also changed the way we tell stories in video games.",
                 "{{games.generic.info.1}}",
                 "{{games.generic.info.2}}"
             ],
-            "theme-images": ["FF7R", "FF7R2", "FF7R3"]
+            "theme-images": ["FF7Remake1", "FF7Remake2", "FF7Remake3"]
         },
         "palworld": {
             "name": "Palworld",
@@ -66,7 +67,34 @@
                 "{{games.generic.info.1}}",
                 "{{games.generic.info.2}}"
             ],
-            "theme-images": ["3pals", "Grizzbolt", "Lamball"]
+            "theme-images": ["Palworld1", "Palworld2", "Palworld3"]
+        },
+        "tekken8": {
+            "name": "Tekken 8",
+            "info": [
+                "Tekken 8 is the latest installment in the popular fighting game series, featuring a diverse cast of characters, stunning visuals, and fast-paced gameplay.",
+                "{{games.generic.info.1}}",
+                "{{games.generic.info.2}}"
+            ],
+            "theme-images": ["Tekken", "Tekken2", "Tekken3"]
+        },
+        "black-myth-wukong": {
+            "name": "Black Myth: Wukong",
+            "info": [
+                "Black Myth: Wukong is an upcoming action-adventure game based on the classic Chinese novel Journey to the West.",
+                "{{games.generic.info.1}}",
+                "{{games.generic.info.2}}"
+            ],
+            "theme-images": ["BlackMyth1", "BlackMyth2", "BlackMyth3"]
+        },
+        "lockdown-protocol": {
+            "name": "Lockdown Protocol",
+            "info": [
+                "Lockdown Protocol is a top-down shooter with fast-paced combat, challenging enemies, and a retro-inspired art style.",
+                "{{games.generic.info.1}}",
+                "{{games.generic.info.2}}"
+            ],
+            "theme-images": ["Lockdown1", "Lockdown2", "Lockdown3"]
         }
     },
     
@@ -221,7 +249,9 @@
         "desc": "{{app.brandname}} is an application that allows you to download and easily manage mods from the {{common.nexus}} website, specifically for Unreal Engine based games. This application is built using modern technologies and is designed to be feature rich, while being as simple and easy to use as possible. If you encounter any bugs or issues, or have feature suggestions, please let us know by joining the support server!",
         "head": "{{/about.name}} {{app.brandname}}",
         "main": "{{app.brandname}} is an application that allows you to download and easily manage mods for {{game.name}} from the {{common.nexus}} website. This application is built using modern technologies and is designed to be as simple and easy to use as possible. If you encounter any bugs or issues, please let us know!",
-        "notice": "This application was developed independently and is neither affiliated with nor officially endorsed by {{common.nexus}}, nor by any of the developers, publishers, or creators of the games it supports.",
+        "notice": "This application was developed independently and is neither affiliated with, or officially endorsed by {{common.nexus}}, nor by any of the developers, publishers, or creators of the games it supports.",
+        "supported-games": "Supported Games",
+        "more-games-soon": "More supported games coming soon!",
         "discord": "Join Support Server",
         "patreon": "Support Development",
         "features": {
@@ -374,8 +404,12 @@
                 "desc": "Alter the UI by selecting from a range of spicy color themes.."
             },
             "theme-image": {
-                "name": "Change Background Image [beta]",
+                "name": "Change Background Image",
                 "desc": "Alter the UI by selecting from a range of spicy background images.."
+            },
+            "theme-opacity": {
+                "name": "Change Background Visibility",
+                "desc": "Alter the application background by selecting changing its visibility.."
             },
             "language": {
                 "name": "Change Language [alpha]",

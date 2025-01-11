@@ -80,8 +80,7 @@ export default {
             },
         },
     },
-    "ff7r": {
-        is_hidden: true, 
+    "ff7remake": {
         providers: {
             nexus: "finalfantasy7remake"
         },
@@ -93,7 +92,6 @@ export default {
         },
     },
     "hogwarts-legacy": {
-        is_hidden: true, 
         providers: {
             nexus: "hogwartslegacy"
         },
@@ -105,7 +103,6 @@ export default {
         },
     },
     "black-myth-wukong": {
-        is_hidden: true, 
         providers: {
             nexus: "blackmythwukong"
         },
@@ -117,7 +114,6 @@ export default {
         },
     },
     "lockdown-protocol": {
-        is_hidden: true, 
         providers: {
             nexus: "lockdownprotocol"
         },
@@ -129,7 +125,6 @@ export default {
         },
     },
     "tekken8": {
-        is_hidden: true, 
         providers: {
             nexus: "tekken8"
         },
@@ -140,16 +135,16 @@ export default {
             }
         },
     },
-    "orcs-must-die-deathtrap": {
-        is_hidden: true, 
-        providers: {
-            nexus: "orcsmustdiedeathtrap"
-        },
-        platforms: {
-            game: {
-                steam: {id: "2273980", root: "OMD", app: "OMD-Win64-Shipping"},
-                modloader: {ue4ss: KNOWN_MODLOADERS.optional_ue4ss}
-            }
-        },
-    },
+    // "orcs-must-die-deathtrap": {
+    //     is_hidden: true, 
+    //     providers: {
+    //         nexus: "orcsmustdiedeathtrap"
+    //     },
+    //     platforms: {
+    //         game: {
+    //             steam: {id: "2273980", root: "OMD", app: "OMD-Win64-Shipping"},
+    //             modloader: {ue4ss: KNOWN_MODLOADERS.optional_ue4ss}
+    //         }
+    //     },
+    // },
 }

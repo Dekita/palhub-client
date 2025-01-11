@@ -43,19 +43,20 @@ export default function DekAppLayoutWrapper({ children }) {
     const [deepLink, linkChanged, consumeDeepLink] = useDeepLinkListener();
     const { requiredModulesLoaded, commonAppData } = useCommonChecks();
     const [deepLinkData, setDeepLinkData] = useState(null);
-    const [theme_id, setThemeID, bg_id, setBgID] = useThemeSystem();
+    const [theme_id, setThemeID, bg_id, setBgID, bg_opac, setBgOpac] = useThemeSystem(commonAppData?.selectedGame.id);
     const [showNavbarModal, setShowNavbarModal] = useState(false);
     const [showNxmModal, setShowNxmModal] = useState(false);
     const windowName = useWindowNameFromDEAP();
     const theme = `/themes/${THEMES[theme_id]}.css`;
     const active_route = useRouter().pathname;
-    const bg = `game-bg-palworld${bg_id+1}`;
+
+    // bgopac-low bgopac-med bgopac-high
+    const opac = ['low', 'med', 'high'][bg_opac];
+    const bg = `game-bg ${commonAppData?.selectedGame.id}${bg_id+1} bgopac-${opac}`;
     const can_show_navbar = windowName && !['help', 'setup'].includes(windowName);
     const nonav_page = can_show_navbar ? '' : 'game-bg-full';
-    const loadDelay = can_show_navbar ? 10000 : 0;
-    const { ready, t } = useLocalization(null, loadDelay);
-
-    console.log({loadDelay})
+    // const loadDelay = can_show_navbar ? 10000 : 0;
+    const { ready, t } = useLocalization(null);//, loadDelay);
 
     const modals = {
         // onClickSettings: () => setShowSettingsModal(true),
@@ -64,7 +65,7 @@ export default function DekAppLayoutWrapper({ children }) {
 
     const isbasepath = active_route !== '/';
     // const bodystyle = isbasepath ? {overflowY: 'scroll'} : {};
-    const bodystyle = isbasepath ? {overflowY: 'auto'} : {};
+    const bodystyle = isbasepath ? {overflowY: 'scroll'} : {};
     const commonTitle = "PalHUB Client";
 
     const ThemeController = useMemo(() => {
@@ -73,8 +74,9 @@ export default function DekAppLayoutWrapper({ children }) {
             setThemeID,
             themes: THEMES,
             bg_id, setBgID,
+            bg_opac, setBgOpac,
         }
-    }, [theme_id, bg_id]);
+    }, [theme_id, bg_id, bg_opac]);
 
     React.useEffect(() => {
         if (linkChanged) {

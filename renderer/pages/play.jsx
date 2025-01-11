@@ -80,14 +80,14 @@ export default function PlayPage() {
                         <div className='card-body py-2 px-1'>
                             <div className='row'>
                                 <div className='d-lg-none col-lg-7'>
-                                    <Image src={`/img/${game?.id}/game-logo.jpg`} alt="Game Logo Image" rounded fluid />
+                                    <Image src={`/img/${game?.id}/game-logo.webp`} alt="Game Logo Image" rounded fluid />
                                 </div>
                                 <div className='col-12 col-lg-5 pt-4 px-5 pe-lg-2'>
                                     <h1 className="font-bold mb-4">{t('/play.head', {game})}</h1>
                                     {tA(`games.${game?.id}.info`).map((line, idx) => <p key={idx} className="mb-4">{line}</p>)}
                                 </div>
                                 <div className='d-none d-lg-block col-lg-7'>
-                                    <Image src={`/img/${game?.id}/game-logo.jpg`} alt="Game Logo Image" rounded fluid />
+                                    <Image src={`/img/${game?.id}/game-logo.webp`} alt="Game Logo Image" rounded fluid />
                                 </div>
                             </div>
 

@@ -9,9 +9,17 @@ import Link from 'next/link';
 
 import * as CommonIcons from '@config/common-icons';
 import useLocalization from '@hooks/useLocalization';
+import GameCardComponent from '@components/game-card';
+import game_map from '@main/dek/game-map';
 
 export default function AboutPage() {
     const { t, tA } = useLocalization();
+
+    const gamesArray = Object.keys(game_map).sort((a, b) => {
+        const aName = t(`games.${a}.name`);
+        const bName = t(`games.${b}.name`);
+        return aName.localeCompare(bName);
+    });
 
     return <div className="container">
         <div className="col-12 col-md-10 offset-0 offset-md-1 col-lg-8 offset-lg-2">
@@ -50,6 +58,15 @@ export default function AboutPage() {
                             <strong className='ps-2'>{t('/faq.name')}</strong>
                         </Link>
                     </div>
+
+                    <h2 className="font-bold mt-3">{t('/about.supported-games')}</h2>
+                    {gamesArray.map((id) => {
+                        const key = `supported-game-card-${id}`;
+                        const platforms = Object.keys(game_map[id]?.platforms?.game).filter(k => k != 'modloader');
+                        const initGameData = { name: t(`games.${id}.name`), map_data: game_map[id] };
+                        return <GameCardComponent key={key} {...{id, platforms, initGameData, small: true}} />
+                    })}
+                    <small className='text-dark text-center'>{t('/about.more-games-soon')}</small>
                 </div>
             </div>
         </div>

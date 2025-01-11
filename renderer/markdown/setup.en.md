@@ -1,5 +1,4 @@
-![alt text](/img/Lamball.png)
-
+![alt text](/img/palworld/bg3.png)
 
 ---
 #### Application Cache Directory

@@ -486,8 +486,40 @@ function SettingsPage_Theme({ThemeController}) {
     const game_id = commonAppData?.selectedGame?.id;
     const { t, tA } = useLocalization();
 
+    console.log('ThemeController', ThemeController.bg_opac);
+
     if (!requiredModulesLoaded) return null;
     return <React.Fragment>
+
+        <div className='row'>
+            <div className='col'>
+                <ENVEntryLabel
+                    name={t('/settings.options.theme-image.name')}
+                    tooltip={t('/settings.options.theme-image.desc')}
+                />
+                <DekChoice
+                    className="pb-3"
+                    disabled={false}
+                    active={Number(ThemeController.bg_id)}
+                    choices={[1,2,3]}
+                    //tA(`games.${game_id}.theme-images`)}
+                    onClick={(i, value) => ThemeController.setBgID(i)}
+                />
+            </div>
+            <div className='col'>
+                <ENVEntryLabel
+                    name={t('/settings.options.theme-opacity.name')}
+                    tooltip={t('/settings.options.theme-opacity.desc')}
+                />
+                <DekChoice
+                    className="pb-3"
+                    disabled={false}
+                    active={Number(ThemeController.bg_opac)}
+                    choices={tA(`games.generic.theme-opacities`, 3)}
+                    onClick={(i, value) => ThemeController.setBgOpac(i)}
+                />
+            </div>
+        </div>
         <ENVEntryLabel
             name={t('/settings.options.theme-color.name')}
             tooltip={t('/settings.options.theme-color.desc')}
@@ -495,20 +527,9 @@ function SettingsPage_Theme({ThemeController}) {
         <DekChoice
             className="pb-3 mt-1"
             choices={ThemeController.themes}
-            active={ThemeController.theme_id}
+            active={Number(ThemeController.theme_id)}
             onClick={(i, value) => ThemeController.setThemeID(value)}
         />
-        <ENVEntryLabel
-            name={t('/settings.options.theme-image.name')}
-            tooltip={t('/settings.options.theme-image.desc')}
-        />
-        <DekChoice
-            className="pb-3"
-            disabled={false}
-            active={ThemeController.bg_id}
-            choices={tA(`games.${game_id}.theme-images`)}
-            onClick={(i, value) => ThemeController.setBgID(i)}
-        />        
     </React.Fragment>
 }
 
@@ -559,7 +580,7 @@ function SettingsPage_Game({showGameConfig, setShowGameConfig, tempGame, setTemp
                         </div>
                     </div>
                 </div>
-            </div>  
+            </div> 
             {/* list existing managed games */}
             {gamesArray.map(({id, type, launch_type, path, active}) => {
                 // console.log('entry', {game_id, type, launch_type, path});

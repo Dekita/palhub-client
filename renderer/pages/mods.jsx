@@ -114,6 +114,7 @@ export default function ModsPage() {
             return await window.nexus(api_key, 'getModInfo', mod_id, slug);
         }));
 
+        if (!config.local_mods) return mods_from_nexus;
         const local_mods = Object.values(config.local_mods).filter(mod => mod.local);
         console.log('local_mods:', local_mods);
         return mods_from_nexus.concat(local_mods);

@@ -11,7 +11,6 @@ import Col from 'react-bootstrap/Col';
 import Image from 'react-bootstrap/Image';
 import Card from 'react-bootstrap/Card';
 // import { SphereSpinner } from 'react-spinners-kit';
-import DOMPurify from 'dompurify';
 // import Link from 'next/link';
 
 import * as CommonIcons from '@config/common-icons';
@@ -19,9 +18,9 @@ import useLocalization from '@hooks/useLocalization';
 import useCommonChecks from '@hooks/useCommonChecks';
 import isDevEnvironment from '@utils/isDevEnv';
 
-export default function gameCardComponent({ id, path, onClick=()=>{}, tempGame=null }) {
+export default function gameCardComponent({ id, path, onClick=()=>{}, tempGame=null, small=false, platforms=null, initGameData=null }) {
     const {requiredModulesLoaded, commonAppData, updateSelectedGame} = useCommonChecks();
-    const [gameData, setGameData] = React.useState(null);
+    const [gameData, setGameData] = React.useState(initGameData);
     const IconComponent = CommonIcons.star;
     const { t, tA } = useLocalization();
     
@@ -56,24 +55,27 @@ export default function gameCardComponent({ id, path, onClick=()=>{}, tempGame=n
 
     return <Col xs={12} md={6} lg={6} xl={4} className='mb-2' onClick={realOnClick}>
     {/* return <Col xs={12} md={6} lg={4} xl={3} className='mb-2' onClick={realOnClick}> */}
-        <Card className='theme-border chartcard cursor-pointer'>
+        <Card className={`theme-border chartcard ${small?'':'cursor-pointer'}`}>
             <Card.Body className='text-start p-0'>
                 <Card.Title className='p-1'>
                     <div className="ratio ratio-16x9">
-                        <Image src={`/img/${id}/game-logo.jpg`} alt="Game Logo Image" fluid thumbnail />
+                        <Image src={`/img/${id}/game-logo.webp`} alt="Game Logo Image" fluid thumbnail />
                     </div>
                     <div className='modcard set-topleft p-1 bg-info'>
-                        <PlatformIcon type={gameData?.type} />
+                        {platforms && <div className='d-flex gap-1'>
+                            {platforms.map((platform, idx) => <PlatformIcon key={idx} type={platform} />)}
+                        </div>}
+                        {gameData?.type && <PlatformIcon type={gameData?.type} />}
                         {gameData?.launch_type === 'server' && <div className='d-inline-block'>
                             <strong className='px-1 py-0'><small>{t(`common.app-types.${gameData?.launch_type}`)}</small></strong>
                         </div>}
 
                     </div>
                 </Card.Title>
-                <div className='anal-cavity large px-2 pb-2'>
+                <div className={`anal-cavity ${small?'small':''} large px-2 pb-2`}>
                     <div className='text-white'>
                         {/* {tA(`games.${id}.info`).map((line, idx) => <p key={idx} className="mb-0">{line}</p>)} */}
-                        {t(`games.${id}.info.0`)}
+                        {small ? t(`games.${id}.name`) : t(`games.${id}.info.0`)}
                     </div>
                 </div>
             </Card.Body>

@@ -256,18 +256,16 @@ small {
     pointer-events: none; /* Ensure the background doesn't interfere with mouse events */
 }
 
-.game-bg-palworld1::before {
-    background: url('/img/3Pals.png') no-repeat center center fixed;
-    background-size: cover;
+.main-body.bgopac-low::before {
+    opacity: 0.025;
 }
-.game-bg-palworld2::before {
-    background: url('/img/Grizzbolt.png') no-repeat center center fixed;
-    background-size: cover;
+.main-body.bgopac-med::before {
+    opacity: 0.1;
 }
-.game-bg-palworld3::before {
-    background: url('/img/Lamball.png') no-repeat center center fixed;
-    background-size: cover;
+.main-body.bgopac-high::before {
+    opacity: 0.25;
 }
+
 
 .game-bg-full {
     height: calc(100% - 40px) !important;
@@ -278,6 +276,43 @@ small {
     bottom: 2px !important;
     right: 2px !important;
     left: 2px !important;
+}
+
+.game-bg.palworld1::before {
+    background: url('/img/palworld/bg1.webp') no-repeat center center fixed;
+    background-size: cover;
+}
+.game-bg.palworld2::before {
+    background: url('/img/palworld/bg2.webp') no-repeat center center fixed;
+    background-size: cover;
+}
+.game-bg.palworld3::before {
+    background: url('/img/palworld/bg3.webp') no-repeat center center fixed;
+    background-size: cover;
+}
+.game-bg.black-myth-wukong1::before {
+    background: url('/img/black-myth-wukong/bg1.webp') no-repeat center center fixed;
+    background-size: cover;
+}
+.game-bg.black-myth-wukong2::before {
+    background: url('/img/black-myth-wukong/bg2.webp') no-repeat center center fixed;
+    background-size: cover;
+}
+.game-bg.black-myth-wukong3::before {
+    background: url('/img/black-myth-wukong/bg3.webp') no-repeat center center fixed;
+    background-size: cover;
+}
+.game-bg.ff7remake1::before {
+    background: url('/img/ff7remake/bg1.webp') no-repeat center center fixed;
+    background-size: cover;
+}
+.game-bg.ff7remake2::before {
+    background: url('/img/ff7remake/bg2.webp') no-repeat center center fixed;
+    background-size: cover;
+}
+.game-bg.ff7remake3::before {
+    background: url('/img/ff7remake/bg3.webp') no-repeat center center fixed;
+    background-size: cover;
 }
 
 
@@ -376,6 +411,13 @@ small {
 
 .anal-cavity.large div, .anal-cavity.large small {
     -webkit-line-clamp: 6;
+}
+.anal-cavity.small {
+    min-height: 28px;
+    max-height: 48px;
+}
+.anal-cavity.small div, .anal-cavity.small small {
+    -webkit-line-clamp: 2;
 }
 
 

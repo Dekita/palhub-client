@@ -18,5 +18,5 @@ dist
 .env*.local
 
 # additional
-/renderer/public/svgs/font-awesome
+/resources/font-awesome
 .env
