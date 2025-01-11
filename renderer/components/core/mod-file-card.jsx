@@ -33,6 +33,7 @@ export default function ModFileCard({mod, file, triggers=null, showHR=true}) {
     const [downloadProgress, setDownloadProgress] = React.useState(0);
 
     console.log({cache_dir})
+    console.log({mod, file, triggers});
 
     React.useEffect(() => {
         if (!requiredModulesLoaded) return;
@@ -173,6 +174,11 @@ export default function ModFileCard({mod, file, triggers=null, showHR=true}) {
     }, [triggers]);
 
     if (!requiredModulesLoaded) return null;
+
+
+    // if (file && file.category_name === 'ARCHIVED') {
+    //     return null;
+    // }    
 
     return <div className='row' style={{minHeight:92}}>
         <div className={`col`}>

@@ -39,17 +39,15 @@ export default function DekSwitch({
     // overwrite text if labels exist:
     text = labels[checked ? 0 : 1] ?? text;
 
-    return <>
-        <div className={'' + className} style={{ ...style }}>
-            <div className='btn-group dek-switch w-100' role="group" style={{minWidth: 128}} onClick={onClickedBox} >
-                <div className={`btn btn-dark hover-${color} text-center px-0 py-1`} style={{maxWidth: maxIconWidth}}>
-                    <Icon fill='currentColor' height='1rem' />
-                </div>
-                <div className={'btn '+(checked ? `btn-${color}` : `btn-dark hover-${color}`)}>
-                    {text}
-                </div>
+    return <div className={'' + className} style={{ ...style }}>
+        <div className='btn-group dek-switch w-100' role="group" style={{minWidth: 128}} onClick={onClickedBox} >
+            <div className={`btn btn-dark hover-${color} text-center px-0 py-1`} style={{maxWidth: maxIconWidth, maxHeight: maxIconWidth}}>
+                <Icon fill='currentColor' height='1rem' />
             </div>
-            {/* {!!text && <p className='d-inline px-2'>{text}</p>} */}
+            <div className={'btn '+(checked ? `btn-${color}` : `btn-dark hover-${color}`)}>
+                {text}
+            </div>
         </div>
-    </>
+        {/* {!!text && <p className='d-inline px-2'>{text}</p>} */}
+    </div>
 }

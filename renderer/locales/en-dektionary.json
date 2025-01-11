@@ -92,7 +92,7 @@
         },
         "play-vanilla": {
             "head": "Play Vanilla {{game.name}}",
-            "info": "Clicking the {{common.confirm}} button below will remove all mods installed by the {{app.brandname}} and then attempt to launch the {{game.name}}. This action is irreversible once started.",
+            "info": "Clicking the {{common.confirm}} button below will remove all mods installed by the {{app.brandname}} and then attempt to launch {{game.name}}. This action is irreversible once started.",
             "warn": "Are you sure you want to continue?"
         },
         "mod-table": {
@@ -107,6 +107,7 @@
             "view-page": "View on {{common.nexus}}",
             "file-info": "Uploaded: {{date}} - {{size}}",
             "file-version": "v{{file.version}} - {{file.file_name}}",
+            "show-archive": "Show Archived Files",
             "remove": "Remove files from cache",
             "uninstall": "Uninstall mod files",
             "download": "Download mod files",

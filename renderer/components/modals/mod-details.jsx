@@ -20,7 +20,7 @@ import MarkdownRenderer from '@components/markdown/renderer';
 import BBCodeRenderer from "@components/core/bbcode";
 
 import { ENVEntry } from '@components/modals/common';
-// import DekSelect from '@components/core/dek-select';
+import DekSelect from '@components/core/dek-select';
 import DekSwitch from '@components/core/dek-switch'
 import DekChoice from "@components/core/dek-choice";
 // import DekCheckbox from '@components/core/dek-checkbox';
@@ -44,10 +44,15 @@ export default function ModDetailsModal({show,setShow,mod}) {
     const modpageTypes = tA('modals.mod-details.tabs', 2);
 
     const [modFiles, setModFiles] = useState([]);
+    const [showArchive, setShowArchive] = useState(false);
 
     const onCancel = useCallback(() => {
         setShow(false);
-        setTimeout(() => setModpageID(0), 250);
+        setTimeout(() => {
+            setModpageID(0);
+            setModFiles([]);
+            setShowArchive(false);
+        }, 250);
     }, []);
 
     useEffect(() => {
@@ -71,6 +76,7 @@ export default function ModDetailsModal({show,setShow,mod}) {
             }
         })();
     }, [mod]);
+  
     
     if (!mod) return null;
 
@@ -99,7 +105,21 @@ export default function ModDetailsModal({show,setShow,mod}) {
                     </Carousel.Item>
 
                     <Carousel.Item className="container-fluid">
+                        <div className='row'>
+                        <DekSwitch 
+                            // labels={['Hide Archived Files','Display Archived Files']} 
+                            labels={[]}
+                            className='mb-3 px-0'
+                            text={t('modals.mod-details.show-archive')}
+                            checked={showArchive}
+                            maxIconWidth={64} 
+                            onClick={setShowArchive}
+                        />
+
+                        </div>
+
                         {modFiles.map((file, i) => {
+                            if (!showArchive && file && file.category_name === 'ARCHIVED') return null;
                             return <ModFileCard key={i} mod={mod} file={file} />
                         })}
                     </Carousel.Item>
