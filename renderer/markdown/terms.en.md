@@ -1,5 +1,5 @@
 #### Terms and Conditions of Use
-These Terms and Conditions of Use ("Terms") govern your access to and use of PalHUB Client ("the App"), including any and all services, features, and content made available through the Application. 
+These Terms and Conditions of Use ("Terms") govern your access to and use of {{app.brandname}} ("the App"), including any and all services, features, and content made available through the Application. 
 
 By using the App, you agree to comply with and be bound by these Terms. If you do not agree with these Terms, then we request you uninstall the Application from your machine.
 
@@ -17,7 +17,7 @@ We reserve the right to terminate or suspend your access to the Application at o
 We may update these Terms from time to time, and any changes will be effective immediately upon update. Your continued use of the Application after such changes constitutes your acceptance of the revised Terms.
 
 #### Disclaimer of Warranties
-The PalHUB Client Application and its content are provided "as is" without warranties of any kind, either express or implied. We make no representations or warranties regarding the accuracy, reliability, or suitability of the content available on the Application.
+The {{app.brandname}} Application and its content are provided "as is" without warranties of any kind, either express or implied. We make no representations or warranties regarding the accuracy, reliability, or suitability of the content available on the Application.
 
 #### Limitation of Liability
 We shall not be liable for any direct, indirect, incidental, special, consequential, or punitive damages arising out of or in connection with your use of the Application.
