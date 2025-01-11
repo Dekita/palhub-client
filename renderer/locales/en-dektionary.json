@@ -280,6 +280,10 @@
                 "a": "To list your own modified server using {{app.brandname}}, you will need to have the required mods installed on a UE4SS capable server. To get an api key for listing your server, you will need to join the Discord support server to interact with our API bot. Once you have the required mods installed and an api key, start your server to have it be automatically be listed within the application."
             },
             {
+                "q": "Why are mods being installed incorrectly?",
+                "a": "If your mods are being installed incorrectly, the most likely cause is an unrecognised archive structure. The manager utilizes a mods archive structure and internal files to determine how to install the mod. If the mod is not structured to correctly detail its root folder, the manager may not be able to install it correctly. If you continue to experience issues, please contact support for assistance."
+            },
+            {
                 "q": "Why are my downloads failing?",
                 "a": "If your downloads are failing, it could be due to a number of reasons. The most common cause is an invalid {{common.nexus}} API key. Make sure you have entered the correct key in the application settings. It could also be due to network issues, or the mod files being unavailable on the {{common.nexus}} servers. If you continue to experience issues, please contact support for assistance. Note: Premium users of {{common.nexus}} may have different download limits, and additional features available due to their premium status; without premium status, users will need to either install mods manually from zip/rar files using {{app.brandname}} or initiate mod downloads from {{common.nexus}} directly by pressing the 'Download With Manager' button."
             },

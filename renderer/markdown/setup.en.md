@@ -13,7 +13,7 @@ DO NOT SET THIS TO BE THE PATH TO YOUR GAME!!
 #### Nexus Mods API Key
 ![alt text](/img/app-setup-help/nexus-api-key.png)
 
-Enter your unique API Key for PalHUB Client from Nexus Mods. You should NOT use a Personal API Key for PalHUB Client, or the API Key for any other Nexus Mods supported mod manager application as this may cause issues when downloading mods. 
+Enter your unique API Key for {{app.brandname}} from Nexus Mods. You should NOT use a Personal API Key for {{app.brandname}}, or the API Key for any other Nexus Mods supported mod manager application as this may cause issues when downloading mods. 
 
 ![alt text](/img/app-setup-help/nexus-palhub-api.png)
 
@@ -27,7 +27,7 @@ Once enabled, the application MUST be restarted for the changes to take effect. 
 
 ![alt text](/img/app-setup-help/nexus-modman-download.png) 
 
-This will initiate a download of the specific mod file that you have clicked, and is the only way for non-premium Nexus Mods users to download mods when using PalHUB Client. 
+This will initiate a download of the specific mod file that you have clicked, and is the only way for non-premium Nexus Mods users to download mods when using {{app.brandname}}. 
 
 ![alt text](/img/app-setup-help/nexus-freeuser-download.png) 
 
@@ -37,7 +37,7 @@ NOTE: Only one application can actively listen for 'Mod Manager Download' button
 #### Manage Games
 ![alt text](/img/app-setup-help/manage-games.png) 
 
-This is where you add a specific game to be managed by PalHUB Client. On first launch you should click to add new game, this will open a popup window for you to enter the installation path of your desired game. 
+This is where you add a specific game to be managed by {{app.brandname}}. On first launch you should click to add new game, this will open a popup window for you to enter the installation path of your desired game. 
 
 ![alt text](/img/app-setup-help/setup-new-game.png) 
 
@@ -45,9 +45,9 @@ Once you enter a valid path to a supported game; Palworld, FF7R, etc. You will b
 
 ![alt text](/img/app-setup-help/setup-new-game-found.png) 
 
-After UE4SS is installed you are all setup and ready to begin using PalHUB Client to manage the mods for your selected game. UE4SS Config options can dramatically affect how the system interacts with your game, because of this you should NOT alter the UE4SS Config options unless you FULLY understand the changes you are making!! PalHUB Client will apply the most common and stable configuration for supported games to ensure a smooth experience for everyday users.
+After UE4SS is installed you are all setup and ready to begin using {{app.brandname}} to manage the mods for your selected game. UE4SS Config options can dramatically affect how the system interacts with your game, because of this you should NOT alter the UE4SS Config options unless you FULLY understand the changes you are making!! {{app.brandname}} will apply the most common and stable configuration for supported games to ensure a smooth experience for everyday users.
 
 ![alt text](/img/app-setup-help/ue4ss-installation.png) 
 
 ---
-Last updated: Jan 8th, 2025.
+Last updated: Jan 11th, 2025.

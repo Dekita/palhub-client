@@ -172,7 +172,7 @@ export const LocalizationProvider = ({ children }) => {
         })();
     }, [hasWindow, loadDelay]);
 
-    const exposed = { ready, t, tA, tO, language, changeLanguage, VALID_LANGUAGES, tryLoadBundle, setLoadDelay };
+    const exposed = { ready, t, tA, tO, language, changeLanguage, VALID_LANGUAGES, tryLoadBundle, innerM };
     return <LocalizationContext.Provider value={exposed}>{children}</LocalizationContext.Provider>;
 };
 
@@ -201,7 +201,11 @@ export default function useLocalization(namespace = null, loadDelay = ARTIFICIAL
         return context.tO(key, bundle);
     }, [context, bundle]);
 
-    return { ...context, namespace, t, tA, tO };
+    const tString = React.useCallback((instr, replacers = {}) => {
+        return context.innerM(instr, replacers, bundle);
+    }, [context, bundle]);
+
+    return { ...context, namespace, t, tA, tO, tString };
 }
 
 // dekitarpg@gmail.com
