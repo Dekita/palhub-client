@@ -2,15 +2,28 @@ appId: com.dekitarpg.palhubclient
 productName: PalHUB Client
 copyright: Copyright © 2024 DekitaRPG@gmail.com
 
+compression: maximum
+
 directories:
   output: dist
   buildResources: resources
 
 files:
-  - from: .
-    filter:
-      - package.json
-      - app
+  - '**/app/**/*'
+  - '**/package.json'
+  - '!**/scripts/**' # Exclude the scripts folder
+  - '!**/renderer/**' # Exclude the renderer folder
+  - '!**/resources/**' # Exclude the resources folder
+  - '!**/resources/uncompressed-public-images/**/*' # Exclude the uncompressed folder
+  - '!**/.vscode/*'
+  - '!**/scripts/**'
+  - '!**/cache/**'
+  - '!**/main/**'
+  - '!**/*.map'
+  - "!**/node_modules/*/{CHANGELOG.md,README.md,README,readme.md,readme}"
+  - "!**/node_modules/*/{test,__tests__,tests,powered-test,example,examples}"
+  - "!**/node_modules/*.d.ts"
+  - "!**/node_modules/.bin"
 
 # - from: resources/vbs
 extraFiles:
