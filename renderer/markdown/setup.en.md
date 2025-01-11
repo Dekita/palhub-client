@@ -31,7 +31,7 @@ This will initiate a download of the specific mod file that you have clicked, an
 
 ![alt text](/img/app-setup-help/nexus-freeuser-download.png) 
 
-NOTE: Only one application can acively listen for 'Mod Manager Download' buttons from nexus mods. If you currenly use Vortex or any other mod manager software that uses this feature, enabling it for this application may disable it for others (closing this application and opening your other app; Vortex for example, should restore functionality). 
+NOTE: Only one application can actively listen for 'Mod Manager Download' buttons from nexus mods. If you currenly use Vortex or any other mod manager software that uses this feature, enabling it for this application may disable it for others (closing this application and opening your other app; Vortex for example, should restore functionality). 
 
 ---
 #### Manage Games
