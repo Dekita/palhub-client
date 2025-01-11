@@ -28,6 +28,6 @@ These Terms shall be governed by and construed in accordance with the laws of th
 #### Contact Information
 If you have any questions or concerns about these Terms, please contact us via [Discord](https://discord.gg/WyTdramBkm)!
 
-By using the Application, you acknowledge that you have read, understood, and agree to these Terms and our Privacy Policy. These Terms constitute a binding agreement between you and PalHUB.
+By using the Application, you acknowledge that you have read, understood, and agree to these Terms and our Privacy Policy. These Terms constitute a binding agreement between you and {{app.brandname}}.
 
 Last updated: July 31st, 2024.

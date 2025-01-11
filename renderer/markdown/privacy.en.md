@@ -3,7 +3,7 @@ Hello and welcome to the {{app.brandname}}! We've written this Privacy Policy to
 
 The tl;dr is that we don't collect or share any information about you at all!
 
-This Privacy Policy covers the services (including all services, software applications, and websites to which this Privacy Policy is posted, the “Services”) operated by PalHUB and its affiliates (collectively, PalHUB”, “we”, “us” and/or “our”). This Privacy Policy explains what Personal Information (defined below) we collect, how we use and share that information, and your choices concerning our data practices. This Privacy Policy is incorporated into and is part of our Terms of Service.
+This Privacy Policy covers the services (including all services, software applications, and websites to which this Privacy Policy is posted, the “Services”) operated by {{app.brandname}} and its affiliates (collectively, {{app.brandname}}”, “we”, “us” and/or “our”). This Privacy Policy explains what Personal Information (defined below) we collect, how we use and share that information, and your choices concerning our data practices. This Privacy Policy is incorporated into and is part of our Terms of Service.
 
 Before using the Services or entering any Personal Information into {{app.brandname}}, please review this Privacy Policy carefully. By using the Services, you agree to the practices described in this Privacy Policy. If you do not agree to this Privacy Policy, you may not access or otherwise use the Service.
 
