@@ -42,12 +42,47 @@ class ArchiveHandler extends EventEmitter {
 
     _loadZipEntries() {
         const zip = new AdmZip(this.filePath);
-        this.entries = zip.getEntries().map(entry => ({
-            entryName: entry.entryName,
-            isDirectory: entry.isDirectory,
-            size: entry.header.size,
-            getData: () => entry.getData(),
-        }));
+        // this.entries = zip.getEntries().map(entry => ({
+        //     entryName: entry.entryName,
+        //     isDirectory: entry.isDirectory,
+        //     size: entry.header.size,
+        //     getData: () => entry.getData(),
+        // }));
+
+        // Initialize a set to track all directories
+        const directories = new Set();
+
+        // Map entries and infer directories from file paths
+        this.entries = zip.getEntries().map(entry => {
+            const entryName = entry.entryName;
+
+            // Add parent directories for each entry
+            const parts = entryName.split("/");
+            for (let i = 1; i < parts.length; i++) {
+                directories.add(parts.slice(0, i).join("/") + "/");
+            }
+
+            return {
+                entryName,
+                isDirectory: entry.isDirectory,
+                size: entry.header.size,
+                getData: () => entry.getData(),
+            };
+        });
+
+        // Add explicit directory entries
+        for (const dir of directories) {
+            if (this.entries.some(e => e.entryName === dir)) continue;
+            this.entries.push({
+                entryName: dir,
+                isDirectory: true,
+                size: 0,
+                getData: () => Buffer.alloc(0), // Empty data for directories
+            });
+        }
+
+        // Sort entries for consistent order (optional)
+        this.entries.sort((a, b) => a.entryName.localeCompare(b.entryName));
     }
 
     // https://www.npmjs.com/package/node-unrar-js
