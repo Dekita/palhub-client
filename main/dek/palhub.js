@@ -350,6 +350,28 @@ export class Client {
 
         let ignoredRoots = '';
 
+        // entries.sort((a, b) => a.entryName.length - b.entryName.length);
+        const folders = new Set(); // To store unique folder paths
+        for (const entry of entries) {
+            console.log({ entry });
+            const entryPath = entry.entryName;
+        
+            // If the entry is not a directory, derive its parent directories
+            if (!entry.isDirectory) {
+                const parts = entryPath.split("/");
+                for (let i = 1; i < parts.length; i++) {
+                    folders.add(parts.slice(0, i).join("/") + "/");
+                }
+            } else {
+                // If the entry is a directory, add it directly
+                folders.add(entryPath);
+            }
+        }
+        // Convert the set to an array and sort it (optional, for readability)
+        const folderList = Array.from(folders);//.sort();
+        console.log("Detected folders:", folderList);
+
+
         const getFirstFileEntry = () => entries.find((entry) => {
             const replaced = entry.entryName.replace(ignoredRoots, '');
             const root = replaced.split(/[\\/]/).shift();
@@ -803,11 +825,6 @@ export class Client {
             console.log(`stdout: ${stdout}`);
             console.error(`stderr: ${stderr}`);
         });
-        // exec(exe_path, (error, stdout, stderr) => {
-        //     if (error) return console.error(`exec error: ${error}`);
-        //     console.log(`stdout: ${stdout}`);
-        //     console.error(`stderr: ${stderr}`);
-        // });
         return true;
     }
 
@@ -896,7 +913,11 @@ export class Client {
                     const patchpath = path.join(game_path, filetoreplace);
                     console.log("deleting patched file:", patchpath);
                     Emitter.emit("ue4ss-process", 'delete', patchpath);
-                    await fs.unlink(patchpath);
+                    try {
+                        await fs.unlink(patchpath);
+                    } catch (error) {
+                        console.error("uninstallUE4SS error", error);
+                    }
                 }
             }
             
