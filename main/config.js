@@ -76,7 +76,7 @@ const CONFIG = {
         "auto-play": false,
         "auto-tiny": false,
         "tiny-tray": false,
-        "nxm-links": false, // use nexus mod deep links (download with manager button)
+        "nxm-links": true, // use nexus mod deep links (download with manager button)
         // app specific user configurables
         // used to store app specific cache data
         "app-cache": null, 

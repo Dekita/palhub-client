@@ -80,9 +80,11 @@ export default function ModDetailsModal({show,setShow,mod}) {
     
     if (!mod) return null;
 
+    
     const height = fullscreen ? "calc(100vh - 96px)" : "calc(100vh / 4 * 3)";
     const headerText = `${mod.name} by ${mod.author}`;
     const modalOptions = {show, setShow, onCancel, headerText, showX: true};
+    const hasArchivedFiles = modFiles.some(file => file && file.category_name === 'ARCHIVED');
     return <DekCommonAppModal {...modalOptions}>
         <div type="DekBody" className='d-block overflow-y-scroll p-2' style={{height}}>
             <div>
@@ -105,19 +107,17 @@ export default function ModDetailsModal({show,setShow,mod}) {
                     </Carousel.Item>
 
                     <Carousel.Item className="container-fluid">
-                        <div className='row'>
-                        <DekSwitch 
-                            // labels={['Hide Archived Files','Display Archived Files']} 
-                            labels={[]}
-                            className='mb-3 px-0'
-                            text={t('modals.mod-details.show-archive')}
-                            checked={showArchive}
-                            maxIconWidth={64} 
-                            onClick={setShowArchive}
-                        />
-
-                        </div>
-
+                        {hasArchivedFiles && <div className='row'>
+                            <DekSwitch 
+                                // labels={['Hide Archived Files','Display Archived Files']} 
+                                labels={[]}
+                                className='mb-3 px-0'
+                                text={t('modals.mod-details.show-archive')}
+                                checked={showArchive}
+                                maxIconWidth={64} 
+                                onClick={setShowArchive}
+                            />
+                        </div>}
                         {modFiles.map((file, i) => {
                             if (!showArchive && file && file.category_name === 'ARCHIVED') return null;
                             return <ModFileCard key={i} mod={mod} file={file} />
