@@ -8,7 +8,7 @@ list of unreal engine games, their steam game/server app id
 
 const KNOWN_PATCHES = {
     palworld_server: {
-        "Mods/BPModLoaderMod/Scripts/main.lua": "https://raw.githubusercontent.com/Okaetsu/RE-UE4SS/refs/heads/logicmod-temp-fix/assets/Mods/BPModLoaderMod/Scripts/main.lua"
+        "Pal/Binaries/Win64/Mods/BPModLoaderMod/Scripts/main.lua": "https://raw.githubusercontent.com/Okaetsu/RE-UE4SS/refs/heads/logicmod-temp-fix/assets/Mods/BPModLoaderMod/Scripts/main.lua"
     }
 }
 
