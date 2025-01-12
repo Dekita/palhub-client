@@ -61,7 +61,7 @@ export default function Footer() {
             <div className='col text-start'>
                 <OverlayTrigger placement='top' delay={delay} overlay={<Tooltip className="text-end">{t('#footer.hover-nexus-api')}</Tooltip>}>
                     <div className='d-inline-block px-3'>
-                        <Image src={validation?.profile_url} alt='avatar' fluid width={42}/>
+                        <Image src={validation?.profile_url} alt='avatar' fluid roundedCircle width={42}/>
                         <small className='ps-2'>{rateLimits} {validation?.is_premium && <small>p</small>}                        </small>
                     </div>
                 </OverlayTrigger>
