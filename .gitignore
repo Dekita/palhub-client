@@ -19,4 +19,5 @@ dist
 
 # additional
 /resources/font-awesome
+.apikeys
 .env

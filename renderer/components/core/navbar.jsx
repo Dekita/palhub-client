@@ -14,10 +14,13 @@ import AutoUpdater from '@components/core/autoupdater';
 import useLocalization from '@hooks/useLocalization';
 import * as CommonIcons from '@config/common-icons';
 import navbar_items from '@config/navbar-items';
+import useCommonChecks from '@hooks/useCommonChecks';
 // import useAppLogger from '@hooks/useAppLogger';
+import game_map from '@main/dek/game-map';
 
 export default function MainNavbar({modals: {onClickHamburger,onClickGemStore}}) {
     // const logger = useAppLogger('components/core/navbar');
+    const {requiredModulesLoaded, commonAppData, updateSelectedGame} = useCommonChecks();
     const { t } = useLocalization();
     const router = useRouter();
     const active_route = router.pathname;
@@ -34,6 +37,8 @@ export default function MainNavbar({modals: {onClickHamburger,onClickGemStore}})
 
     // if (!ready) return <></>;
 
+    console.log('commonAppData.selectedGame:', commonAppData.selectedGame);
+
     return <Navbar className='navbar theme-text'>
         <Container className='theme-text' fluid>
             {/* Area shown when on a small viewport (shows hamburger menu) */}
@@ -47,7 +52,9 @@ export default function MainNavbar({modals: {onClickHamburger,onClickGemStore}})
                 {navbar_items.map((element) => {
                     const is_this_route = element.href === active_route;
                     const is_route_servers = element.href === '/servers';
-                    // if (is_route_servers) return null;
+                    const hasServers = game_map[commonAppData.selectedGame?.id]?.platforms?.server;
+                    const isServer = commonAppData.selectedGame?.launch_type === 'server';
+                    if (is_route_servers && !(hasServers && !isServer)) return null;
 
                     const route_color = is_this_route ? 'text-warning' : 'hover-dark hover-secondary ';
                     return <Link href={element.href} key={element.href} className={`btn px-3 no-shadow ${route_color}`}>
