@@ -8,7 +8,7 @@ import path  from "path";
 
 function getPath() {
     let dirname = DEAP.app.isPackaged ? process.resourcesPath : __dirname;// DEAP.app.getAppPath();//getPath('userData');
-    dirname = DEAP.app.isPackaged ? `${dirname}/app.asar.unpacked/node_modules/7zip-bin` : dirname;
+    dirname = DEAP.app.isPackaged ? `${dirname}/app.asar.unpacked/node_modules/7zip-bin` : `${dirname}/../node_modules/7zip-bin`;
     if (process.platform === "darwin") {
         return path.join(dirname, "mac", process.arch, "7za")
     } else if (process.platform === "win32") {

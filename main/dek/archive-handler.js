@@ -78,7 +78,7 @@ class ArchiveHandler extends EventEmitter {
     
                 result.forEach((entry) => {
                     entries.push({
-                        entryName: entry.name,
+                        entryName: entry.attr.includes('D') ? `${entry.name}/` : entry.name,
                         isDirectory: entry.attr.includes('D'),
                         size: entry.size,
                         getData: async () => await this._extract7zEntry(entry.name),
