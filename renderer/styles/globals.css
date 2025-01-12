@@ -244,7 +244,7 @@ small {
 /* Pseudo-element for the fixed background image */
 .main-body::before {
     content: "";
-    background: url('/img/3Pals.png') no-repeat center center fixed;
+    background: url('/img/palworld/bg1.webp') no-repeat center center fixed;
     background-size: cover;
     position: fixed; /* Make the background fixed */
     top: 112px;
