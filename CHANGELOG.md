@@ -14,6 +14,7 @@ Added 'Show Archived Files' toggle for mod details popup.
 Changed selected background image to be game specific.
 Changed file 'download' button to open nexus mods file page for non-premium users.
 Changed 'servers' tab to only display for games that have known community servers.
+Changed 'Open Nexus Mods Links' to be enabled by default. 
 Improved various text elements, descriptions, faq's, etc. 
 Altered main body scrollbar to always show for element position consistency.
 Fixed issue with certain 7z archive structures (causing mods to install to wrong location)
