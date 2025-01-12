@@ -1,9 +1,34 @@
+
+### TODO: 
+- make free user experience even more streamlined
+- variable install location when installing downloaded mod
+- ensure 'zCustomGameConfigs' is used for relevant games
+- add support for games listed in zCustomGameConfigs? 
+- cleanup of files because omg they are a mess atm..
+
+
+### v0.7.20
+Added 'Supported Games' list to 'About' page.
+Added 'Change Background Visibility' setting.
+Added 'Show Archived Files' toggle for mod details popup.
+Changed selected background image to be game specific.
+Changed file 'download' button to open nexus mods file page for non-premium users.
+Changed 'servers' tab to only display for games that have known community servers.
+Improved various text elements, descriptions, faq's, etc. 
+Altered main body scrollbar to always show for element position consistency.
+Fixed issue with certain 7z archive structures (causing mods to install to wrong location)
+Fixed issue with all archive structures (where folders arent included in archive as entries)
+Fixed issue with ue4ss installation error on palworld servers (incorrect patch file path)
+Dramatically reduced overall installer & application size (~25%). <3
+- unpacked app size change: 434MB -> 326MB (24.88% reduction)
+- installer size change: 125MB -> 98MB (21.6% reduction)
+
 ### v0.6.90
 Unlocked 'servers' tab for listing modified steam servers (beta feature).
 Added app mods for steam palworld (for auto join dedicated server).
 Added app mods for steam palserver (for listing modified servers within PalHUB Client App).
 Added 'Setup Help' page to detail application setup for new users.
-Fixed issue causing 'launch palworld' button to not work correctly. 
+Fixed issue causing 'Launch Palworld' button to not work correctly. 
 Various small code improvements + FAQ enhancements
 
 ### v0.6.80
