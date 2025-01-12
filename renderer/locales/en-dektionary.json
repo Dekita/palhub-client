@@ -20,6 +20,8 @@
         "suggested": "Suggested",
         "installed": "Installed",
         "downloaded": "Downloaded",
+        "archived": "Archived",
+        "latest": "Latest",
         "required": "Not On Disk",
         "confirm": "Confirm",
         "cancel": "Cancel",

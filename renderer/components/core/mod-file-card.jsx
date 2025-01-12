@@ -74,13 +74,25 @@ export default function ModFileCard({mod, file, triggers=null, showHR=true}) {
 
     const onDownloadModZip = React.useCallback(async() => {
         if (!requiredModulesLoaded) return;
-        console.log('downloading mod:', {api_key, mod, file});
 
         try {
-            setIsDownloading(true);
-
+            const api_key = await window.uStore.get('api_key');
+            if (!api_key) return console.error('api_key not found');
+            
             const key = triggers?.key ?? undefined;
             const expires = triggers?.expires ?? undefined;
+
+            const {is_premium} = await window.nexus(api_key, 'getValidationResult');
+            if (!is_premium && !(key && expires)) {
+                // https://www.nexusmods.com/palworld/mods/${mod.mod_id}?tab=files&${file.file_id}=6790&nmm=1
+                window.ipc.invoke('open-external', `https://www.nexusmods.com/palworld/mods/${mod.mod_id}?tab=files&file_id=${file.file_id}&nmm=1`);
+                console.log('You need to be a premium user on Nexus Mods to view the files tab');
+                return;
+                // alert('You need to be a premium user on Nexus Mods to view the files tab');
+            }
+
+            setIsDownloading(true);
+            console.log('downloading mod:', {api_key, mod, file});
             const file_links = await window.nexus(api_key, 'getDownloadURLs', mod.mod_id, file.file_id, key, expires);//, null, null, mod.game_id);
             console.log({file_links, mod, file, key, expires});
             const download_url = file_links.find(link => !!link.URI)?.URI;
@@ -194,6 +206,7 @@ export default function ModFileCard({mod, file, triggers=null, showHR=true}) {
                     {file.is_primary && <span className='badge bg-secondary border border-secondary2 w-100'>{t('common.suggested')}</span>}
                     {isInstalled && <span className='badge bg-success border border-success2 w-100'>{t('common.installed')}</span>}
                     {isDownloaded && !isInstalled && <span className='badge bg-primary border border-primary2 w-100'>{t('common.downloaded')}</span>}
+                    {file.category_name === 'ARCHIVED' && <span className='badge bg-danger border border-danger2 w-100'>{t('common.archived')}</span>}
                 </div>
             </div>
             
