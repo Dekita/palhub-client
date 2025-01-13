@@ -296,6 +296,10 @@ function SettingsPage_ApplicationRequirements({setSettingsPageID}) {
     let nexusApiKeyHandler = null;
     // updates the nexus api key when the input changes and sets a timeout to save it
     const onUpdateNexusApiKey = React.useCallback(async (name, new_value) => {
+        new_value = new_value.trim();
+        // ensure new value has only ascii printable characters;
+        new_value = new_value.replace(/[^\x20-\x7E]/g, '');
+        
         await updateNexusApiKey(new_value, valid_key_user=>{
             setNexusKeyIsValid(valid_key_user !== null); 
             if (valid_key_user !== null) {

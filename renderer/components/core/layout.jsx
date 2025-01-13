@@ -43,7 +43,8 @@ export default function DekAppLayoutWrapper({ children }) {
     const [deepLink, linkChanged, consumeDeepLink] = useDeepLinkListener();
     const { requiredModulesLoaded, commonAppData } = useCommonChecks();
     const [deepLinkData, setDeepLinkData] = useState(null);
-    const [theme_id, setThemeID, bg_id, setBgID, bg_opac, setBgOpac] = useThemeSystem(commonAppData?.selectedGame.id);
+    const initialGame = commonAppData?.selectedGame?.id ?? 'palworld';
+    const [theme_id, setThemeID, bg_id, setBgID, bg_opac, setBgOpac] = useThemeSystem(initialGame);
     const [showNavbarModal, setShowNavbarModal] = useState(false);
     const [showNxmModal, setShowNxmModal] = useState(false);
     const windowName = useWindowNameFromDEAP();
@@ -52,7 +53,7 @@ export default function DekAppLayoutWrapper({ children }) {
 
     // bgopac-low bgopac-med bgopac-high
     const opac = ['low', 'med', 'high'][bg_opac];
-    const bg = `game-bg ${commonAppData?.selectedGame.id}${bg_id+1} bgopac-${opac}`;
+    const bg = `game-bg ${initialGame}${bg_id+1} bgopac-${opac}`;
     const can_show_navbar = windowName && !['help', 'setup'].includes(windowName);
     const nonav_page = can_show_navbar ? '' : 'game-bg-full';
     // const loadDelay = can_show_navbar ? 10000 : 0;

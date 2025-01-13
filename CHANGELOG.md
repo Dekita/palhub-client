@@ -1,5 +1,6 @@
 
 ### TODO: 
+- determine if single uploaded pak file should be placed in logic mods
 - make free user experience even more streamlined
 - variable install location when installing downloaded mod
 - ensure 'zCustomGameConfigs' is used for relevant games

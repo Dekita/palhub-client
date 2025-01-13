@@ -37,7 +37,7 @@ export default async (event, api_key, functionName, ...functionArgs) => {
         try {
             return await nexus[functionName](...functionArgs);
         } catch (error) {
-            applog.error(`Nexus function ${functionName} failed`, error);
+            applog.error(`Nexus function ${functionName} failed: ${error}`);
         }
         return null;
     }

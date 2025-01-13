@@ -76,11 +76,11 @@ export default function ModFileCard({mod, file, triggers=null, showHR=true}) {
         if (!requiredModulesLoaded) return;
 
         try {
-            const api_key = await window.uStore.get('api_key');
-            if (!api_key) return console.error('api_key not found');
+            // const api_key = await window.uStore.get('api_key');
+            // if (!api_key) return console.error('api_key not found');
             
             const key = triggers?.key ?? undefined;
-            const expires = triggers?.expires ?? undefined;
+            const expires = triggers?.expires ? Number(triggers.expires) : undefined;
 
             const {is_premium} = await window.nexus(api_key, 'getValidationResult');
             if (!is_premium && !(key && expires)) {
