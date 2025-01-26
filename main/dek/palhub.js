@@ -338,6 +338,86 @@ export class Client {
         });
     }
 
+
+
+
+
+    static checkPakForLogicMod(pakFilePath, assetName='ModActor.uasset') {
+        try {
+            const dirPath = path.dirname(pakFilePath);
+            const baseName = path.basename(pakFilePath, '.pak'); // Get the base name without extension
+
+            // Check if corresponding .ucas and .utoc files exist
+            const ucasFilePath = path.join(dirPath, `${baseName}.ucas`);
+            const utocFilePath = path.join(dirPath, `${baseName}.utoc`);
+
+            // If both .ucas and .utoc files exist, recurse using the .utoc file
+            if (fs.existsSync(ucasFilePath) && fs.existsSync(utocFilePath)) {
+                console.log(`Found .ucas and .utoc files for ${baseName}, checking ${utocFilePath}...`);
+                return checkPakForLogicMod(utocFilePath, assetName); // Recurse with .utoc file
+            }
+
+            // If the pak file or .utoc file doesn't exist, proceed with reading the .pak file
+            const fileBuffer = fs.readFileSync(pakFilePath);
+            const readableData = fileBuffer.toString('utf-8');
+            
+            // Modify regex to search for the specific asset name (case-insensitive)
+            const matches = [...readableData.matchAll(new RegExp(`${assetName}`, 'gi'))];
+
+            // Return true if asset is found, otherwise false
+            return {
+                found: matches.length > 0,
+                paktype: path.extname(pakFilePath).slice(1), // Get the package name without the dot
+                assetName,
+            };
+
+        } catch (error) {
+            console.error('Error reading pak file:', error.message);
+            return {found: false}; // Return false in case of any error
+        }
+    }
+
+
+
+    static checkPakForLogicModInZip(zipEntries, assetName = 'ModActor.uasset') {
+        try {
+            // Look for pak and utoc files in zip entries
+            for (const entry of zipEntries) {
+                // Check if the entry is a .pak or .utoc file
+                if (!entry.isDirectory && (entry.entryName.endsWith('.pak') || entry.entryName.endsWith('.utoc'))) {
+                    const fileBuffer = entry.getData();
+                    const readableData = fileBuffer.toString('utf-8');
+
+                    // Check for asset name in the file
+                    const matches = [...readableData.matchAll(new RegExp(assetName, 'gi'))];
+
+                    if (matches.length > 0) {
+                        return {
+                            found: true,
+                            paktype: path.extname(entry.entryName).slice(1), // Get the package name without the dot
+                            fileName: entry.entryName,
+                            assetName,
+                        };
+                    }
+                }
+            }
+
+            // If no asset was found
+            return {
+                found: false,
+                assetName,
+            };
+
+        } catch (error) {
+            console.error('Error processing zip file:', error.message);
+            return { found: false }; // Return false in case of any error
+        }
+    }
+
+
+
+
+
     static async determineInstallPath(game_path, entries, forcedRoot=null) {
         let install_path = game_path;
 
@@ -464,11 +544,18 @@ export class Client {
                     break;
             }
         } else {
-            console.log('unknown install type assuming ~mods');
-            // unknown mod type ~ assume regular .pak replacement
-            install_path = path.join(game_path, game_data.unreal_root, "Content/Paks/~mods");
+            const zipAssetFound = this.checkPakForLogicModInZip(entries);
+            // const pakAssetFound = checkPakForLogicMod(pakFilePath);
+            console.log({zipAssetFound});
+            if (zipAssetFound) {
+                // unknown mod type ~ assume regular .pak replacement
+                install_path = path.join(game_path, game_data.unreal_root, "Content/Paks/LogicMods");
+            } else {
+                console.log('unknown install type assuming ~mods');
+                // unknown mod type ~ assume regular .pak replacement
+                install_path = path.join(game_path, game_data.unreal_root, "Content/Paks/~mods");
+            }
         }
-
         return [install_path, ignored_files, entries];
     }
 
@@ -513,7 +600,7 @@ export class Client {
 
                 // add mod data to the config file
                 const propName = isLocal ? 'local_mods' : 'mods';
-                await this.addModDataToJSON(game_path, mod, file, entries, ignored_files, propName, forcedRoot, extraJsonProps);
+                await this.addModDataToJSON(game_path, mod, file, entries, ignored_files, propName, install_path, extraJsonProps);
 
 
                 return resolve(true);
@@ -531,7 +618,7 @@ export class Client {
                 const installed = config_override || await this.checkModIsInstalled(game_path, mod);
                 if (!local && !installed) return reject("Mod not installed");
                 // remove the mod from the config file
-                const entries = await this.removeModDataFromJSON(game_path, mod, config_override, local);
+                const {root, entries} = await this.removeModDataFromJSON(game_path, mod, config_override, local);
                 console.log("uninstalling mod entries:", entries);
 
                 const game_data = await this.validateGamePath(game_path);
@@ -569,7 +656,7 @@ export class Client {
                 // remove the mod files from the game directory
                 const used_entries = [];
                 for (const entry of entries) {
-                    const fileordir = path.join(base_path, entry);
+                    const fileordir = path.join(root ?? base_path, entry);
                     console.log("iterating:", fileordir);
                     // unlink if file, ignore if directory
                     if ((await fs.stat(fileordir)).isDirectory()) continue;
@@ -758,13 +845,14 @@ export class Client {
 
         const clone = (d) => JSON.parse(JSON.stringify(d));
         const entries = clone(config[modsprop][mod[idprop]].entries);
+        const root = config[modsprop][mod[idprop]].root;
         console.log('removing entries:', entries);
         config[modsprop][mod[idprop]] = null;
         delete config[modsprop][mod[idprop]];
 
         if (!config_override) await this.writeJSON(game_path, config);
 
-        return entries;
+        return {root, entries};
     }
 
 
