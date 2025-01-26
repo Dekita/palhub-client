@@ -3,6 +3,7 @@ import DEAP from './deap';
 import DiscordRPC from 'discord-rpc';
 
 import localization from '../../renderer/locales/en-dektionary.json';
+import fs from 'fs';
 
 // const path = require('path');
 // const { app } = require('electron');
@@ -35,8 +36,22 @@ export default {
     paused: false,
     handle: null,
     isset: false,
+    isDiscordAvailable() {
+        let ipcPath = `\\\\?\\pipe\\discord-ipc-0`;
+        if (!process.platform === 'win32') {
+            ipcPath = `${process.env.XDG_RUNTIME_DIR || '/tmp'}/discord-ipc-0`;
+        } 
+        return fs.existsSync(ipcPath);
+    },
+    startWhenReady() {
+        console.log('Starting Discord RPC when ready');
+        rpc.on('ready', () => this.start());
+    },
     start() {
         console.log('Starting Discord RPC');
+        const available = this.isDiscordAvailable();
+        console.log('Starting Discord RPC:', available);
+        if (!available) return;
         rpc.login({ clientId }).then(() => {
             console.log('Discord RPC connected');
             startTimestamp = new Date();
@@ -46,6 +61,8 @@ export default {
                 this.update();
             }, UPDATE_FREQ);
             this.update();
+        }).catch(error => {
+            console.error('Discord RPC error:', error);
         });
     },
     stop() {
@@ -81,7 +98,7 @@ export default {
         if (!allowRPC) return;
         
         // console.log('Updating Discord RPC');
-        
+
         // const playtime = new Date() - startTimestamp;
         // const minutes = Math.floor(playtime / 60000);
         const maxLen = 23;

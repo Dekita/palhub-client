@@ -52,7 +52,8 @@ DEAP.setup(config, ()=>{ // then run this callback
     // ensure the ModCache folder is created on app ready
     let appDataPath = DEAP.app.getAppPath();
     if (DEAP.app.isPackaged) {
-        appDataPath = path.dirname(DEAP.app.getPath('exe'));
+        // appDataPath = path.dirname(DEAP.app.getPath('exe'));
+        appDataPath = DEAP.app.getPath("userData");
     }
     const appFolder = path.join(appDataPath, 'ModCache');
     if (!fs.existsSync(appFolder)) {
@@ -83,6 +84,6 @@ DEAP.launch({
         //         RPC.pause();
         //     });
         // });
-        RPC.start();
+        RPC.startWhenReady();
     }
 });
