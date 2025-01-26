@@ -32,7 +32,8 @@ export default function GameConfiguration({tempGame, setTempGame, runModloaderTa
         setShow(false);
     }, []);
 
-    const can_use_ue4ss = tempGame?.map_data?.platforms?.[tempGame?.launch_type]?.[tempGame?.type]?.modloader?.ue4ss;
+    const can_use_ue4ss = tempGame?.map_data?.platforms?.[tempGame?.launch_type]?.modloader?.ue4ss !== undefined;
+    console.log({can_use_ue4ss, tempGame});
 
     if (!requiredModulesLoaded) return null;
     return <React.Fragment>
@@ -96,16 +97,14 @@ export default function GameConfiguration({tempGame, setTempGame, runModloaderTa
                     <strong>{t('/settings.buttons.download-ue4ss', { game: tempGame })}</strong>
                 </button>
             </div>}
-
-            <div className='row pt-2'>
-                <div className='col'>
-                    <div className="col btn btn-danger px-3 w-100" onClick={onForgetGame}>
-                        <strong>{t('/settings.buttons.unmanage-game')}</strong>
-                    </div>
-                </div>
-            </div>
-
         </div>}
 
+        {tempGame?.name && <div className='row pt-2'>
+            <div className='col'>
+                <div className="col btn btn-danger px-3 w-100" onClick={onForgetGame}>
+                    <strong>{t('/settings.buttons.unmanage-game')}</strong>
+                </div>
+            </div>
+        </div>}
     </React.Fragment>;
 }
