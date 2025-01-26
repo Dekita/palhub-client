@@ -88,6 +88,7 @@ export default function Ue4ssConfigurator({ game }) {
             }
         }
         // const new_ini_string = stringify(settings);
+        const ini_path = await window.palhub('joinPath', game.ue4ss_root, 'UE4SS-settings.ini');
         await window.palhub('writeFile', ini_path, updated_ini, { encoding: 'utf-8' });
         setHasChanges(false);
     }, [requiredModulesLoaded, game, settings, rawINI]);

@@ -9,7 +9,7 @@
 import bent from 'bent';
 import Dekache from 'dekache';
 
-const ApiCache = new Dekache({name: "api-cache", mins: 5});
+const ApiCache = new Dekache({name: "api-cache", mins: 10});
 const DekAPI = bent('https://dekitarpg.com/', 'POST', 'json', 200);
 
 export default class API {

@@ -1,11 +1,23 @@
 
 ### TODO: 
-- determine if single uploaded pak file should be placed in logic mods
-- make free user experience even more streamlined
-- variable install location when installing downloaded mod
-- ensure 'zCustomGameConfigs' is used for relevant games
+- determine if single uploaded pak file should be placed in logic mods.
+- determine if any pak files edit the same asset? 
+- make free user experience even more streamlined.
+- variable install location when installing downloaded mod.
+- ensure 'zCustomGameConfigs' is used for relevant games.
 - add support for games listed in zCustomGameConfigs? 
 - cleanup of files because omg they are a mess atm..
+- add optional symlink/direct copy options for deploying mods.
+
+### v0.8.25
+REBRANDED APP FROM `PalHUB Client` to `UE Mod Hub` due to now supporting multiple unreal engine games. 
+Moved default cache location to the folder that app is installed to.  
+Fixed issue of app not creating default cache folder on install.
+Fixed issue with 'View on Nexus Mods' button in mod details popup for newly supported games. 
+Fixed issue with FF7 Remake + Rebirth not launching from app (wanted launched via steam).
+Fixed issue with 'save ue4ss config' button causing crash. 
+Added 'ff7' and 'mako' themes for final fantasy 7 users. 
+Added 'Discord RPC' for the application.
 
 
 ### v0.7.20

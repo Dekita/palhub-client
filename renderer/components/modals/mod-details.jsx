@@ -125,7 +125,7 @@ export default function ModDetailsModal({show,setShow,mod}) {
                     </Carousel.Item>
                 </Carousel>
                 <div className="text-center mb-1">
-                    <Link href={`https://www.nexusmods.com/palworld/mods/${mod.mod_id}`} target='_blank' className='btn btn-warning p-2 px-4'>
+                    <Link href={`https://www.nexusmods.com/${commonAppData?.selectedGame?.map_data.providers.nexus}/mods/${mod.mod_id}`} target='_blank' className='btn btn-warning p-2 px-4'>
                         <strong>{t('modals.mod-details.view-page')}</strong><br />
                         <small>{t('common.open-link')}</small>
                     </Link>

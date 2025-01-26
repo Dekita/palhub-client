@@ -32,7 +32,7 @@ const KNOWN_MODLOADERS = {
 //     },
 //     platforms: { // list of game store platforms 
 //         game: {  // game store ids for each platform the main game is available on
-//             steam: {id: "1234567", root: "UEProjectRoot", app: "AppExeName"}, 
+//             steam: {id: "1234567", root: "UEProjectRoot", app: "AppExeName", url: true}, // url=true to open game using steam appid url
 //             epic: null, 
 //             xbox: null,
 //             modloader: { // list of compatible modlaoders to use with the game
@@ -86,8 +86,19 @@ export default {
         },
         platforms: {
             game: {
-                steam: {id: "1167190", root: "End", app: "ff7remake"},
-                modloader: {ue4ss: KNOWN_MODLOADERS.optional_ue4ss}
+                steam: {id: "1462040", root: "End", app: "ff7remake", url: true},
+                // modloader: {ue4ss: KNOWN_MODLOADERS.optional_ue4ss}
+            }
+        },
+    },
+    "ff7rebirth": {
+        providers: {
+            nexus: "finalfantasy7rebirth"
+        },
+        platforms: {
+            game: {
+                steam: {id: "2909400", root: "End", app: "ff7rebirth", url: true},
+                // modloader: {ue4ss: KNOWN_MODLOADERS.optional_ue4ss}
             }
         },
     },
@@ -135,6 +146,30 @@ export default {
             }
         },
     },
+
+    // "satisfactory": {
+    //     is_hidden: true, 
+    //     providers: {
+    //         nexus: "satisfactory"
+    //     },
+    //     platforms: {
+    //         game: {
+    //             steam: {id: "526870", root: "FactoryGame", app: "FactoryGameSteam"},
+    //             modloader: {ue4ss: KNOWN_MODLOADERS.optional_ue4ss}
+    //         }
+    //     },
+    // }
+    // "orcs-must-die-3": {
+    //     providers: {
+    //         nexus: "orcsmustdie3"
+    //     },
+    //     platforms: {
+    //         game: {
+    //             steam: {id: "1029890", root: "OMD", app: "Orcs Must Die! 3"},
+    //             modloader: {ue4ss: KNOWN_MODLOADERS.optional_ue4ss}
+    //         }
+    //     },
+    // }
     // "orcs-must-die-deathtrap": {
     //     is_hidden: true, 
     //     providers: {

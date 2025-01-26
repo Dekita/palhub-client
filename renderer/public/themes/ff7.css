@@ -1,0 +1,43 @@
+:root {
+	--dek-gen-version: 0.0.96;
+	--dek-body-color: #0d0f1a; /* Deep black-blue, like a starry night sky */
+	--dek-text-color: #eae6df; /* Soft ivory, resembling parchment or lighted runes */
+
+	--dek-modal-body-color: #161926; /* Darker modal, invoking mystery */
+	--dek-modal-text-color: #ffffff; /* Pure white for contrast */
+	--dek-modal-border-color: #2a2e3f; /* Subtle blue-gray for edges */
+
+	--dek-card-body-color: #1a1e2d; /* Midnight blue for depth */
+	--dek-card-text-color: #f8f5f0; /* Bright but soft white for readability */
+	--dek-card-header-color: #4c5a7c; /* Muted metallic blue reminiscent of armor */
+
+    --dek-primary-normal: #5865f2; /* Striking azure, akin to the Lifestream */
+	--dek-primary-darker: #404ecb; /* Darker mystical blue */
+	--dek-primary-darkest: #2d379f; /* Intense twilight hue */
+	--dek-primary-light: #8b95f9; /* Glowing light blue, like Materia */
+
+    --dek-secondary-normal: #a64d79; /* Rich magenta, evoking magical energy */
+	--dek-secondary-darker: #833b61; /* Darker mystical magenta */
+	--dek-secondary-darkest: #632948; /* Shadowy crimson-magenta */
+	--dek-secondary-light: #c97da2; /* Luminous pink-magenta glow */
+
+    --dek-info-normal: #417b9b; /* Serene cerulean blue, suggesting water and sky */
+	--dek-info-darker: #315e77; /* Muted ocean blue */
+	--dek-info-darkest: #234459; /* Deep abyssal tone */
+	--dek-info-light: #5c9ec1; /* Crystalline light blue */
+
+    --dek-success-normal: #3b9956; /* Vibrant emerald green for life and growth */
+	--dek-success-darker: #29733f; /* Deep forest green */
+	--dek-success-darkest: #19542d; /* Shadowy green for contrast */
+	--dek-success-light: #60c987; /* Lush glowing green */
+
+    --dek-warning-normal: #c78d1f; /* Golden amber, reminiscent of glowing sparks */
+	--dek-warning-darker: #9b6f14; /* Burnished gold */
+	--dek-warning-darkest: #71530a; /* Deep bronze */
+	--dek-warning-light: #e5b64a; /* Radiant golden light */
+
+    --dek-danger-normal: #a1374b; /* Blood red, dark and dramatic */
+	--dek-danger-darker: #7d2838; /* Crimson shadow */
+	--dek-danger-darkest: #591b26; /* Deep garnet */
+	--dek-danger-light: #c45a72; /* Glowing ruby */
+}

@@ -11,7 +11,7 @@ import DEAP from "./deap.js";
 
 // import stringify from "json-stringify-pretty-compact";
 import { createReadStream, createWriteStream, watchFile, unwatchFile, readFileSync, copyFile } from "fs";
-import { exec, execFile } from "child_process";
+import { exec, execFile, spawn } from "child_process";
 import fs from "node:fs/promises";
 import path from "node:path";
 import {https} from "follow-redirects";
@@ -818,13 +818,24 @@ export class Client {
         await fs.unlink(path.join(cache_path, file.file_name));
     }
 
-    static launchExe(exe_path) {
+    static launchExe(exe_path, args, opts={}) {
         console.log("launching exe", exe_path);
-        execFile(exe_path, (error, stdout, stderr) => {
-            if (error) return console.error(`exec error: ${error}`);
-            console.log(`stdout: ${stdout}`);
-            console.error(`stderr: ${stderr}`);
+        // execFile(exe_path, args, (error, stdout, stderr) => {
+        //     if (error) return console.error(`exec error: ${error}`);
+        //     console.log(`stdout: ${stdout}`);
+        //     console.error(`stderr: ${stderr}`);
+        // });
+        const gameProcess = spawn(exe_path, args);
+        gameProcess.stdout.on('data', (data) => {
+            console.log(`Stdout: ${data}`);
         });
+        gameProcess.stderr.on('data', (data) => {
+            console.error(`Stderr: ${data}`);
+        });
+        gameProcess.on('close', (code) => {
+            console.log(`Process exited with code: ${code}`);
+        });        
+
         return true;
     }
 

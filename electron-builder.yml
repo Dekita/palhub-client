@@ -1,11 +1,11 @@
-appId: com.dekitarpg.palhubclient
-productName: PalHUB Client
-copyright: Copyright © 2024 DekitaRPG@gmail.com
+appId: com.dekitarpg.uemodhub
+productName: UE Mod Hub
+copyright: Copyright © 2024-Present DekitaRPG@gmail.com
 
 compression: maximum
 
 directories:
-  output: dist
+  output: release
   buildResources: resources
 
 files:
@@ -16,7 +16,6 @@ files:
   - '!**/resources/**' # Exclude the resources folder
   - '!**/resources/uncompressed-public-images/**/*' # Exclude the uncompressed folder
   - '!**/.vscode/*'
-  - '!**/scripts/**'
   - '!**/cache/**'
   - '!**/main/**'
   - '!**/*.map'
@@ -33,10 +32,10 @@ extraFiles:
     to: resources/app-mods
 
 publish:
+  releaseType: release
+  repo: ue-mod-hub
   provider: github
   owner: dekita
-  repo: palhub-client
-  releaseType: release
 
 win:
   target: nsis

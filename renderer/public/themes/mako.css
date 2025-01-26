@@ -1,0 +1,43 @@
+:root {
+	--dek-gen-version: 0.0.96;
+	--dek-body-color: #0c0f0c; /* Deep charcoal with a hint of green, like industrial shadows */
+	--dek-text-color: #cdd3cc; /* Muted silver-green, soft and readable */
+
+	--dek-modal-body-color: #101512; /* Dark, atmospheric green-gray for modals */
+	--dek-modal-text-color: #e1e6e1; /* Subtle pale green for contrast */
+	--dek-modal-border-color: #1a1f1c; /* Darker border, blending with the theme */
+
+	--dek-card-body-color: #121914; /* Rich black-green for an earthy, industrial feel */
+	--dek-card-text-color: #d3ded2; /* Faint glowing green, readable against dark tones */
+	--dek-card-header-color: #2a3c33; /* Dark jade, reminiscent of Mako-infused steel */
+
+    --dek-primary-normal: #2e604c; /* Muted emerald green, representing subdued Mako energy */
+	--dek-primary-darker: #234b3a; /* Darker, concentrated Mako green */
+	--dek-primary-darkest: #183528; /* Almost black-green for depth */
+	--dek-primary-light: #486f5e; /* Faintly glowing Mako green for highlights */
+
+    --dek-secondary-normal: #3a4d66; /* Stormy Materia blue, subtle and deep */
+	--dek-secondary-darker: #2e3d52; /* Darker, shadowy sapphire */
+	--dek-secondary-darkest: #212d3d; /* Almost steel blue, barely glowing */
+	--dek-secondary-light: #4f6480; /* Slightly brighter blue for accents */
+
+    --dek-info-normal: #415e5b; /* Industrial, muted aquamarine with a touch of mystery */
+	--dek-info-darker: #314946; /* Shadowy teal, like Mako in darkness */
+	--dek-info-darkest: #21322f; /* Very dark green-blue */
+	--dek-info-light: #5d7c78; /* Softened aquamarine for faint glows */
+
+    --dek-success-normal: #395847; /* Subtle green for Restore Materia */
+	--dek-success-darker: #2b4336; /* Forest green for earthy tones */
+	--dek-success-darkest: #1d2f25; /* Near-black green for shadows */
+	--dek-success-light: #4d6b58; /* Muted glowing emerald for subtle accents */
+
+    --dek-warning-normal: #7c6842; /* Tarnished gold, worn and subdued */
+	--dek-warning-darker: #5e5032; /* Shadowy bronze for warnings */
+	--dek-warning-darkest: #3e3624; /* Deep burnt umber */
+	--dek-warning-light: #9b8255; /* Muted glowing gold for accents */
+
+    --dek-danger-normal: #663a4c; /* Dark, muted magenta for destructive Materia */
+	--dek-danger-darker: #4d2c39; /* Deeper, shadowy magenta */
+	--dek-danger-darkest: #331d27; /* Near-black crimson-magenta */
+	--dek-danger-light: #7d5065; /* Subtle glow of red-pink for highlights */
+}

@@ -1,4 +1,4 @@
-![alt text](/img/palworld/bg3.png)
+![alt text](/img/palworld/bg3.webp)
 
 ---
 #### Application Cache Directory
@@ -16,7 +16,7 @@ Enter your unique API Key for {{app.brandname}} from Nexus Mods. You should NOT 
 
 ![alt text](/img/app-setup-help/nexus-palhub-api.png)
 
-
+NOTICE: This app is currently being rebranded from `PalHUB Client` to `UE Mod Hub` due to the app now supporting multiple unreal engine games, such as Palworld, Final Fantasy Remake+Rebirth, Black Myth Wukong, etc. Nexus mods has not yet updated the application information on the api keys page.. This should be done soon. 
 
 ---
 #### Open Nexus Mods Links

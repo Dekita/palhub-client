@@ -1,0 +1,43 @@
+:root {
+	--dek-gen-version: 0.0.96;
+	--dek-body-color: #101820; /* Deep charcoal blue, evoking shadowy forests and twilight */
+	--dek-text-color: #c7d2cf; /* Soft, desaturated silver-green for readability */
+
+	--dek-modal-body-color: #15232b; /* Muted deep teal for subdued popups */
+	--dek-modal-text-color: #dce7e3; /* Gentle pale green for natural contrast */
+	--dek-modal-border-color: #1e363f; /* Soft gray-blue for subtle definition */
+
+	--dek-card-body-color: #192830; /* Dark slate with a slight green tint */
+	--dek-card-text-color: #d1dedb; /* Cool, faintly glowing teal for text */
+	--dek-card-header-color: #26434d; /* Muted ocean blue-green, reminiscent of serene waters */
+
+    --dek-primary-normal: #3e848b; /* Muted aqua-green, representing tranquil water and sky */
+	--dek-primary-darker: #2d6368; /* Darker teal with an earthy undertone */
+	--dek-primary-darkest: #1e4549; /* Deep, shadowy green-blue */
+	--dek-primary-light: #5f9ea4; /* Softened aqua glow for highlights */
+
+    --dek-secondary-normal: #b6924e; /* Subtle, muted golden ochre for sunlight tones */
+	--dek-secondary-darker: #8e7240; /* Warm amber-brown for grounded accents */
+	--dek-secondary-darkest: #654e2f; /* Earthy burnt gold for depth */
+	--dek-secondary-light: #d8af6e; /* Soft, pale gold for highlights */
+
+    --dek-info-normal: #538d74; /* Soft sage green, inspired by lush foliage */
+	--dek-info-darker: #3d6c5b; /* Deeper, more grounded green */
+	--dek-info-darkest: #284b41; /* Shadowy forest green */
+	--dek-info-light: #73a18b; /* Gentle minty glow for accents */
+
+    --dek-success-normal: #6d9254; /* Muted grassy green, symbolizing growth and nature */
+	--dek-success-darker: #506e3f; /* Earthy olive green for depth */
+	--dek-success-darkest: #354c2b; /* Shadowy moss green */
+	--dek-success-light: #8faf76; /* Soft pale green for highlights */
+
+    --dek-warning-normal: #a9693d; /* Muted terracotta orange for subtle warnings */
+	--dek-warning-darker: #855232; /* Dark clay for grounded accents */
+	--dek-warning-darkest: #5b3723; /* Shadowy rust brown */
+	--dek-warning-light: #c88c5c; /* Warm sandstone glow for accents */
+
+    --dek-danger-normal: #8b4348; /* Muted crimson for understated danger tones */
+	--dek-danger-darker: #6a3235; /* Dark burgundy for depth */
+	--dek-danger-darkest: #472124; /* Shadowy wine-red */
+	--dek-danger-light: #a56468; /* Subdued rose-red for soft highlights */
+}

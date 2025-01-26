@@ -334,7 +334,7 @@ function SettingsPage_ApplicationRequirements({setSettingsPageID}) {
     React.useEffect(() => {
         if (cacheDirectory) return;
         (async() => {
-            const path = await window.ipc.invoke('get-path', 'userData');
+            const path = await window.ipc.invoke('get-path', 'app');
             const newpath = await window.palhub('joinPath', path, 'ModCache');
             onUpdateCacheDirectory(null, newpath);
         })();
@@ -436,6 +436,7 @@ function SettingsPage_ApplicationCustomize() {
         'auto-play': false,
         'auto-tiny': false,
         'tiny-tray': false,
+        'allow-rpc': false,
     });
     const updateConfig = React.useCallback(async (key, value) => {
         if (!requiredModulesLoaded) return;
@@ -452,12 +453,13 @@ function SettingsPage_ApplicationCustomize() {
             'auto-play': await window.uStore.get('auto-play', false),
             'auto-tiny': await window.uStore.get('auto-tiny', false),
             'tiny-tray': await window.uStore.get('tiny-tray', false),
+            'allow-rpc': await window.uStore.get('allow-rpc', false),
         })})();
     }, [requiredModulesLoaded]);
 
     return <React.Fragment>
         <div className="row mb-2">
-            <div className="col-12 col-lg-4">
+            <div className="col-12 col-lg-6">
                 <ENVEntry
                     value={settings['auto-boot']}
                     updateSetting={(n, v) => updateConfig('auto-boot', v)}
@@ -465,7 +467,7 @@ function SettingsPage_ApplicationCustomize() {
                     tooltip={t('/settings.options.auto-boot.desc')}
                 />
             </div>
-            <div className="col-12 col-lg-4">
+            <div className="col-12 col-lg-6">
                 <ENVEntry
                     value={settings['auto-tiny']}
                     updateSetting={(n, v) => updateConfig('auto-tiny', v)}
@@ -473,7 +475,15 @@ function SettingsPage_ApplicationCustomize() {
                     tooltip={t('/settings.options.auto-tiny.desc')}
                 />
             </div>
-            <div className="col-12 col-lg-4">
+            <div className="col-12 col-lg-6">
+                <ENVEntry
+                    value={settings['allow-rpc']}
+                    updateSetting={(n, v) => updateConfig('allow-rpc', v)}
+                    name={t('/settings.options.allow-rpc.name')}
+                    tooltip={t('/settings.options.allow-rpc.desc')}
+                />
+            </div>
+            <div className="col-12 col-lg-6">
                 <ENVEntry
                     value={settings['tiny-tray']}
                     updateSetting={(n, v) => updateConfig('tiny-tray', v)}

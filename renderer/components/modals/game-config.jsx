@@ -60,7 +60,7 @@ export default function GameConfigurationModal({ show, setShow, tempGame, setTem
             case 'uninstall': {
                 setSettingsPageID(2);
                 const {modloader} = tempGame.map_data.platforms[tempGame.launch_type];
-                if (modloader.ue4ss) {
+                if (modloader?.ue4ss) {
                     await wait(1000);
                     await window.palhub('uninstallUE4SS', cache_dir, tempGame.path, modloader.ue4ss);
                     await updateSelectedGame(tempGame, setTempGame);

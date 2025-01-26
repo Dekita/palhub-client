@@ -32,6 +32,8 @@ export default function GameConfiguration({tempGame, setTempGame, runModloaderTa
         setShow(false);
     }, []);
 
+    const can_use_ue4ss = tempGame?.map_data?.platforms?.[tempGame?.launch_type]?.[tempGame?.type]?.modloader?.ue4ss;
+
     if (!requiredModulesLoaded) return null;
     return <React.Fragment>
 
@@ -74,16 +76,16 @@ export default function GameConfiguration({tempGame, setTempGame, runModloaderTa
         </div>}
 
         {tempGame?.id && <div className="py-2">
-            <ENVEntryLabel
+            {(can_use_ue4ss || tempGame?.has_ue4ss) && <ENVEntryLabel
                 name={"Modloader Setup"}
                 tooltip={"Modloader Setup Tooltip"}
-            />
+            />}
             {tempGame?.has_ue4ss && <div className='col'>
                 <div className="col btn btn-danger px-3 w-100" onClick={() => runModloaderTask('uninstall')}>
                     <strong>{t('/settings.buttons.uninstall-ue4ss')}</strong>
                 </div>
             </div>}
-            {!tempGame.has_ue4ss && <div className={dangerCard}>
+            {!tempGame.has_ue4ss && can_use_ue4ss && <div className={dangerCard}>
                 <h4 className="mb-0 text-warning">
                     <strong>{t('/settings.setup.need-ue4ss.head', { game: tempGame })}</strong>
                 </h4>

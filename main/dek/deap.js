@@ -153,6 +153,7 @@ class DEAP {
             return app.getPath(key);
         });
         ipcMain.handle("open-external", (event, url) => {
+            console.log(`open-external: ${url}`);
             shell.openExternal(url)
         });
         ipcMain.handle("open-file-location", (event, filepath) => {

@@ -68,7 +68,7 @@ const BANNED_MODS = [];
 
 function determineAdvertizedMods(slug) {
     switch (slug) {
-        case 'palworld': return [577, 1204, 146, 489];//1650, 487, 577, 489]//, 1204];//, 1314, 1650, 1640];
+        case 'palworld': return [577, 703, 1204, 146, 489];//1650, 487, 577, 489]//, 1204];//, 1314, 1650, 1640];
         case 'hogwarts-legacy': return [1260, 1261, 1275, 1179];
     }
     return [];

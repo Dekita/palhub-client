@@ -47,6 +47,7 @@ export default async (event, api_key, functionName, ...functionArgs) => {
 
     // create a cache key based on the function name and arguments
     const cache_key = `${functionName}-${JSON.stringify(functionArgs)}`;
+    let log_key = cache_key;
 
     let result = null;
     let forced = false;
@@ -57,6 +58,15 @@ export default async (event, api_key, functionName, ...functionArgs) => {
     let canPrintLogInfo = true;
     if (functionName === 'setKey') canPrintLogInfo = false;
     if (functionName === 'validateKey') canPrintLogInfo = false;
+    // if the function is getDownloadURLs, redact the first argument (the mod user download key) from the log (if included)
+    if (functionName === 'getDownloadURLs') {
+        const replacedFunctionArgs = functionArgs.map((str, i) => {
+            if (str && i === 2) return 'REDACTED';
+            return str;
+        });
+        log_key = `${functionName}-${JSON.stringify(replacedFunctionArgs)}`;
+    }
+
 
     if (nexusFunctionsToCache[functionName]) {
         const cached = nexusApiModDataStore.get(cache_key, null);
@@ -70,7 +80,7 @@ export default async (event, api_key, functionName, ...functionArgs) => {
         // else, get the uncached value and set
         result = await nexusApiCache.get(cache_key, getUncachedValue);
         if (result) result.cache_time = Date.now(); // add cache time to the result
-        if (canPrintLogInfo) applog.info(`Caching ${functionName} with key ${cache_key}`);
+        if (canPrintLogInfo) applog.info(`Caching ${functionName} with key ${log_key}`);
         if (canPrintLogInfo) applog.info(result);
         nexusApiModDataStore.set(cache_key, result);
     } else {

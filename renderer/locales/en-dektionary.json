@@ -1,6 +1,6 @@
 {
     "app": {
-        "brandname": "PalHUB Client",
+        "brandname": "UE Mod Hub",
         "version": "v{{version}}",
         "devname": "DekitaRPG"
     },
@@ -61,6 +61,15 @@
                 "{{games.generic.info.2}}"
             ],
             "theme-images": ["FF7Remake1", "FF7Remake2", "FF7Remake3"]
+        },
+        "ff7rebirth": {
+            "name": "Final Fantasy VII Rebirth",
+            "info": [
+                "FF7 Rebirth is the bold continuation of the legendary RPG's reimagining, expanding its world, deepening its story, and redefining what it means to embark on an epic journey.",
+                "{{games.generic.info.1}}",
+                "{{games.generic.info.2}}"
+            ],
+            "theme-images": ["FF7Rebirth1", "FF7Rebirth2", "FF7Rebirth3"]
         },
         "palworld": {
             "name": "Palworld",
@@ -420,6 +429,10 @@
             "nxm-links": {
                 "name": "Open {{common.nexus}} Links",
                 "desc": "Open 'Download With Manager' links from {{common.nexus}} in {{app.brandname}}. Requires app restart."
+            },
+            "allow-rpc": {
+                "name": "Allow Discord RPC",
+                "desc": "Allow {{app.brandname}} to display your current game status in Discord."
             }
         },
         "setup": {

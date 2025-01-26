@@ -12,6 +12,9 @@ import DEAP from "./dek/deap";
 import ipcHandlers from "./ipc-handlers";
 import { Client, Emitter } from './dek/palhub';
 import { setExternalVBS } from "./dek/detectSteamGame";
+import RPC from "./dek/discord-rpc";
+import path from 'path';
+import fs from 'fs';
 
 // set the app details for nexus api requests
 Client.setAppDetails(DEAP.name, DEAP.version);
@@ -37,10 +40,35 @@ DEAP.setup(config, ()=>{ // then run this callback
 
 // launch the electron app via DEAP wrapper
 DEAP.launch({
-    // onAppReady() {},
+    onAppReady() {
+        // ensure the ModCache folder is created on app ready
+        const appDataPath = DEAP.app.getAppPath();
+        // const appDataPath = DEAP.app.getPath('userData');
+        const appFolder = path.join(appDataPath, 'ModCache');
+        if (!fs.existsSync(appFolder)) {
+            console.log('Creating app folder');
+            fs.mkdirSync(appFolder, { recursive: true });
+            console.log('App folder created');
+        }
+    },
     // onAppActivate: () => {},
     // onAppWindowsClosed:() => {},
     // onSecondInstanceLaunched: () => {},
     // onBeforeQuitApp: () => {},
-    // onLoadWindow(id, win) {}
+    onLoadWindow(id, win) {
+        // start the discord rpc client
+        if (id !== 'main') return;
+        // // Track when the window is focused/blurred
+        // win.webContents.on('did-finish-load', ()=>{
+        //     win.on('restore', ()=>{ // focus
+        //         console.log('Window focused');
+        //         RPC.unpause();
+        //     });
+        //     win.on('minimize', ()=>{ //blur
+        //         console.log('Window blurred');
+        //         RPC.pause();
+        //     });
+        // });
+        RPC.start();
+    }
 });

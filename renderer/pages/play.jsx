@@ -49,11 +49,6 @@ export default function PlayPage() {
         if (!requiredModulesLoaded) return;
         setShowPlayVanillaModal(true);
     }, [requiredModulesLoaded]);
-    
-    const onClickLaunchGame = React.useCallback(async () => {
-        if (!requiredModulesLoaded) return;
-        await onRunGameExe();
-    }, [requiredModulesLoaded]);
 
     const onRunGameExe = React.useCallback(async () => {
         if (!requiredModulesLoaded) return;
@@ -62,8 +57,26 @@ export default function PlayPage() {
             return;
         }
         applog('info', `Launching Game: ${game_data.exe_path}`);
-        await window.palhub('launchExe', game_data.exe_path);
+
+        // const args = ['-steam', '-launch', '-appid', '1167190']
+        // const env = { ...process.env, SteamAppId: '<AppID>', SteamGameId: '<AppID>' };
+        // "E:/Program Files (x86)/Steam/Steam.exe"
+        // steam://rungameid/2909400
+
+        if (game_data.type === 'steam' && game_data.map_data.platforms.game.steam.url) {
+            await window.ipc.invoke('open-external', `steam://rungameid/${game_data.map_data.platforms.game.steam.id}`);
+            // window.open(`steam://rungameid/${game_data.map_data.platforms.game.steam.id}`, '_blank');
+        } else {
+            await window.palhub('launchExe', game_data.exe_path, []);//, {env: {SteamAppId: game_data.map_data.platforms.game.steam.id, SteamGameId: game_data.map_data.platforms.game.steam.id}});
+        }
     }, [requiredModulesLoaded, game_data]);
+
+    const onClickLaunchGame = React.useCallback(async () => {
+        if (!requiredModulesLoaded) return;
+        await onRunGameExe();
+    }, [requiredModulesLoaded, onRunGameExe]);
+
+    console.log(game_data);
 
     return <React.Fragment>
         <CheckModsModal show={showCheckModsModal} setShow={setShowCheckModsModal} />
