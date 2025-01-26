@@ -62,6 +62,7 @@ List your Palworld server in UE Mod Hub using the `UE Mod Hub (Server Listing Mo
 - Lockdown Protocol
 - Tekken 8
 - More coming soon <3
+<hr class="mt-1">
 
 ### Technical Details
 - [Nextron](https://github.com/saltyshiomix/nextron) (Bundles Next.js with Electron)
