@@ -84,6 +84,6 @@ DEAP.launch({
         //         RPC.pause();
         //     });
         // });
-        RPC.startWhenReady();
+        RPC.start();
     }
 });

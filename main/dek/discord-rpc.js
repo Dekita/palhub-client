@@ -28,6 +28,7 @@ const gameToAppModID = {
 }
 
 const UPDATE_FREQ = 30e3;//15e3;
+const REATTEMPT_FREQ = 15 * 60e3; // every 15 minutes:
 
 let startTimestamp;
 
@@ -36,22 +37,17 @@ export default {
     paused: false,
     handle: null,
     isset: false,
-    isDiscordAvailable() {
+    available() {
         let ipcPath = `\\\\?\\pipe\\discord-ipc-0`;
         if (!process.platform === 'win32') {
             ipcPath = `${process.env.XDG_RUNTIME_DIR || '/tmp'}/discord-ipc-0`;
         } 
         return fs.existsSync(ipcPath);
     },
-    startWhenReady() {
-        console.log('Starting Discord RPC when ready');
-        rpc.on('ready', () => this.start());
-    },
     start() {
-        console.log('Starting Discord RPC');
-        const available = this.isDiscordAvailable();
-        console.log('Starting Discord RPC:', available);
-        if (!available) return;
+        // const available = this.available();
+        // console.log('Starting Discord RPC:', available);
+        // if (!available) return;
         rpc.login({ clientId }).then(() => {
             console.log('Discord RPC connected');
             startTimestamp = new Date();
@@ -63,6 +59,7 @@ export default {
             this.update();
         }).catch(error => {
             console.error('Discord RPC error:', error);
+            setTimeout(() => this.start(), REATTEMPT_FREQ); // re-attempt connection
         });
     },
     stop() {
