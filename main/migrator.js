@@ -27,7 +27,7 @@ export function migrateFiles(oldAppName, newAppName, filesToMove, deleteOldFiles
             const oldFilePath = path.join(oldAppDataFolder, file);
             const newFilePath = path.join(newAppDataFolder, file);
 
-            if (fs.existsSync(oldFilePath)) {
+            if (fs.existsSync(oldFilePath) && !fs.existsSync(newFilePath)) {
                 try {
                     fs.copyFileSync(oldFilePath, newFilePath);
                     console.log(`Copied file: ${file}`);
