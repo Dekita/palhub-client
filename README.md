@@ -10,11 +10,11 @@
 <hr class="mt-1">
 
 ### What is UE Mod Hub
-UE Mod Hub is the ULTIMATE Mod Manager for Unreal Engine games, starting with support for the video game Palworld. It allows players to effortlessly manage mods, save/load mod collections to/from a modlist, and most importantly, view/install the requirements for modified servers (for games with dedicated servers)!
+Originally launched as PalHUB Client with support exclusively for Palworld, UE Mod Hub has evolved into the ultimate mod management tool for Unreal Engine games. Designed to simplify modding, it enables players to easily manage their mods, save and load mod collections, and seamlessly view and install the required mods for modified servers—perfect for games with dedicated servers!
 
-Additionally, if you run a server where connecting clients need specific mods, UE Mod Hub offers a plug-and-play solution to the countless hours spent helping users set up mods to join your server. Simply share your server mod list, and users can install all requirements with a single click!
+For server hosts, UE Mod Hub provides a hassle-free solution to streamline the mod setup process for your players. Share your server’s mod list, and users can install all necessary mods with just one click, saving time and frustration for everyone involved.
 
-List your server in UE Mod Hub using the `UE Mod Hub (Server Listing Mod)` (coming soon...).
+List your Palworld server in UE Mod Hub using the `UE Mod Hub (Server Listing Mod)` (contact me via discord for further details...).
 
 | :exclamation: THIS APP IS IN BETA!! PLEASE REPORT ANY BUGS! |
 |---|
