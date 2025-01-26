@@ -60,12 +60,15 @@ export default function AboutPage() {
                     </div>
 
                     <h2 className="font-bold mt-3">{t('/about.supported-games')}</h2>
-                    {gamesArray.map((id) => {
-                        const key = `supported-game-card-${id}`;
-                        const platforms = Object.keys(game_map[id]?.platforms?.game).filter(k => k != 'modloader');
-                        const initGameData = { name: t(`games.${id}.name`), map_data: game_map[id] };
-                        return <GameCardComponent key={key} {...{id, platforms, initGameData, small: true}} />
-                    })}
+                    {/* align to center */}
+                    <div className='row justify-content-center'>
+                        {gamesArray.map((id) => {
+                            const key = `supported-game-card-${id}`;
+                            const platforms = Object.keys(game_map[id]?.platforms?.game).filter(k => k != 'modloader');
+                            const initGameData = { name: t(`games.${id}.name`), map_data: game_map[id] };
+                            return <GameCardComponent key={key} {...{id, platforms, initGameData, small: true}} />
+                        })}
+                    </div>
                     <small className='text-dark text-center'>{t('/about.more-games-soon')}</small>
                 </div>
             </div>

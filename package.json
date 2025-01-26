@@ -1,10 +1,10 @@
 {
     "private": true,
-    "version": "0.8.25",
-    "name": "dekita-palhub-client",
-    "productName": "PalHUB Client",
-    "description": "PalHUB Client written by DekitaRPG",
-    "repository": "git@github.com:dekita/palhub-client",
+    "version": "0.8.35",
+    "name": "dekita-ue-mod-hub",
+    "productName": "UE Mod Hub",
+    "description": "UE Mod Hub written by DekitaRPG",
+    "repository": "git@github.com:dekita/ue-mod-hub",
     "author": "DekitaRPG <dekitarpg@gmail.com>",
     "license": "SEE LICENSE IN LICENSE",
     "main": "app/background.js",
@@ -81,6 +81,6 @@
     },
     "release": {
         "date": "1/26/2025",
-        "time": "2:29:08 AM"
+        "time": "5:15:26 AM"
     }
 }

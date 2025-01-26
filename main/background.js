@@ -16,6 +16,8 @@ import RPC from "./dek/discord-rpc";
 import path from 'path';
 import fs from 'fs';
 
+import {migrateFiles} from './migrator';
+
 // set the app details for nexus api requests
 Client.setAppDetails(DEAP.name, DEAP.version);
 
@@ -36,21 +38,33 @@ DEAP.setup(config, ()=>{ // then run this callback
     for (const event of Emitter.EVENTS_TO_HANDLE) {
         Emitter.on(event, (...args) => DEAP.main_window.webContents.send(event, ...args));
     }
+    // migrate files from old app name to new app name
+    const newAppName = DEAP.app.getPath("userData").split(path.sep).pop();
+    const oldAppName = newAppName.replace('UE Mod Hub', 'PalHUB Client')
+    console.log({oldAppName, newAppName});
+    const filesToMove = ['[dek.ue.appdata].json', '[dek.ue.nexus.cache].json'];
+    try {
+        migrateFiles(oldAppName, newAppName, filesToMove, false);
+        console.log('File migration completed successfully!');
+    } catch (err) {
+        console.error('Error during file migration:', err);
+    }
+    // ensure the ModCache folder is created on app ready
+    let appDataPath = DEAP.app.getAppPath();
+    if (DEAP.app.isPackaged) {
+        appDataPath = path.dirname(DEAP.app.getPath('exe'));
+    }
+    const appFolder = path.join(appDataPath, 'ModCache');
+    if (!fs.existsSync(appFolder)) {
+        console.log('Creating app folder: ', appFolder);
+        fs.mkdirSync(appFolder, { recursive: true });
+        console.log('App folder created');
+    }    
 });
 
 // launch the electron app via DEAP wrapper
 DEAP.launch({
-    onAppReady() {
-        // ensure the ModCache folder is created on app ready
-        const appDataPath = DEAP.app.getAppPath();
-        // const appDataPath = DEAP.app.getPath('userData');
-        const appFolder = path.join(appDataPath, 'ModCache');
-        if (!fs.existsSync(appFolder)) {
-            console.log('Creating app folder');
-            fs.mkdirSync(appFolder, { recursive: true });
-            console.log('App folder created');
-        }
-    },
+    // onAppReady() {},
     // onAppActivate: () => {},
     // onAppWindowsClosed:() => {},
     // onSecondInstanceLaunched: () => {},

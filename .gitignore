@@ -10,7 +10,7 @@ next-env.d.ts
 
 # build & Local testing app cache directory
 app
-build
+build-output
 cache
 dist
 
