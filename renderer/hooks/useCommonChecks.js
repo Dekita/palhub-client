@@ -35,10 +35,29 @@ export const CommonAppDataProvider = ({ children }) => {
         updateCommonAppData('cache', cache);
     }, [requiredModulesLoaded]);
 
-    const refreshGames = React.useCallback(async () => {
-        if (!requiredModulesLoaded) return;
+    const refreshGames = React.useCallback(async (ignoreRequired=false) => {
+        if (!ignoreRequired && !requiredModulesLoaded) return;
         const games = await window.uStore.get('games');
+        // remove all empty (games that no longer seem to exist at path) games just in case;
+        for (const a in games) {
+            // if (!Object.prototype.hasOwnProperty.call(games, key)) continue;
+            if (a === 'active') continue;
+            if (!games[a]) delete games[a];
+            for (const b in games[a]) {
+                if (b === '{UNKNOWN}') delete games[a];
+                for (const c in games[a][b]) {
+                    if (c === 'undefined') delete games[a][b];
+                }
+            }
+        }
+        const [a, b, c] = games?.active?.split('.');
+        if (b === '{UNKNOWN}' || c === 'undefined') {
+            games.active = null;
+            delete games[a];
+        }
+        await window.uStore.set('games', games);
         updateCommonAppData('games', games);
+        return games;
     }, [requiredModulesLoaded]);
     
     const getStoreID = React.useCallback((game_id, tempGame=null, prefixGames=true) => {
@@ -129,7 +148,7 @@ export const CommonAppDataProvider = ({ children }) => {
         // get the api keys, cache, and games
         const apis  = await window.uStore.get('api-keys');
         const cache = await window.uStore.get('app-cache');
-        const games = await window.uStore.get('games');
+        const games = refreshGames();//await window.uStore.get('games');
         // if no api keys are set, redirect to settings
         Object.values(apis).find(api => api === null) && router.push('/settings');
         // if no cache is set, redirect to settings
@@ -150,6 +169,7 @@ export const CommonAppDataProvider = ({ children }) => {
                 console.error(error);
             }    
         }    
+        !selectedGame && router.push('/settings');
         
         // set the commonly used app datas
         setCommonAppData(prev => ({apis, cache, games, selectedGame}));

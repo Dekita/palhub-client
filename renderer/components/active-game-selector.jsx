@@ -20,11 +20,11 @@ export default function ActiveGameSelector({gamesArray, selectedGameID, setTempG
         });
     }, [updateSelectedGame, gamesArray]);
 
-    // React.useEffect(() => {
-    //     if (selectedGameID === null && gamesArray.length > 0) {
-    //         updateSelectedGame(gamesArray[0]);
-    //     }
-    // }, [selectedGameID, gamesArray]);
+    React.useEffect(() => {
+        if (selectedGameID === -1 && gamesArray.length > 0) {
+            updateSelectedGame(gamesArray[0]);
+        }
+    }, [selectedGameID, gamesArray]);
 
     const { t } = useLocalization();
     const iconOptions = {height:'1.8rem', style:{marginTop:-4}};
