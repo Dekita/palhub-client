@@ -80,7 +80,8 @@ export default {
         if (!allowRPC && this.isset) return rpc.clearActivity();
         if (!allowRPC) return;
         
-        console.log('Updating Discord RPC');
+        // console.log('Updating Discord RPC');
+        
         // const playtime = new Date() - startTimestamp;
         // const minutes = Math.floor(playtime / 60000);
         const maxLen = 23;
