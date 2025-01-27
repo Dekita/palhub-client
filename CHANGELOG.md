@@ -9,6 +9,12 @@
 - add optional symlink/direct copy options for deploying mods.
 - properly setup github actions 
 
+### v0.8.75
+- Fix for manually installed mods not showing unless 'downloaded mods' have also been added. 
+- Fix for certain zip archives with logic mod pak file installing to ~mods folder rather than LogicMods. 
+- Fix for locally installed mods popup not closing aon uninstall mod
+- Fix for mod pages not properly updating after a mod is added/removed
+
 ### v0.8.69
 - Fixed issue of cache directory being incorrectly named on first boot. 
 - Fixed issue of app not redirecting to settings page on first boot. 
