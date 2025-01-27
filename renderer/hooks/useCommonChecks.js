@@ -39,14 +39,24 @@ export const CommonAppDataProvider = ({ children }) => {
         if (!ignoreRequired && !requiredModulesLoaded) return;
         const games = await window.uStore.get('games');
         // remove all empty (games that no longer seem to exist at path) games just in case;
+        let changed = false;
         for (const a in games) {
             // if (!Object.prototype.hasOwnProperty.call(games, key)) continue;
             if (a === 'active') continue;
-            if (!games[a]) delete games[a];
+            if (!games[a]) {
+                delete games[a];
+                changed = true;
+            } 
             for (const b in games[a]) {
-                if (b === '{UNKNOWN}') delete games[a];
+                if (b === '{UNKNOWN}') {
+                    delete games[a][b];
+                    changed = true;
+                }
                 for (const c in games[a][b]) {
-                    if (c === 'undefined') delete games[a][b];
+                    if (c === 'undefined') {
+                        delete games[a][b][c];
+                        changed = true;
+                    }
                 }
             }
         }
@@ -54,8 +64,12 @@ export const CommonAppDataProvider = ({ children }) => {
         if (b === '{UNKNOWN}' || c === 'undefined') {
             games.active = null;
             delete games[a];
+            changed = true;
         }
-        await window.uStore.set('games', games);
+        if (changed) {
+            await window.uStore.set('games', games);
+            router.push('/settings');
+        }
         updateCommonAppData('games', games);
         return games;
     }, [requiredModulesLoaded]);
@@ -96,6 +110,7 @@ export const CommonAppDataProvider = ({ children }) => {
         const active_id = getStoreID(selectedGame.id, selectedGame, false);
         await window.uStore.set('games.active', active_id);
         // call the callback function when the game id is updated
+        
         await callmemaybe(selectedGame);
     }, [t]);
 
@@ -145,10 +160,13 @@ export const CommonAppDataProvider = ({ children }) => {
     // 
     const router = useRouter();
     const refreshCommonDataWithRedirect = React.useCallback(async () => {
+        await new Promise((r) => setTimeout(r, 250));
         // get the api keys, cache, and games
         const apis  = await window.uStore.get('api-keys');
         const cache = await window.uStore.get('app-cache');
-        const games = refreshGames();//await window.uStore.get('games');
+        const games = await window.uStore.get('games');
+        // const games = refreshGames(true);
+
         // if no api keys are set, redirect to settings
         Object.values(apis).find(api => api === null) && router.push('/settings');
         // if no cache is set, redirect to settings
@@ -159,20 +177,22 @@ export const CommonAppDataProvider = ({ children }) => {
         if (games?.active) {
             try {
                 const game_path = await window.uStore.get(`games.${games.active}`);
-                // const game = games[games.active];
+                // const game_path = games[games.active];
                 const data = await window.palhub('validateGamePath', game_path);
                 selectedGame = { ...data, name: t(`games.${games.active}.name`) };
                 // initialize the nexus api with the selected game's slug
                 const slug = selectedGame.map_data.providers.nexus;
                 await window.nexus(apis.nexus, 'setGame', slug);
+                // set the commonly used app datas
+                setCommonAppData(prev => ({apis, cache, games, selectedGame}));
             } catch (error) {
                 console.error(error);
-            }    
-        }    
-        !selectedGame && router.push('/settings');
-        
-        // set the commonly used app datas
+            }
+        }
+        // selectedGame = null;
+        // !selectedGame && router.push('/settings');
         setCommonAppData(prev => ({apis, cache, games, selectedGame}));
+        
         setRequiredModulesLoaded(true);
     }, [ready]);
 
