@@ -1,23 +1,24 @@
 
 ### TODO: 
-- determine if any pak files edit the same asset? 
-- make free user experience even more streamlined.
+- add optional symlink/direct copy options for deploying mods.
 - variable install location when installing downloaded mod.
 - ensure 'zCustomGameConfigs' is used for relevant games.
 - add support for games listed in zCustomGameConfigs? 
 - cleanup of files because omg they are a mess atm..
-- add optional symlink/direct copy options for deploying mods.
+- make free user experience even more streamlined.
+- determine if any pak files edit the same asset? 
 - properly setup github actions 
-- allow for auto updates to be enabled/disabled
 
-
-### v0.?.?
+### v0.8.85
 - Fix for 7z archives crashing the application (due to checking their pak file for logic mods)
+- Hid servers tab from popup navbar (available when application window is small)
+- Updated popup navbars description for about page. 
+- Added option to disable/enable auto updates.
 - Added BG images for some supported games. 
 - Added orcs-must-die3 & deathtrap games. 
-- Added option to disable auto updates.
 - Set user counter to update each hour.
-
+- Changed theme selection design from beta. 
+- Added changelog info to about page of app. 
 
 ### v0.8.75
 - Fix for manually installed mods not showing unless 'downloaded mods' have also been added. 
