@@ -136,7 +136,7 @@ export default function LogsPage(props) {
                 <div className='col'>
                     <DekChoice 
                         className='pb-3'
-                        disabled={false}
+                        disabled={!game_data?.has_ue4ss}
                         active={logPageID}
                         choices={tA('/logs.tabs', 2)}
                         onClick={(i,v)=>setLogPageID(i)}
