@@ -21,15 +21,33 @@ export default function AboutPage() {
         return aName.localeCompare(bName);
     });
 
+    const onClickChangelog = React.useCallback(() => {
+        if (!window.ipc) return console.error('ipc not loaded');
+        window.ipc.invoke('open-child-window', 'changes');
+    }, []);
+
+
     return <div className="container">
         <div className="col-12 col-md-10 offset-0 offset-md-1 col-lg-8 offset-lg-2">
             <div className="mx-auto px-3 py-5">
                 <h1 className="font-bold mb-4">{t('/about.head')}</h1>
                 <p className="mb-4">{t('/about.desc')}</p>
-                <Link href="https://discord.gg/WyTdramBkm" target='_blank' className='w-100 btn btn-dark hover-success py-3 px-4'>
-                    <CommonIcons.discord height='2rem' fill='currentColor' style={{ opacity: 0.5 }} />
-                    <strong className='ps-2'>{t('/about.discord')}</strong>
-                </Link>
+                <div className='row'>
+                    <div className='col-12 col-xl-6'>
+                        <Link href="https://discord.gg/WyTdramBkm" target='_blank' className='w-100 btn btn-dark hover-success py-3 px-4'>
+                            <CommonIcons.discord height='2rem' fill='currentColor' style={{ opacity: 0.5 }} />
+                            <strong className='ps-2'>{t('/about.discord')}</strong>
+                        </Link>
+                    </div>
+                    <div className='col-12 col-xl-6'>
+                        <Link href="https://www.patreon.com/dekitarpg" target='_blank' className='w-100 btn btn-info py-3 px-4 mb-2 mb-xl-0'>
+                            <CommonIcons.patreon height='2rem' fill='currentColor' style={{ opacity: 0.5 }} />
+                            <strong className='ps-2'>{t('/about.patreon')}</strong>
+                        </Link>                        
+                    </div>
+                </div>
+
+
                 <div className='alert alert-warning text-center mt-3'>
                     <strong>{t('/about.notice')}</strong>
                 </div>
@@ -39,10 +57,10 @@ export default function AboutPage() {
                         <ul className='px-0'>
                             {tA('/about.features.list').map((feature, idx) => <li key={idx}>{feature}</li>)}
                         </ul>
-                        <Link href="https://www.patreon.com/dekitarpg" target='_blank' className='w-100 btn btn-info py-3 px-4 mb-2 mb-xl-0'>
-                            <CommonIcons.patreon height='2rem' fill='currentColor' style={{ opacity: 0.5 }} />
-                            <strong className='ps-2'>{t('/about.patreon')}</strong>
-                        </Link>
+                        <div className='w-100 btn btn-secondary py-3 px-4 mb-2 mb-xl-0' onClick={onClickChangelog}>
+                            <CommonIcons.info height='2rem' fill='currentColor' style={{ opacity: 0.5 }} />
+                            <strong className='ps-2'>{t('/about.changes')}</strong>
+                        </div>
                     </div>
                     <div className='col-12 col-xl-6 d-grid gap-2'>
                         <Link href="/privacy" className='w-100 btn btn-dark hover-success py-3 px-4'>

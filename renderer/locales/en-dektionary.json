@@ -258,6 +258,7 @@
     "/about": {
         "name": "About",
         "desc": "{{app.brandname}} is an application that allows you to download and easily manage mods from the {{common.nexus}} website, specifically for Unreal Engine based games. This application is built using modern technologies and is designed to be feature rich, while being as simple and easy to use as possible. If you encounter any bugs or issues, or have feature suggestions, please let us know by joining the support server!",
+        "tldr": "{{app.brandname}} is a mod manager for Unreal Engine games! Find out more here!",
         "head": "{{/about.name}} {{app.brandname}}",
         "main": "{{app.brandname}} is an application that allows you to download and easily manage mods for {{game.name}} from the {{common.nexus}} website. This application is built using modern technologies and is designed to be as simple and easy to use as possible. If you encounter any bugs or issues, please let us know!",
         "notice": "This application was developed independently and is neither affiliated with, or officially endorsed by {{common.nexus}}, nor by any of the developers, publishers, or creators of the games it supports.",
@@ -265,6 +266,7 @@
         "more-games-soon": "More supported games coming soon!",
         "discord": "Join Support Server",
         "patreon": "Support Development",
+        "changes": "App Changelog",
         "features": {
             "head": "Features",
             "list": [

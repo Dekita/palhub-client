@@ -9,7 +9,7 @@ import Container from 'react-bootstrap/Container';
 import MarkdownRenderer from '@components/markdown/renderer';
 import useLocalization from '@hooks/useLocalization';
 
-export default function MarkdownPageWrapper({ tagline, filename, header=true }) {
+export default function MarkdownPageWrapper({ tagline, filename, header=true, fromGithub=false }) {
     const [content, setContent] = React.useState('');
     const { t, tString, language } = useLocalization();
 
@@ -17,10 +17,21 @@ export default function MarkdownPageWrapper({ tagline, filename, header=true }) 
         (async () => {
             let markdown = null;
             try { // Try to load the markdown file for the current locale
-                markdown = (await import(`../../markdown/${filename}.${language}.md`)).default;
+                if (!fromGithub) markdown = (await import(`../../markdown/${filename}.${language}.md`)).default;
             } catch (e) { // Fallback to English if the file doesn't exist for the current locale
                 console.log(`Error loading markdown file: ${filename}.${language}.md`);
-                markdown = (await import(`../../markdown/${filename}.en.md`)).default;
+                if (!fromGithub) markdown = (await import(`../../markdown/${filename}.en.md`)).default;
+            }
+            // if from github, load data from given filename as url:
+            if (fromGithub) {
+                try {
+                    console.log(`Fetching markdown file: ${filename}`);
+                    const response = await fetch(filename, { cache: 'no-store' });
+                    markdown = await response.text();
+                } catch (e) {
+                    console.log(`Error loading markdown file: ${filename}`);
+                    markdown = null;
+                }
             }
             // Set the content of the Markdown file if it was loaded
             if (markdown) setContent(markdown);
@@ -29,6 +40,8 @@ export default function MarkdownPageWrapper({ tagline, filename, header=true }) 
 
     // (keystring, replacers = {}, expectedArraySize = null, bundle_override=null)
     // bundle_point = '', replacers = {}, bundle_override=null
+
+    if (!content) return null;
 
     return <React.Fragment>
         {header && <BrandHeader type='altsmall' tagline={t(tagline)}/>}

@@ -140,6 +140,16 @@ const CONFIG = {
                 show_frame: false,
             },
         },
+        changes: {
+            page: "changes",
+            size: { w: 640, h: 420 },
+            load: join(__dirname, "./preload.js"),
+            opts: {
+                fullscreen: false,
+                transparent: false,
+                show_frame: false,
+            },
+        }
     },
     // end of config
 };

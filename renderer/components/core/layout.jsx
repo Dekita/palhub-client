@@ -54,7 +54,7 @@ export default function DekAppLayoutWrapper({ children }) {
     // bgopac-low bgopac-med bgopac-high
     const opac = ['low', 'med', 'high'][bg_opac];
     const bg = `game-bg ${initialGame}${bg_id+1} bgopac-${opac}`;
-    const can_show_navbar = windowName && !['help', 'setup'].includes(windowName);
+    const can_show_navbar = windowName && !['help', 'setup', 'changes'].includes(windowName);
     const nonav_page = can_show_navbar ? '' : 'game-bg-full';
     // const loadDelay = can_show_navbar ? 10000 : 0;
     const { ready, t } = useLocalization(null);//, loadDelay);
