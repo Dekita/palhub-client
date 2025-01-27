@@ -14,6 +14,7 @@ export const THEMES = [
     'pals',
     'ikon',
     'khakii',
+    'hogleg',
     
     
     '1',

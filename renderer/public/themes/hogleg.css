@@ -1,0 +1,43 @@
+:root {
+	--dek-gen-version: 1.0.2;
+	--dek-body-color: #0f0f0c; /* Shadowy forest black-green */
+	--dek-text-color: #d8dec1; /* Soft moonlit silver-green */
+
+	--dek-modal-body-color: #171812; /* Deep dark green-gray */
+	--dek-modal-text-color: #e4e8c9; /* Gentle pale yellow-green */
+	--dek-modal-border-color: #2d2f23; /* Dark foliage tones */
+
+	--dek-card-body-color: #212517; /* Rich black-olive green */
+	--dek-card-text-color: #e0e4d2; /* Muted glowing green-silver */
+	--dek-card-header-color: #3c442e; /* Mossy green with earthy depth */
+
+	--dek-primary-normal: #375a3e; /* Vibrant forest green */
+	--dek-primary-darker: #2a452f; /* Shadowy, mossy tones */
+	--dek-primary-darkest: #1e3022; /* Ivy and roots green */
+	--dek-primary-light: #4d7054; /* Soft glowing leaves */
+
+	--dek-secondary-normal: #4e5639; /* Subdued sage green */
+	--dek-secondary-darker: #3a422a; /* Shadowed sage */
+	--dek-secondary-darkest: #2b301e; /* Dark earth-green */
+	--dek-secondary-light: #657850; /* Vibrant sage highlights */
+
+	--dek-info-normal: #3b5144; /* Aquatic green, mysterious like lake shadows */
+	--dek-info-darker: #2c3e33; /* Deeper teal shadows */
+	--dek-info-darkest: #1e2d24; /* Murky emerald depths */
+	--dek-info-light: #537365; /* Soft aquamarine glow */
+
+	--dek-success-normal: #466a41; /* Fresh forest green, alive with magic */
+	--dek-success-darker: #355031; /* Dark ivy */
+	--dek-success-darkest: #243520; /* Deep, shadowed growth */
+	--dek-success-light: #59885a; /* Glowing green vitality */
+
+	--dek-warning-normal: #816639; /* Worn golden-brown */
+	--dek-warning-darker: #634e2b; /* Burnt amber shadows */
+	--dek-warning-darkest: #46371f; /* Deep earthy gold */
+	--dek-warning-light: #a27e50; /* Bright glowing golden tones */
+
+	--dek-danger-normal: #71272e; /* Dark enchanted crimson */
+	--dek-danger-darker: #551d22; /* Shadowy maroon */
+	--dek-danger-darkest: #3c1418; /* Deep blood magic red */
+	--dek-danger-light: #924349; /* Vibrant ruby highlights */
+}
