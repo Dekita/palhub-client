@@ -379,13 +379,13 @@ export class Client {
 
 
 
-    static checkPakForLogicModInZip(zipEntries, assetName = 'ModActor.uasset') {
+    static async checkPakForLogicModInZip(zipEntries, assetName = 'ModActor.uasset') {
         try {
             // Look for pak and utoc files in zip entries
             for (const entry of zipEntries) {
                 // Check if the entry is a .pak or .utoc file
                 if (!entry.isDirectory && (entry.entryName.endsWith('.pak') || entry.entryName.endsWith('.utoc'))) {
-                    const fileBuffer = entry.getData();
+                    const fileBuffer = await entry.getData();
                     const readableData = fileBuffer.toString('utf-8');
 
                     // Check for asset name in the file
@@ -540,7 +540,7 @@ export class Client {
                     install_path = path.join(game_path, game_data.unreal_root, "Content/Paks");
                     break;
                 default: // ~mods/ or unknown mod type ~ assume regular .pak replacement
-                    const zipAssetFound = this.checkPakForLogicModInZip(entries);
+                    const zipAssetFound = await this.checkPakForLogicModInZip(entries);
                     // const pakAssetFound = checkPakForLogicMod(pakFilePath);
                     console.log({zipAssetFound});
                     if (zipAssetFound) {
@@ -554,7 +554,7 @@ export class Client {
                     break;
             }
         } else {
-            const zipAssetFound = this.checkPakForLogicModInZip(entries);
+            const zipAssetFound = await this.checkPakForLogicModInZip(entries);
             // const pakAssetFound = checkPakForLogicMod(pakFilePath);
             console.log({zipAssetFound});
             if (zipAssetFound) {
