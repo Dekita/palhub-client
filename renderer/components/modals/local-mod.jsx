@@ -76,7 +76,7 @@ function getInstallTypeFromRoot(root) {
 
 
 
-export default function AddLocalModModal({show,setShow, initialModData={
+export default function AddLocalModModal({show,setShow, refreshModList, initialModData={
     root: '',
     mod_id: '',
     version: '',
@@ -89,7 +89,10 @@ export default function AddLocalModModal({show,setShow, initialModData={
     thumbnail: '',
 }}) {
     console.log('initialModData:', initialModData);
-    const onCancel = React.useCallback(() => setShow(false), []);
+    const onCancel = React.useCallback(() => {
+        setShow(false);
+        refreshModList();
+    }, [setShow, refreshModList]);
     const { requiredModulesLoaded, commonAppData } = useCommonChecks();
     const [modName, setModName] = React.useState('');
     const [modVersion, setModVersion] = React.useState('');
@@ -191,7 +194,7 @@ export default function AddLocalModModal({show,setShow, initialModData={
         e.stopPropagation();
         console.log('Uninstalling mod:', {game_path, initialModData});
         await window.palhub('uninstallMod', game_path, initialModData, null, true);
-        // onCancel();
+        onCancel();
     }, [game_path, initialModData]);
 
 

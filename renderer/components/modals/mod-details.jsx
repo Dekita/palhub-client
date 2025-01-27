@@ -32,7 +32,7 @@ import useLocalization from '@hooks/useLocalization';
 import DekCommonAppModal from '@components/core/modal';
 import useCommonChecks from "@hooks/useCommonChecks";
 
-export default function ModDetailsModal({show,setShow,mod}) {
+export default function ModDetailsModal({show,setShow,mod,refreshModList}) {
     const { requiredModulesLoaded, commonAppData } = useCommonChecks();
     const { t, tA } = useLocalization();
     const {isDesktop} = useScreenSize();
@@ -52,8 +52,9 @@ export default function ModDetailsModal({show,setShow,mod}) {
             setModpageID(0);
             setModFiles([]);
             setShowArchive(false);
+            refreshModList();
         }, 250);
-    }, []);
+    }, [setShow, refreshModList]);
 
     useEffect(() => {
         (async () => {

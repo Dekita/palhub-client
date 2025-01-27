@@ -85,6 +85,7 @@ export default function ModsPage() {
     const slug = game_data?.map_data?.providers?.nexus;
 
 
+    const [needsRefreshed, setNeedsRefreshed] = React.useState(false);
     const [showAddLocalMod, setShowAddLocalMod] = React.useState(false);
     const [showModDetails, setShowModDetails] = React.useState(false);
     const [showModList, setShowModList] = React.useState(false);
@@ -176,9 +177,10 @@ export default function ModsPage() {
                 setAds(new_ads);
                 setMods(new_mods);
                 setLocalMods(new_locals);
+                setNeedsRefreshed(false);
             }
         })();
-    }, [modlistID]);
+    }, [modlistID, requiredModulesLoaded, needsRefreshed]);
 
     const onClickModCard = (mod) => {
         console.log('clicked mod:', mod);
@@ -198,7 +200,7 @@ export default function ModsPage() {
         }, 500);
     }
 
-    const onFindSpecificMod = async () => {
+    const onFindSpecificMod = React.useCallback(async () => {
         const value = modSearchRef.current.value;
         let mod_id = null;
         // if value is valid number then it is considered as mod id:
@@ -220,7 +222,11 @@ export default function ModsPage() {
         // const api_key = await getApiKey();
         const mod = await window.nexus(api_key, 'getModInfo', mod_id, slug);
         onClickModCard(mod);
-    }
+    }, [modSearchRef, commonAppData?.selectedGame?.id]);
+
+    const refreshModList = React.useCallback(()=>{
+        setNeedsRefreshed(true);
+    }, []);
 
     
     const gold_mod = false;
@@ -234,8 +240,8 @@ export default function ModsPage() {
     return <React.Fragment>
         <CheckModsModal show={showModList} setShow={setShowModList} />
         {/* <ModListModal show={showModList} setShow={setShowModList} mods={mods} /> */}
-        <ModDetailsModal mod={activeMod} show={showModDetails} setShow={setShowModDetails} />
-        <AddLocalModModal show={showAddLocalMod} setShow={onToggleShowLocalModCard} initialModData={localMod} />
+        <ModDetailsModal mod={activeMod} show={showModDetails} setShow={setShowModDetails} refreshModList={refreshModList}/>
+        <AddLocalModModal show={showAddLocalMod} setShow={onToggleShowLocalModCard} initialModData={localMod} refreshModList={refreshModList}/>
 
         <div className="container">
             <div className="mx-auto px-3 py-5">
