@@ -1,6 +1,6 @@
 {
     "private": true,
-    "version": "0.8.44",
+    "version": "0.8.68",
     "name": "dekita-ue-mod-hub",
     "productName": "UE Mod Hub",
     "description": "UE Mod Hub written by DekitaRPG",
@@ -80,7 +80,7 @@
         "bbcode-to-react/react": "18.3.1"
     },
     "release": {
-        "date": "1/26/2025",
-        "time": "11:16:17 AM"
+        "date": "1/27/2025",
+        "time": "8:20:04 AM"
     }
 }

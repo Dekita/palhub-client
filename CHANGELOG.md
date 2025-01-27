@@ -1,6 +1,5 @@
 
 ### TODO: 
-- determine if single uploaded pak file should be placed in logic mods.
 - determine if any pak files edit the same asset? 
 - make free user experience even more streamlined.
 - variable install location when installing downloaded mod.
@@ -8,6 +7,18 @@
 - add support for games listed in zCustomGameConfigs? 
 - cleanup of files because omg they are a mess atm..
 - add optional symlink/direct copy options for deploying mods.
+- properly setup github actions 
+
+### v0.8.61
+Fixed issue of zip archives with logic mod pak file installing to ~mods folder rather than LogicMods. 
+(caused by archives that doesnt specify any root folder and contain only pak/utac/ucos/other files)
+Fixed issue of 'install ue4ss' not displaying when setting up managed game that supports it. 
+Fixed issue of games that have been moved directory since added to app causing crash/error.
+(any game that doesnt seem validis now automatically removed from the applications data cache)
+Fixed issue of cache being reset each app boot. (only affected latest few versions of app)
+Fixed issue of user nexus avatar not immediately updating after entering api key.
+Fixed issue of 'Discord RPC' not updating status. 
+Disabled Logs->Application/Game selection when no ue4ss available for game logs.
 
 ### v0.8.25
 REBRANDED APP FROM `PalHUB Client` to `UE Mod Hub` due to now supporting multiple unreal engine games. 
@@ -18,7 +29,6 @@ Fixed issue with FF7 Remake + Rebirth not launching from app (wanted launched vi
 Fixed issue with 'save ue4ss config' button causing crash. 
 Added 'ff7' and 'mako' themes for final fantasy 7 users. 
 Added 'Discord RPC' for the application.
-
 
 ### v0.7.20
 Added 'Supported Games' list to 'About' page.
@@ -55,7 +65,6 @@ Fixed confusing visual issue where 'add new games to palhub' also showed a 'feat
 Fixed issue causing lua mods that are only packaged/zipped within their own mod folder, rather than a Mods, Win64, or Binaries root folder, to be incorrectly installed. 
 App now sets the cache directory to use the appdata folder by default (recommended to configure to a not appdata folder, but users kept putting their game path in there. hopefully this will help make it more clear.)
 Added multiple FAQs.
-
 
 ### v0.6.13
 Fixed issue where api key was being saved within application activity log. 
