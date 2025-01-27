@@ -108,7 +108,7 @@ export default function ModsPage() {
 
     const getInstalledMods = async (api_key, game_path) => {
         const config = await window.palhub('readJSON', game_path);
-        if (!config || !config.mods) return [];
+        if (!config || (!config.mods && !config.local_mods)) return [];
         const mod_ids = Object.keys(config.mods);
         const mods_from_nexus = await Promise.all(mod_ids.map(async mod_id => {
             return await window.nexus(api_key, 'getModInfo', mod_id, slug);
