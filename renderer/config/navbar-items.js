@@ -31,7 +31,7 @@ navbar_items.push({
 navbar_items.push({
     href: '/about',
     text: "/about.name",
-    desc: '/about.desc',
+    desc: '/about.tldr',
     image: '/img/heap2.png',
 });
 
