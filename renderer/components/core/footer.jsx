@@ -28,14 +28,19 @@ export default function Footer() {
 
     React.useEffect(() => {
         if (!window.ipc) return console.error('ipc not loaded');
-        (async () => {
+        const callback = async () => {
             const user_result = await window.ipc.invoke('get-user-count');
             // format the user count to be more readable
             const locale = Intl.DateTimeFormat().resolvedOptions().locale;
             const options = { notation: 'compact', maximumFractionDigits: 1 };
             const readable_count = Intl.NumberFormat(locale, options).format(user_result);
             setUserCount(readable_count);
-        })();
+        };
+        setTimeout(callback, 1000 * 1);
+        // const fifteenMinutes = 1000 * 60 * 15;
+        const eachHour = 1000 * 60 * 60;
+        const handle = setInterval(callback, eachHour);
+        return () => clearInterval(handle);
     }, []);
 
     React.useEffect(() => {
