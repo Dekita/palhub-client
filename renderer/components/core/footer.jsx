@@ -13,6 +13,7 @@ import Image from 'react-bootstrap/Image';
 import * as CommonIcons from '@config/common-icons';
 import useLocalization from '@hooks/useLocalization';
 // import useAppLogger from '@hooks/useAppLogger';
+import { SwapSpinner } from 'react-spinners-kit';
 
 
 
@@ -49,7 +50,8 @@ export default function Footer() {
             setValidation(validation_result);
             setRateLimits(readable_rate);
         }
-        callback(); // run once on load
+        // callback(); // run once on load
+        setTimeout(callback, 1000 * 1);
         const handle = setInterval(callback, 1000 * 60 * 1);
         return () => clearInterval(handle);
     }, []);
@@ -59,12 +61,18 @@ export default function Footer() {
     return <footer className='footer darker-bg3 text-center p-3'>
         <div className='row position-absolute w-100 text-dark'>
             <div className='col text-start'>
-                <OverlayTrigger placement='top' delay={delay} overlay={<Tooltip className="text-end">{t('#footer.hover-nexus-api')}</Tooltip>}>
+                {!validation && <div className='d-flex align-items-center px-3'>
+                    {/* <CommonIcons.account height='1rem' fill='currentColor' /> */}
+                    <SwapSpinner color='currentColor' size={36} />
+                    <small className='ps-2'>{t('common.loading')}</small>
+                </div>}
+
+                {validation && <OverlayTrigger placement='top' delay={delay} overlay={<Tooltip className="text-end">{t('#footer.hover-nexus-api')}</Tooltip>}>
                     <div className='d-inline-block px-3'>
                         <Image src={validation?.profile_url} alt='avatar' fluid roundedCircle width={42}/>
                         <small className='ps-2'>{rateLimits} {validation?.is_premium && <small>p</small>}                        </small>
                     </div>
-                </OverlayTrigger>
+                </OverlayTrigger>}
             </div>
             <div className='col d-flex align-items-center justify-content-end'>
                 <OverlayTrigger placement='top' delay={delay} overlay={<Tooltip className="text-end">{t('#footer.hover-users-api')}</Tooltip>}>
