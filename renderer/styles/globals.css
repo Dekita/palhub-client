@@ -326,6 +326,81 @@ small {
     background: url('/img/ff7rebirth/bg3.webp') no-repeat center center fixed;
     background-size: cover;
 }
+.game-bg.hogwarts-legacy1::before {
+    background: url('/img/hogwarts-legacy/bg1.webp') no-repeat center center fixed;
+    background-size: cover;
+}
+.game-bg.hogwarts-legacy2::before {
+    background: url('/img/hogwarts-legacy/bg2.webp') no-repeat center center fixed;
+    background-size: cover;
+}
+.game-bg.hogwarts-legacy3::before {
+    background: url('/img/hogwarts-legacy/bg3.webp') no-repeat center center fixed;
+    background-size: cover;
+}
+.game-bg.black-myth-wukong1::before {
+    background: url('/img/black-myth-wukong/bg1.webp') no-repeat center center fixed;
+    background-size: cover;
+}
+.game-bg.black-myth-wukong2::before {
+    background: url('/img/black-myth-wukong/bg2.webp') no-repeat center center fixed;
+    background-size: cover;
+}
+.game-bg.black-myth-wukong3::before {
+    background: url('/img/black-myth-wukong/bg3.webp') no-repeat center center fixed;
+    background-size: cover;
+}
+.game-bg.lockdown-protocol1::before {
+    background: url('/img/lockdown-protocol/bg1.webp') no-repeat center center fixed;
+    background-size: cover;
+}
+.game-bg.lockdown-protocol2::before {
+    background: url('/img/lockdown-protocol/bg2.webp') no-repeat center center fixed;
+    background-size: cover;
+}
+.game-bg.lockdown-protocol3::before {
+    background: url('/img/lockdown-protocol/bg3.webp') no-repeat center center fixed;
+    background-size: cover;
+}
+.game-bg.orcs-must-die-31::before {
+    background: url('/img/orcs-must-die-3/bg1.webp') no-repeat center center fixed;
+    background-size: cover;
+}
+.game-bg.orcs-must-die-32::before {
+    background: url('/img/orcs-must-die-3/bg2.webp') no-repeat center center fixed;
+    background-size: cover;
+}
+.game-bg.orcs-must-die-33::before {
+    background: url('/img/orcs-must-die-3/bg3.webp') no-repeat center center fixed;
+    background-size: cover;
+}
+.game-bg.orcs-must-die-deathtrap1::before {
+    background: url('/img/orcs-must-die-3/bg1.webp') no-repeat center center fixed;
+    background-size: cover;
+}
+.game-bg.orcs-must-die-deathtrap2::before {
+    background: url('/img/orcs-must-die-3/bg2.webp') no-repeat center center fixed;
+    background-size: cover;
+}
+.game-bg.orcs-must-die-deathtrap3::before {
+    background: url('/img/orcs-must-die-3/bg3.webp') no-repeat center center fixed;
+    background-size: cover;
+}
+.game-bg.tekken81::before {
+    background: url('/img/tekken8/bg1.webp') no-repeat center center fixed;
+    background-size: cover;
+}
+.game-bg.tekken82::before {
+    background: url('/img/tekken8/bg2.webp') no-repeat center center fixed;
+    background-size: cover;
+}
+.game-bg.tekken83::before {
+    background: url('/img/tekken8/bg3.webp') no-repeat center center fixed;
+    background-size: cover;
+}
+
+
+
 
 
 @media (min-width: 576px) {

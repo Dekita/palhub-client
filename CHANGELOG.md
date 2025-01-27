@@ -8,6 +8,16 @@
 - cleanup of files because omg they are a mess atm..
 - add optional symlink/direct copy options for deploying mods.
 - properly setup github actions 
+- allow for auto updates to be enabled/disabled
+
+
+### v0.?.?
+- Fix for 7z archives crashing the application (due to checking their pak file for logic mods)
+- Added BG images for some supported games. 
+- Added orcs-must-die3 & deathtrap games. 
+- Added option to disable auto updates.
+- Set user counter to update each hour.
+
 
 ### v0.8.75
 - Fix for manually installed mods not showing unless 'downloaded mods' have also been added. 
