@@ -540,7 +540,17 @@ export class Client {
                     install_path = path.join(game_path, game_data.unreal_root, "Content/Paks");
                     break;
                 default: // ~mods/ or unknown mod type ~ assume regular .pak replacement
-                    install_path = path.join(game_path, game_data.unreal_root, "Content/Paks/~mods");
+                    const zipAssetFound = this.checkPakForLogicModInZip(entries);
+                    // const pakAssetFound = checkPakForLogicMod(pakFilePath);
+                    console.log({zipAssetFound});
+                    if (zipAssetFound) {
+                        // unknown mod type ~ assume regular .pak replacement
+                        install_path = path.join(game_path, game_data.unreal_root, "Content/Paks/LogicMods");
+                    } else {
+                        console.log('unknown install type assuming ~mods');
+                        // unknown mod type ~ assume regular .pak replacement
+                        install_path = path.join(game_path, game_data.unreal_root, "Content/Paks/~mods");
+                    }
                     break;
             }
         } else {
