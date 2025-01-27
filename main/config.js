@@ -81,6 +81,7 @@ const CONFIG = {
         // used to store app specific cache data
         "app-cache": null, 
         "allow-rpc": true, // allow discord rpc to be enabled
+        'do-update': true, // check for updates on boot
         // handles all api keys for the app
         "api-keys": {
             "nexus": null,

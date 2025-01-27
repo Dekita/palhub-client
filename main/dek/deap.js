@@ -431,7 +431,9 @@ class DEAP {
         }
     }
     static initializeAutoUpdater() {
-        this.logger.info(`Automatic Updates Enabled: ${app.isPackaged}`);
+        const updatesEnabled = app.isPackaged && this._datastore.get("do-update", true);
+        this.logger.info(`Automatic Updates Enabled: ${updatesEnabled}`);
+        if (!updatesEnabled) return;
         if (!app.isPackaged) {
             this.main_window?.webContents?.send("auto-updater", "not-packaged");
             return;

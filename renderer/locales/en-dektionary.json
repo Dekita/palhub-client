@@ -339,7 +339,7 @@
             },
             {
                 "q": "How do I uninstall {{app.brandname}}?",
-                "a": "To uninstall {{app.brandname}}, right click the application launcher, and select uninstall. This will remove all files associated with the application, but notthe cache directory where mods are stored."
+                "a": "To uninstall {{app.brandname}}, right click the application launcher, and select uninstall. This will remove all files associated with the application, but not the cache directory where mods are stored. If you did not change this, this can result in a large amount of disk space being used. If you wish to remove the cache directory, you will need to do this manually before/after uninstalling the application."
             }
         ]
     },
@@ -433,6 +433,10 @@
             "allow-rpc": {
                 "name": "Allow Discord RPC",
                 "desc": "Allow {{app.brandname}} to display your current game status in Discord."
+            },
+            "do-update": {
+                "name": "Automatic App Updates",
+                "desc": "Automatically check for updates when the application starts/each hour."
             }
         },
         "setup": {

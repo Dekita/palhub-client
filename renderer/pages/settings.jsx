@@ -437,6 +437,7 @@ function SettingsPage_ApplicationCustomize() {
         'auto-tiny': false,
         'tiny-tray': false,
         'allow-rpc': false,
+        'do-update': false,
     });
     const updateConfig = React.useCallback(async (key, value) => {
         if (!requiredModulesLoaded) return;
@@ -454,6 +455,7 @@ function SettingsPage_ApplicationCustomize() {
             'auto-tiny': await window.uStore.get('auto-tiny', false),
             'tiny-tray': await window.uStore.get('tiny-tray', false),
             'allow-rpc': await window.uStore.get('allow-rpc', false),
+            'do-update': await window.uStore.get('do-update', false),
         })})();
     }, [requiredModulesLoaded]);
 
@@ -489,6 +491,14 @@ function SettingsPage_ApplicationCustomize() {
                     updateSetting={(n, v) => updateConfig('tiny-tray', v)}
                     name={t('/settings.options.tiny-tray.name')}
                     tooltip={t('/settings.options.tiny-tray.desc')}
+                />
+            </div>
+            <div className='col-12 col-lg-6'>
+                <ENVEntry
+                    value={settings['do-update']}
+                    updateSetting={(n, v) => updateConfig('do-update', v)}
+                    name={t('/settings.options.do-update.name')}
+                    tooltip={t('/settings.options.do-update.desc')}
                 />
             </div>
         </div>
