@@ -14,6 +14,7 @@ import * as CommonIcons from '@config/common-icons';
 import useLocalization from '@hooks/useLocalization';
 // import useAppLogger from '@hooks/useAppLogger';
 import { SwapSpinner } from 'react-spinners-kit';
+import useCommonChecks from '@hooks/useCommonChecks';
 
 
 
@@ -22,6 +23,7 @@ export default function Footer() {
     const [userCount, setUserCount] = React.useState('??');
     const [rateLimits, setRateLimits] = React.useState('??');
     const [validation, setValidation] = React.useState(null);
+    const {commonAppData} = useCommonChecks();
     const delay = { show: 100, hide: 250 };
 
     React.useEffect(() => {
@@ -54,7 +56,7 @@ export default function Footer() {
         setTimeout(callback, 1000 * 1);
         const handle = setInterval(callback, 1000 * 60 * 1);
         return () => clearInterval(handle);
-    }, []);
+    }, [commonAppData?.apis]);
 
     // if (!ready) return <></>;
 
