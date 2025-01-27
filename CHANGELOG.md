@@ -9,6 +9,10 @@
 - add optional symlink/direct copy options for deploying mods.
 - properly setup github actions 
 
+### v0.8.69
+- Fixed issue of cache directory being incorrectly named on first boot. 
+- Fixed issue of app not redirecting to settings page on first boot. 
+
 ### v0.8.68
 - Fixed issue of zip archives with logic mod pak file installing to ~mods folder rather than LogicMods. 
 (caused by archives that doesnt specify any root folder and contain only pak/utac/ucos/other files)
@@ -20,7 +24,7 @@
 - Fixed issue of 'Discord RPC' not updating status. 
 - Disabled Logs->Application/Game selection when no ue4ss available for game logs.
 
-### v0.8.25
+### v0.8.36
 - REBRANDED APP FROM `PalHUB Client` to `UE Mod Hub` due to now supporting multiple unreal engine games. 
 - Moved default cache location to the folder that app is installed to.  
 - Fixed issue of app not creating default cache folder on install.

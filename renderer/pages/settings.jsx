@@ -331,14 +331,14 @@ function SettingsPage_ApplicationRequirements({setSettingsPageID}) {
         });
     }, [nexusApiKey]);
 
-    React.useEffect(() => {
-        if (cacheDirectory) return;
-        (async() => {
-            const path = await window.ipc.invoke('get-path', 'app');
-            const newpath = await window.palhub('joinPath', path, 'ModCache');
-            onUpdateCacheDirectory(null, newpath);
-        })();
-    }, [cacheDirectory]);
+    // React.useEffect(() => {
+    //     if (cacheDirectory) return;
+    //     (async() => {
+    //         const path = await window.ipc.invoke('get-path', 'app');
+    //         const newpath = await window.palhub('joinPath', path, 'ModCache');
+    //         onUpdateCacheDirectory(null, newpath);
+    //     })();
+    // }, [cacheDirectory]);
 
     if (!requiredModulesLoaded) return null;
     return <React.Fragment>

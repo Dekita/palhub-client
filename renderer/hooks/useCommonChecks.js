@@ -171,6 +171,7 @@ export const CommonAppDataProvider = ({ children }) => {
         Object.values(apis).find(api => api === null) && router.push('/settings');
         // if no cache is set, redirect to settings
         !cache && router.push('/settings');
+        
 
         // check if the selected game is valid and set the data if it is
         let selectedGame = null;
@@ -188,10 +189,12 @@ export const CommonAppDataProvider = ({ children }) => {
             } catch (error) {
                 console.error(error);
             }
+        } else {
+            router.push('/settings');
         }
         // selectedGame = null;
-        // !selectedGame && router.push('/settings');
         setCommonAppData(prev => ({apis, cache, games, selectedGame}));
+        // selectedGame === null && router.push('/settings');
         
         setRequiredModulesLoaded(true);
     }, [ready]);
