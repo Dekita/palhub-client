@@ -9,7 +9,7 @@
 - add optional symlink/direct copy options for deploying mods.
 - properly setup github actions 
 
-### v0.8.61
+### v0.8.68
 - Fixed issue of zip archives with logic mod pak file installing to ~mods folder rather than LogicMods. 
 (caused by archives that doesnt specify any root folder and contain only pak/utac/ucos/other files)
 - Fixed issue of 'install ue4ss' not displaying when setting up managed game that supports it. 
