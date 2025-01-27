@@ -192,7 +192,7 @@
         "current": "No updates available!",
         "available": "Update Available!",
         "preparing": "Preparing Update:..",
-        "downloading": "UPDATING @ {{mbps}} - {{perc}}%",
+        "downloading": "UPDATING @ {{mbps}} mbps - {{perc}}%",
         "error": "Error updating: {{error}}",
         "install": "INSTALL UPDATE"
     },
