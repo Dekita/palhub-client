@@ -128,8 +128,8 @@ export default function SettingsPage({ modals, ThemeController }) {
             <Carousel.Item className="">
                 <div className="col-12 col-md-10 offset-0 offset-md-1 col-lg-8 offset-lg-2">
                     <div className="mx-auto px-3">
-                        <SettingsPage_ApplicationCustomize />
                         <SettingsPage_Theme ThemeController={ThemeController} />
+                        <SettingsPage_ApplicationCustomize />
                     </div>
                 </div>
             </Carousel.Item>
@@ -512,10 +512,29 @@ function SettingsPage_Theme({ThemeController}) {
 
     console.log('ThemeController', ThemeController.bg_opac);
 
+    const OnChangeTheme = React.useCallback((e, v, iText, i) => {
+        console.log('ThemeController.setThemeID', {e, v, iText, i});
+        ThemeController.setThemeID(iText);
+    }, [ThemeController.setThemeID]);
+
     if (!requiredModulesLoaded) return null;
     return <React.Fragment>
 
         <div className='row'>
+            <div className='col'>
+                <ENVEntryLabel
+                    name={t('/settings.options.theme-color.name')}
+                    tooltip={t('/settings.options.theme-color.desc')}
+                />
+                <DekSelect 
+                    active_id={Number(ThemeController.theme_id)} 
+                    onChange={OnChangeTheme}>
+                    {ThemeController.themes.map((theme, i) => {
+                        return <dekItem key={i} text={theme} active={ThemeController.theme_id === i} />
+                    })}
+                </DekSelect>
+            </div>
+
             <div className='col'>
                 <ENVEntryLabel
                     name={t('/settings.options.theme-image.name')}
@@ -544,7 +563,7 @@ function SettingsPage_Theme({ThemeController}) {
                 />
             </div>
         </div>
-        <ENVEntryLabel
+        {/* <ENVEntryLabel
             name={t('/settings.options.theme-color.name')}
             tooltip={t('/settings.options.theme-color.desc')}
         />
@@ -553,7 +572,7 @@ function SettingsPage_Theme({ThemeController}) {
             choices={ThemeController.themes}
             active={Number(ThemeController.theme_id)}
             onClick={(i, value) => ThemeController.setThemeID(value)}
-        />
+        /> */}
     </React.Fragment>
 }
 

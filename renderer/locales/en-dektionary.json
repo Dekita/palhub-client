@@ -411,15 +411,15 @@
                 "desc": "Send {{app.brandname}} to the system tray when minimized."
             },
             "theme-color": {
-                "name": "Change Color Theme [beta]",
+                "name": "App Color Theme",
                 "desc": "Alter the UI by selecting from a range of spicy color themes.."
             },
             "theme-image": {
-                "name": "Change Background Image",
+                "name": "Background Image",
                 "desc": "Alter the UI by selecting from a range of spicy background images.."
             },
             "theme-opacity": {
-                "name": "Change Background Visibility",
+                "name": "Background Visibility",
                 "desc": "Alter the application background by selecting changing its visibility.."
             },
             "language": {
@@ -436,7 +436,7 @@
             },
             "do-update": {
                 "name": "Automatic App Updates",
-                "desc": "Automatically check for updates when the application starts/each hour."
+                "desc": "Keeping up-to-date with the latest fixes and improvements! Automatically checks for app updates on boot/each hour. "
             }
         },
         "setup": {

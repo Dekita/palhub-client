@@ -8,7 +8,7 @@ import { useEffect, useState, useCallback } from 'react';
 
 // theme files should be located in /public/themes
 export const THEMES = [
-    'palhub', 
+    'modhub', 
     'ff7',
     'mako',
     'pals',
