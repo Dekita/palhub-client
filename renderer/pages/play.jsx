@@ -23,7 +23,7 @@ import ColorfulGameSelector from '@components/colorful-game-selector';
 export default function PlayPage() {
     const { t, tA } = useLocalization();
     const applog = useAppLogger("pages/play");
-    const { requiredModulesLoaded, commonAppData } = useCommonChecks();
+    const { refreshCommonDataWithRedirect, requiredModulesLoaded, commonAppData } = useCommonChecks();
     const cache_dir = commonAppData?.cache;
     const game_path = commonAppData?.selectedGame?.path;
     const game_data = commonAppData?.selectedGame;
@@ -75,6 +75,10 @@ export default function PlayPage() {
         if (!requiredModulesLoaded) return;
         await onRunGameExe();
     }, [requiredModulesLoaded, onRunGameExe]);
+
+    React.useEffect(() => {
+        refreshCommonDataWithRedirect();
+    }, [refreshCommonDataWithRedirect]);
 
     console.log(game_data);
 
