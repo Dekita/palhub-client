@@ -9,6 +9,10 @@
 - determine if any pak files edit the same asset? 
 - properly setup github actions 
 
+### v0.8.87
+- Added redirect to settings for 'play' page when app not setup. 
+- Fixed issue of mod not opening correct page when clicking file link. 
+
 ### v0.8.85
 - Fix for 7z archives crashing the application (due to checking their pak file for logic mods)
 - Hid servers tab from popup navbar (available when application window is small)
