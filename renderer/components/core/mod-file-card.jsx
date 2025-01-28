@@ -85,7 +85,7 @@ export default function ModFileCard({mod, file, triggers=null, showHR=true}) {
             const {is_premium} = await window.nexus(api_key, 'getValidationResult');
             if (!is_premium && !(key && expires)) {
                 // https://www.nexusmods.com/palworld/mods/${mod.mod_id}?tab=files&${file.file_id}=6790&nmm=1
-                window.ipc.invoke('open-external', `https://www.nexusmods.com/palworld/mods/${mod.mod_id}?tab=files&file_id=${file.file_id}&nmm=1`);
+                window.ipc.invoke('open-external', `https://www.nexusmods.com/${commonAppData?.selectedGame.map_data.providers.nexus}/mods/${mod.mod_id}?tab=files&file_id=${file.file_id}&nmm=1`);
                 console.log('You need to be a premium user on Nexus Mods to view the files tab');
                 return;
                 // alert('You need to be a premium user on Nexus Mods to view the files tab');
