@@ -543,7 +543,7 @@ export class Client {
                     const zipAssetFound = await this.checkPakForLogicModInZip(entries);
                     // const pakAssetFound = checkPakForLogicMod(pakFilePath);
                     console.log({zipAssetFound});
-                    if (zipAssetFound) {
+                    if (zipAssetFound?.found) {
                         // unknown mod type ~ assume regular .pak replacement
                         install_path = path.join(game_path, game_data.unreal_root, "Content/Paks/LogicMods");
                     } else {
@@ -557,7 +557,7 @@ export class Client {
             const zipAssetFound = await this.checkPakForLogicModInZip(entries);
             // const pakAssetFound = checkPakForLogicMod(pakFilePath);
             console.log({zipAssetFound});
-            if (zipAssetFound) {
+            if (zipAssetFound?.found) {
                 // unknown mod type ~ assume regular .pak replacement
                 install_path = path.join(game_path, game_data.unreal_root, "Content/Paks/LogicMods");
             } else {
