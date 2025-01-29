@@ -1,5 +1,8 @@
 
 ### TODO: 
+- FIX: rename palhub.config files to modhub.config
+- Add proper support for movie type mods. 
+- the ability to add more than 1 version of a specific mod <3
 - add optional symlink/direct copy options for deploying mods.
 - variable install location when installing downloaded mod.
 - ensure 'zCustomGameConfigs' is used for relevant games.
@@ -8,6 +11,11 @@
 - make free user experience even more streamlined.
 - determine if any pak files edit the same asset? 
 - properly setup github actions 
+- sort options for mods
+
+### v0.8.90
+- Bugfix for certain files that should be placed into ~mods being placed into LogicMods. 
+- Fixed issue of mod not opening correct page when clicking file link. (from modlist)
 
 ### v0.8.87
 - Added redirect to settings for 'play' page when app not setup. 
