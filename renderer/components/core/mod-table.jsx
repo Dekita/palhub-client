@@ -3,17 +3,21 @@
 # PalHUB::Client by dekitarpg@gmail.com
 ########################################
 */
+import React from 'react';
 import useScreenSize from '@hooks/useScreenSize';
 import useLocalization from '@hooks/useLocalization';
+import useCommonChecks from '@hooks/useCommonChecks';
 
 export default function ModTable({show,setShow, mods, showStatus=false}) {
+    const { commonAppData } = useCommonChecks();
     const { t, tA } = useLocalization();
     const {isDesktop} = useScreenSize();
     const fullscreen = !isDesktop;
 
-    const openModInBrowser = (mod_id) => {
-        window.open(`https://www.nexusmods.com/palworld/mods/${mod_id}`, '_blank');
-    }
+    const openModInBrowser = React.useCallback((mod_id) => {
+        const gameID = commonAppData?.selectedGame.map_data.providers.nexus;
+        window.open(`https://www.nexusmods.com/${gameID}/mods/${mod_id}`, '_blank');
+    }, [commonAppData?.selectedGame]);
 
     const main_col_size = showStatus ? 'col-6 col-sm-5 col-md-5' :'col-8 col-sm-7 col-md-6';
 
